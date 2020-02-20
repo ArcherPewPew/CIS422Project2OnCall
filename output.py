@@ -1,13 +1,14 @@
 '''
 	Author: Kiana Hosaka
-	Date of Last Modification: February 19, 2020
+	Date of Last Modification: February 20, 2020
 	Description: File produces the functionality of the Shift Assignments Module.
 	References:
 	- Prepending to a list: https://kite.com/python/answers/how-to-prepend-to-a-list-in-python
 '''
+import importlib
 import shiftAssignments as sa
-import test_week as week
-import test_end as end
+import test_week as week # For testing
+import test_end as end # For testing
 
 
 def generateSchedule():
@@ -18,10 +19,15 @@ def generateSchedule():
 		into the raPreferences dictionary. Returns 0 if no errors occured or 1 if 
 		an error occured.
 	'''
+	#TODO: What kind of errors could occur?
+
 	# For now, I am not "calling" the schedulers but I have created test files
 	# for how the return of the schedulers would be
 
+	# Dictionary that will get written to shiftAssignments.py
 	assignments = {}
+	
+	# File containing shift assignment dictionary
 	f = open("shiftAssignments.py", "w")	
 
 	# Adding the WEEKDAYS to the dictionary
@@ -38,11 +44,11 @@ def generateSchedule():
 			assignments[i+1][0].append(end.schedule[i][0][j]) # Primary
 			assignments[i+1][1].append(end.schedule[i][1][j]) # Secondary
 
+	# Writing assignment dictionary to shiftAssignments.py
 	f.write("shiftAssignments = %s\n" % (str(assignments)))
 	f.close()
 
-	#TODO: What kind of errors could occur?
-	return 0 # 0 if no errors occured or a 1 if an error occured
+	return 0
 
 
 def exportFile(fileName):
@@ -53,7 +59,37 @@ def exportFile(fileName):
 		exports the saved shift assignments to a specified CSV file. 
 		Returns 0 if no errors occured or 1 if an error occured.
 	'''
-	return # 0 if no errors occured or a 1 if an error occured
+	importlib.reload(sa) # Reloading dictionary
+	output_file = open(fileName, "w")
+	output_file.write(",,,,---- RESIDENT ASSISTANT SHIFT ASSIGNMENTS -----\n\n")
+	output_file.write(",,SUNDAY DAY, SUNDAY NIGHT, MONDAY, TUESDAY, WEDNESDAY, THURSDAY, \
+				FRIDAY, SATURDAY DAY, SATURDAY NIGHT\n")	
+
+	# kk
+	for week in sa.shiftAssignments:
+		# Write week number
+		output_file.write("Week %d," % (week))
+
+		# Write primary schedule
+		output_file.write(", %s, %s, %s, %s, %s, %s, %s, %s, %s \n" % \
+				(sa.shiftAssignments[week][0][0], \
+				sa.shiftAssignments[week][0][1], sa.shiftAssignments[week][0][2], \
+				sa.shiftAssignments[week][0][3], sa.shiftAssignments[week][0][4], \
+				sa.shiftAssignments[week][0][5], sa.shiftAssignments[week][0][6], \
+				sa.shiftAssignments[week][0][7], sa.shiftAssignments[week][0][8]))
+
+		# Write secondary schedule		
+		output_file.write(",, %s, %s, %s, %s, %s, %s, %s, %s, %s \n" % \
+				(sa.shiftAssignments[week][1][0], \
+				sa.shiftAssignments[week][1][1], sa.shiftAssignments[week][1][2], \
+				sa.shiftAssignments[week][1][3], sa.shiftAssignments[week][1][4], \
+				sa.shiftAssignments[week][1][5], sa.shiftAssignments[week][1][6], \
+				sa.shiftAssignments[week][1][7], sa.shiftAssignments[week][1][8]))
+
+		output_file.write("\n")
+			
+	output_file.close()
+	return 0
 
  
 def updateSchedule(weekNum, secondary, index, newName):
@@ -68,4 +104,7 @@ def updateSchedule(weekNum, secondary, index, newName):
 	'''
 	return # 0 if no errors occured or a 1 if an error occured
 
+# Call methods
 generateSchedule()
+exportFile("file_output.csv")
+
