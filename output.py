@@ -4,12 +4,17 @@
 	Description: File produces the functionality of the Shift Assignments Module.
 	References:
 	- Prepending to a list: https://kite.com/python/answers/how-to-prepend-to-a-list-in-python
+
 '''
+#TODO: What kind of errors could occur?
+
 import importlib
 import shiftAssignments as sa
 import test_week as week # For testing
 import test_end as end # For testing
 
+
+# Global dictionary that will get written to shiftAssignments.py
 
 def generateSchedule():
 	'''
@@ -19,12 +24,10 @@ def generateSchedule():
 		into the raPreferences dictionary. Returns 0 if no errors occured or 1 if 
 		an error occured.
 	'''
-	#TODO: What kind of errors could occur?
 
 	# For now, I am not "calling" the schedulers but I have created test files
 	# for how the return of the schedulers would be
 
-	# Dictionary that will get written to shiftAssignments.py
 	assignments = {}
 	
 	# File containing shift assignment dictionary
@@ -59,13 +62,13 @@ def exportFile(fileName):
 		exports the saved shift assignments to a specified CSV file. 
 		Returns 0 if no errors occured or 1 if an error occured.
 	'''
+
 	importlib.reload(sa) # Reloading dictionary
 	output_file = open(fileName, "w")
 	output_file.write(",,,,---- RESIDENT ASSISTANT SHIFT ASSIGNMENTS -----\n\n")
 	output_file.write(",,SUNDAY DAY, SUNDAY NIGHT, MONDAY, TUESDAY, WEDNESDAY, THURSDAY, \
 				FRIDAY, SATURDAY DAY, SATURDAY NIGHT\n")	
 
-	# kk
 	for week in sa.shiftAssignments:
 		# Write week number
 		output_file.write("Week %d," % (week))
@@ -102,9 +105,18 @@ def updateSchedule(weekNum, secondary, index, newName):
 		This function updates a field in the shiftAssignmnets dictionary.
 		Returns 0 if no errors occured or 1 if an error occured.
 	'''
-	return # 0 if no errors occured or a 1 if an error occured
+	# Copy of the assignments
+	importlib.reload(sa) # Reloading dictionary
+	new_assignments = sa.shiftAssignments
+	new_assignments[weekNum][secondary][index] = newName
+	f = open("shiftAssignments.py", "w")
+	f.write("shiftAssignments = %s\n" % (str(new_assignments)))
+	f.close()
+
+	return 0
 
 # Call methods
-generateSchedule()
-exportFile("file_output.csv")
+# generateSchedule()
+# exportFile("file_output.csv")
+# updateSchedule(2, 0, 1, "KIANA")
 
