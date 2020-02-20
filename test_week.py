@@ -5,6 +5,7 @@
 '''
 
 # Weekday: Sunday Night, Monday, Tuesday, Wedesday, Thursday
+'''
 primary_1 = ["Ally", "Maddie", "Alia", "Josiah", "Fran"]
 secondary_1 = ["Maddie", "Alia", "Ally", "Sam", "Jacob"]
 primary_2 = ["Ally", "Maddie", "Alia", "Josiah", "Fran"]
@@ -27,6 +28,30 @@ primary_10 = ["Ally", "Maddie", "Alia", "Josiah", "Fran"]
 secondary_10 = ["Maddie", "Alia", "Ally", "Sam", "Jacob"]
 primary_11 = ["Ally", "Maddie", "Alia", "Josiah", "Fran"]
 secondary_11 = ["Maddie", "Alia", "Ally", "Sam", "Jacob"]
+'''
+
+primary_1 = ["P Sun Night", "P Monday", "P Tuesday", "P Wednesday", "P Thursday"]
+secondary_1 = ["S Sun Night", "S Monday", "S Tuesday", "S Wednesday", "S Thursday"]
+primary_2 = ["P Sun Night", "P Monday", "P Tuesday", "P Wednesday", "P Thursday"]
+secondary_2 = ["S Sun Night", "S Monday", "S Tuesday", "S Wednesday", "S Thursday"]
+primary_3 = ["P Sun Night", "P Monday", "P Tuesday", "P Wednesday", "P Thursday"]
+secondary_3 = ["S Sun Night", "S Monday", "S Tuesday", "S Wednesday", "S Thursday"]
+primary_4 = ["P Sun Night", "P Monday", "P Tuesday", "P Wednesday", "P Thursday"]
+secondary_4 = ["S Sun Night", "S Monday", "S Tuesday", "S Wednesday", "S Thursday"]
+primary_5 = ["P Sun Night", "P Monday", "P Tuesday", "P Wednesday", "P Thursday"]
+secondary_5 = ["S Sun Night", "S Monday", "S Tuesday", "S Wednesday", "S Thursday"]
+primary_6 = ["P Sun Night", "P Monday", "P Tuesday", "P Wednesday", "P Thursday"]
+secondary_6 = ["S Sun Night", "S Monday", "S Tuesday", "S Wednesday", "S Thursday"]
+primary_7 = ["P Sun Night", "P Monday", "P Tuesday", "P Wednesday", "P Thursday"]
+secondary_7 = ["S Sun Night", "S Monday", "S Tuesday", "S Wednesday", "S Thursday"]
+primary_8 = ["P Sun Night", "P Monday", "P Tuesday", "P Wednesday", "P Thursday"]
+secondary_8 = ["S Sun Night", "S Monday", "S Tuesday", "S Wednesday", "S Thursday"]
+primary_9 = ["P Sun Night", "P Monday", "P Tuesday", "P Wednesday", "P Thursday"]
+secondary_9 = ["S Sun Night", "S Monday", "S Tuesday", "S Wednesday", "S Thursday"]
+primary_10 = ["P Sun Night", "P Monday", "P Tuesday", "P Wednesday", "P Thursday"]
+secondary_10 = ["S Sun Night", "S Monday", "S Tuesday", "S Wednesday", "S Thursday"]
+primary_11 = ["P Sun Night", "P Monday", "P Tuesday", "P Wednesday", "P Thursday"]
+secondary_11 = ["S Sun Night", "S Monday", "S Tuesday", "S Wednesday", "S Thursday"]
 
 schedule = [[primary_1, secondary_1], [primary_2, secondary_2], [primary_3, secondary_3], \
 		[primary_4, secondary_4], [primary_5, secondary_5], [primary_6, secondary_6], \

@@ -3,10 +3,12 @@
 	Date of Last Modification: February 19, 2020
 	Description: File produces the functionality of the Shift Assignments Module.
 	References:
+	- Prepending to a list: https://kite.com/python/answers/how-to-prepend-to-a-list-in-python
 '''
 import shiftAssignments as sa
 import test_week as week
 import test_end as end
+
 
 def generateSchedule():
 	'''
@@ -19,13 +21,28 @@ def generateSchedule():
 	# For now, I am not "calling" the schedulers but I have created test files
 	# for how the return of the schedulers would be
 
-	schedule = week.schedule
-	for i in range(len(schedule)):
-		print({i+1: [schedule[0], schedule[1]]})
-		sa.shiftAssignments.update({i: [schedule[0], schedule[1]]})
-	
+	assignments = {}
+	f = open("shiftAssignments.py", "w")	
 
-	return # 0 if no errors occured or a 1 if an error occured
+	# Adding the WEEKDAYS to the dictionary
+	for i in range(11): # 11 weeks in a term
+		assignments.update({i+1: [week.schedule[i][0], week.schedule[i][1]]})
+
+	# Adding the WEEKENDS to the dictionary
+	for i in range(11): # 11 weeks in a term
+		assignments[i+1][0].insert(0, end.schedule[i][0][3]) # Prepending Primary Sunday Day
+		assignments[i+1][1].insert(0, end.schedule[i][1][3]) # Prepending Secondary Sunday Day
+
+		# Appending rest of weekend
+		for j in range(3):
+			assignments[i+1][0].append(end.schedule[i][0][j]) # Primary
+			assignments[i+1][1].append(end.schedule[i][1][j]) # Secondary
+
+	f.write("shiftAssignments = %s\n" % (str(assignments)))
+	f.close()
+
+	#TODO: What kind of errors could occur?
+	return 0 # 0 if no errors occured or a 1 if an error occured
 
 
 def exportFile(fileName):
@@ -51,5 +68,4 @@ def updateSchedule(weekNum, secondary, index, newName):
 	'''
 	return # 0 if no errors occured or a 1 if an error occured
 
-generateSchedule()    
-    
+generateSchedule()
