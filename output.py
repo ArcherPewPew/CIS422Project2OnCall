@@ -6,28 +6,26 @@
 	- Prepending to a list: https://kite.com/python/answers/how-to-prepend-to-a-list-in-python
 
 '''
-#TODO: What kind of errors could occur?
+#TODO: Add error checking
 
 import importlib
 import shiftAssignments as sa
 import test_week as week # For testing
 import test_end as end # For testing
 
-
-# Global dictionary that will get written to shiftAssignments.py
-
 def generateSchedule():
 	'''
 		(None) -> int
 
-		This function calls the schedulers and saves their returned information 
-		into the raPreferences dictionary. Returns 0 if no errors occured or 1 if 
-		an error occured.
+		Calls the schedulers and saves their returned information into the shiftAssignments dictionary. 
+		Returns 0 if no errors occured or 1 if an error occured.
 	'''
 
 	# For now, I am not "calling" the schedulers but I have created test files
-	# for how the return of the schedulers would be
+	# week_schedule = week.<function to call here>
+	# end_schedule = end.<function to call here>
 
+	# Dictionary that will get written to shiftAssignments.py
 	assignments = {}
 	
 	# File containing shift assignment dictionary
@@ -49,8 +47,8 @@ def generateSchedule():
 
 	# Writing assignment dictionary to shiftAssignments.py
 	f.write("shiftAssignments = %s\n" % (str(assignments)))
-	f.close()
 
+	f.close()
 	return 0
 
 
@@ -58,22 +56,25 @@ def exportFile(fileName):
 	'''
 		(Name of file: str) -> int
 
-		Receives the name of the file to export to. This function 
-		exports the saved shift assignments to a specified CSV file. 
+		Receives the name of the file to export to.
+		Exports the saved shift assignments to a specified CSV file. 
 		Returns 0 if no errors occured or 1 if an error occured.
 	'''
-
+	
 	importlib.reload(sa) # Reloading dictionary
+
+	# Creating user inputted output file and headers
 	output_file = open(fileName, "w")
 	output_file.write(",,,,---- RESIDENT ASSISTANT SHIFT ASSIGNMENTS -----\n\n")
 	output_file.write(",,SUNDAY DAY, SUNDAY NIGHT, MONDAY, TUESDAY, WEDNESDAY, THURSDAY, \
 				FRIDAY, SATURDAY DAY, SATURDAY NIGHT\n")	
 
+	# Go through the weeks of shiftAssignments dictionary and save into output file
 	for week in sa.shiftAssignments:
-		# Write week number
+		# Write week i's number
 		output_file.write("Week %d," % (week))
 
-		# Write primary schedule
+		# Write week i's primary schedule
 		output_file.write(", %s, %s, %s, %s, %s, %s, %s, %s, %s \n" % \
 				(sa.shiftAssignments[week][0][0], \
 				sa.shiftAssignments[week][0][1], sa.shiftAssignments[week][0][2], \
@@ -81,7 +82,7 @@ def exportFile(fileName):
 				sa.shiftAssignments[week][0][5], sa.shiftAssignments[week][0][6], \
 				sa.shiftAssignments[week][0][7], sa.shiftAssignments[week][0][8]))
 
-		# Write secondary schedule		
+		# Write week i's secondary schedule		
 		output_file.write(",, %s, %s, %s, %s, %s, %s, %s, %s, %s \n" % \
 				(sa.shiftAssignments[week][1][0], \
 				sa.shiftAssignments[week][1][1], sa.shiftAssignments[week][1][2], \
@@ -105,10 +106,16 @@ def updateSchedule(weekNum, secondary, index, newName):
 		This function updates a field in the shiftAssignmnets dictionary.
 		Returns 0 if no errors occured or 1 if an error occured.
 	'''
-	# Copy of the assignments
+	#TODO: Does update schedule need to generate a new output file?
 	importlib.reload(sa) # Reloading dictionary
+
+	# Copy of current shift assignments	
 	new_assignments = sa.shiftAssignments
+
+	# Update new assignment 
 	new_assignments[weekNum][secondary][index] = newName
+	
+	# Update shiftAssignments dictionary
 	f = open("shiftAssignments.py", "w")
 	f.write("shiftAssignments = %s\n" % (str(new_assignments)))
 	f.close()
@@ -119,4 +126,5 @@ def updateSchedule(weekNum, secondary, index, newName):
 # generateSchedule()
 # exportFile("file_output.csv")
 # updateSchedule(2, 0, 1, "KIANA")
+# updateSchedule(11, 0, 0, "HOSAKA")
 
