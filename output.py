@@ -32,16 +32,18 @@ def generateSchedule():
 	f = open("shiftAssignments.py", "w")	
 
 	# Adding the WEEKDAYS to the dictionary
-	for i in range(11): # 11 weeks in a term
+	for i in range(10): # 10 weeks in a term
 		assignments.update({i+1: [week.schedule[i][0], week.schedule[i][1]]})
 
 	# Adding the WEEKENDS to the dictionary
-	for i in range(11): # 11 weeks in a term
+	for i in range(10): # 10 weeks in a term
+
+		# Prepend Sunday Day
 		assignments[i+1][0].insert(0, end.schedule[i][0][3]) # Prepending Primary Sunday Day
 		assignments[i+1][1].insert(0, end.schedule[i][1][3]) # Prepending Secondary Sunday Day
 
 		# Appending rest of weekend
-		for j in range(3):
+		for j in range(3): # Friday, Saturday Day, Sunday Night
 			assignments[i+1][0].append(end.schedule[i][0][j]) # Primary
 			assignments[i+1][1].append(end.schedule[i][1][j]) # Secondary
 
@@ -65,9 +67,8 @@ def exportFile(fileName):
 
 	# Creating user inputted output file and headers
 	output_file = open(fileName, "w")
-	output_file.write(",,,,---- RESIDENT ASSISTANT SHIFT ASSIGNMENTS -----\n\n")
-	output_file.write(",,SUNDAY DAY, SUNDAY NIGHT, MONDAY, TUESDAY, WEDNESDAY, THURSDAY, \
-				FRIDAY, SATURDAY DAY, SATURDAY NIGHT\n")	
+	output_file.write(",,SUNDAY DAY,SUNDAY NIGHT,MONDAY,TUESDAY,WEDNESDAY,THURSDAY,"
+				"FRIDAY,SATURDAY DAY,SATURDAY NIGHT\n")	
 
 	# Go through the weeks of shiftAssignments dictionary and save into output file
 	for week in sa.shiftAssignments:
@@ -122,7 +123,9 @@ def updateSchedule(weekNum, secondary, index, newName):
 
 	return 0
 
-# Call methods
+'''
+	Calling methods to test program functionality.
+'''
 # generateSchedule()
 # exportFile("file_output.csv")
 # updateSchedule(2, 0, 1, "KIANA")
