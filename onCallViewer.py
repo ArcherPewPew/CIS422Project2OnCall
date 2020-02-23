@@ -18,9 +18,10 @@ from tkinter import messagebox
 
 import importlib
 
+import input
 import output
+import raPreferences as raPrefs
 import shiftAssignments as sa
-import exampleRaPreferences as exRaPrefs # For testings
 
 class OnCallViewer:
     def __init__(self):
@@ -110,13 +111,13 @@ class OnCallViewer:
         
         # Create RA deletion section:
         # Get RA names
-        importlib.reload(exRaPrefs) # TODO update to raPrefs
+        importlib.reload(raPrefs)
         self.raIDs = []
         self.raNames = []
-        for ra in exRaPrefs.raPreferences: # TODO update to raPrefs
+        for ra in raPrefs.raPreferences:
             if(ra != 1 and ra != 2 and ra != 3):
                 self.raIDs.append(ra)
-                self.raNames.append(exRaPrefs.raPreferences.get(ra)[0]) # TODO update to raPrefs
+                self.raNames.append(raPrefs.raPreferences.get(ra)[0])
         names = self.raNames
         # Create Delete RA label
         delRaLabel = tk.Label(pref, text='Delete RA:')
@@ -144,9 +145,9 @@ class OnCallViewer:
         files = [('CSV Files', '*.csv')]
         fileName = tk.filedialog.askopenfilename(filetypes = files)
         if(fileName != ''):
-            # TODO call input.py's function
+            error = input.Preferences.importFile(fileName)
             # TODO if error indicator returned, send message to user
-            print(fileName)
+        self.closePreferences()
         return None
     
     def selectedForDeletion(self, event):
@@ -163,12 +164,12 @@ class OnCallViewer:
         '''
         if(self.raSelectedToDelete != None):
             # TODO send warning to user
-            # TODO call input.py's function
-            # TODO terminate preferences window so user has to reopen it (allowing it to update)
-            print(self.raSelectedToDelete)
+            #print(self.raSelectedToDelete)
             pos = self.raNames.index(self.raSelectedToDelete)
-            print(pos)
-            print(self.raIDs[pos])
+            #print(pos)
+            studentID = self.raIDs[pos]
+            #print(studentID)
+            input.Preferences.deletePreferences(studentID)
             self.closePreferences() # terminates preferences window forcing the user to reopen it, refreshing the information
         else:
             # TODO send message to user to select RA
@@ -269,13 +270,13 @@ class OnCallViewer:
         settings.minsize(900, 300)
         
         # Get RA info for dropdown menus:
-        importlib.reload(exRaPrefs) # TODO update to raPrefs
+        importlib.reload(raPrefs)
         self.settingsIDs = []
         self.settingsNames = []
-        for ra in exRaPrefs.raPreferences: # TODO update to raPrefs
+        for ra in raPrefs.raPreferences:
             if(ra != 1 and ra != 2 and ra != 3):
                 self.settingsIDs.append(ra)
-                self.settingsNames.append(exRaPrefs.raPreferences.get(ra)[0]) # TODO update to raPrefs
+                self.settingsNames.append(raPrefs.raPreferences.get(ra)[0])
         names = self.settingsNames
         
         # Create Gold Star label:
