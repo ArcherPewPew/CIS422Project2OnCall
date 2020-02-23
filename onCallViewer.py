@@ -137,7 +137,7 @@ class OnCallViewer:
                 pref6 = tk.Label(pref, text=raPrefs.raPreferences.get(ra)[6])
                 pref6.grid(column=6, row=index)
                 # Create edit button
-                editButton = tk.Button(pref, text='Edit', command=partial(self.testRaEdit, index)) # TODO change to raEdit
+                editButton = tk.Button(pref, text='Edit', relief='flat', command=partial(self.testRaEdit, index)) # TODO change to raEdit
                 editButton.grid(column=7, row=index)
                 index += 1
         
@@ -235,7 +235,12 @@ class OnCallViewer:
         sched.geometry('1500x800+0+0') # width x height + x_offset + y_offset
         sched.minsize(400, 400)
         
-        # TODO show 'headers'
+        importlib.reload(sa)
+        existingSchedule = 0
+        if(len(sa.shiftAssignments) != 0):
+            existingSchedule = 1
+        
+        # TODO show 'headers' only if there is a schedule to display
         sundayDay = tk.Label(sched, text='Sunday Day')
         sundayDay.grid(column=1, row=0)
         sundayNight = tk.Label(sched, text='Sunday Night')
@@ -254,6 +259,9 @@ class OnCallViewer:
         saturdayDay.grid(column=8, row=0)
         saturdayNight = tk.Label(sched, text='Saturday Day')
         saturdayNight.grid(column=9, row=0)
+        
+        # TODO show message that there is not schedule in the system
+        
         # TODO display current schedule in the system
         for week in sa.shiftAssignments:
             # Primary RA row
@@ -331,7 +339,6 @@ class OnCallViewer:
         error = output.generateSchedule()
         # TODO handle error
         #self.settingsSaved = False # ready the system for the next generate schedule button press
-        # TODO close schedule window to force a refresh
         return None
     
     def exportSchedule(self):
@@ -349,6 +356,15 @@ class OnCallViewer:
                 # TODO if error indicator returned, send message to user ---- exportFile currently never returns 1 under any circumstances
         else:
             tk.messagebox.showerror(message='No schedule to export. Please generate a schedule first.')
+        return None
+    
+    def closeSchedule(self):
+        '''
+            None -> None
+            This closes the schedule window
+        '''
+        self.schedule.destroy()
+        self.schedule = None
         return None
     
     
@@ -451,6 +467,7 @@ class OnCallViewer:
         print(self.pairingChoice4)
         #self.settingsSaved = True # TODO
         self.closeSettings()
+        self.closeSchedule() # close schedule window to force a refresh
         return None
     
     def closeSettings(self):
