@@ -22,8 +22,8 @@ def generateSchedule():
 	'''
 
 	# For now, I am not "calling" the schedulers but I have created test files
-	# week_schedule = week.<function to call here>
-	# end_schedule = end.<function to call here>
+	# week_schedule = week.weekdayShifts()
+	# end_schedule = end.weekendShifts()
 
 	# Dictionary that will get written to shiftAssignments.py
 	assignments = {}
