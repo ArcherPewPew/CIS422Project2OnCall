@@ -93,6 +93,14 @@ class Preferences:
 		file.close()
 		return 0 # 0 if no errors occured or a 1 if an error occured
 
+	def resetPreferences():
+		current_dictionary = Input.reading_dict_py("raPreferences.py")
+
+		file = open("raPreferences.py", "w+")
+		file.write("raPreferences = {}")
+		file.close()
+		return 0 # 0 if no errors occured or a 1 if an error occured
+
 	def saveSettings(self): # TODO determine how the preferences will be sent, perhaps separate functions
 		'''
 		'''
@@ -100,6 +108,7 @@ class Preferences:
 		return None
 
 if __name__ == '__main__':
+	# Preferences.resetPreferences()
 	Preferences.importFile("example.csv")
 	# Preferences.importFile("example5.csv")
 	# Preferences.importFile("updatedexample.csv")
