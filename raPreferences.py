@@ -1,1 +1,1 @@
-raPreferences = {}
+raPreferences = {'951545641': ['Alex Archer', 'Sunday', 'Wednesday', 'Monday', '7', '8', '0'], '951727211': ['Kiana Hosaka', 'Wednesday', 'Monday', 'Tuesday', '1', '2', '3'], '951458395': ['Alyssa Huque', 'Monday', 'Sunday', 'Tuesday', '5', '0', '0'], '951457848': ['Lily Jim', 'Tuesday', 'Monday', 'Thursday', '0', '0', '0'], '951318175': ['Max Terry', 'Thursday', 'Tuesday', 'Sunday', '0', '0', '0']}
