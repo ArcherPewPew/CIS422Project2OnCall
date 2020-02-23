@@ -67,14 +67,8 @@ def exportFile(fileName):
 
 	# Creating user inputted output file and headers
 	output_file = open(fileName, "w")
-<<<<<<< HEAD
-	#output_file.write(",,,,---- RESIDENT ASSISTANT SHIFT ASSIGNMENTS -----\n\n")
-	output_file.write((",,SUNDAY DAY,SUNDAY NIGHT,MONDAY,TUESDAY,WEDNESDAY,THURSDAY,"
-				"FRIDAY,SATURDAY DAY,SATURDAY NIGHT\n"))	
-=======
 	output_file.write(",,SUNDAY DAY,SUNDAY NIGHT,MONDAY,TUESDAY,WEDNESDAY,THURSDAY,"
 				"FRIDAY,SATURDAY DAY,SATURDAY NIGHT\n")	
->>>>>>> 7ed6ef441beb351f763295f67e8958ad8e961de4
 
 	# Go through the weeks of shiftAssignments dictionary and save into output file
 	for week in sa.shiftAssignments:
