@@ -26,8 +26,6 @@ primary_9 = ["Grace", "Andy", "Donya", "Natalie"]
 secondary_9 = ["Tiffanie", "Ryan", "Alison", "Celine"]
 primary_10 = ["Grace", "Andy", "Donya", "Natalie"]
 secondary_10 = ["Tiffanie", "Ryan", "Alison", "Celine"]
-primary_11 = ["Grace", "Andy", "Donya", "Natalie"]
-secondary_11 = ["Tiffanie", "Ryan", "Alison", "Celine"]
 '''
 primary_1 = ["P1 Friday", "P1 Saturday Day", "P1 Saturday Night", "X"]
 secondary_1 = ["S1 Friday", "S1 Saturday Day", "S1 Saturday Night", "X"]
@@ -49,10 +47,8 @@ primary_9 = ["P9 Friday", "P9 Saturday Day", "P9 Saturday Night", "P9 Sunday Day
 secondary_9 = ["S9 Friday", "S9 Saturday Day", "S9 Saturday Night", "S9 Sunday Day"]
 primary_10 = ["P10 Friday", "P10 Saturday Day", "P10 Saturday Night", "P10 Sunday Day"]
 secondary_10 = ["S10 Friday", "S10 Saturday Day", "S10 Saturday Night", "S10 Sunday Day"]
-primary_11 = ["P11 Friday", "P11 Saturday Day", "P11 Saturday Night", "P11 Sunday Day"]
-secondary_11 = ["P11 Friday", "S11 Saturday Day", "S11 Saturday Night", "S11 Sunday Day"]
 
 schedule = [[primary_1, secondary_1], [primary_2, secondary_2], [primary_3, secondary_3], \
 		[primary_4, secondary_4], [primary_5, secondary_5], [primary_6, secondary_6], \
 		[primary_7, secondary_7], [primary_8, secondary_8], [primary_9, secondary_9], \
-		[primary_10, secondary_10], [primary_11, secondary_11]]
+		[primary_10, secondary_10]]
