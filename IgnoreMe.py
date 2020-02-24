@@ -22,25 +22,8 @@ def foo():
             radict[key].append(0) #add var to counts number of shifts
 
     
-    weekcount = 1 #start week 1, Will have an x for week 1 sunday day
     primary_1 = ["P1 Friday", "P1 Saturday Day", "P1 Saturday Night", "X"]
     secondary_1 = ["S1 Friday", "S1 Saturday Day", "S1 Saturday Night", "X"]
-    
-    tmp = random.choice(list(radict)) #pick temporary Friday primary worker
-    while weekcount == radict.get(tmp)[4] or weekcount == radict.get(tmp)[5] or weekcount == radict.get(tmp)[6]:
-        tmp = random.choice(list(radict)) #make sure they dont have the week off
-    radict[tmp][7] += 1 #increase shift counter
-    tmp2 = random.choice(list(radict)) #pick Friday secondary worker
-    while [tmp,tmp2] == bad1 or [tmp2,tmp] == bad1 or [tmp,tmp2] == bad2 or [tmp2,tmp] == bad2 or tmp == tmp2 or weekcount == radict.get(tmp2)[4] or weekcount == radict.get(tmp2)[5]or weekcount == radict.get(tmp2)[6]: 
-        tmp2 = random.choice(list(radict)) #make sure they arent the same person, a bad pair or have the week off.
-    radict[tmp2][7] += 1 #increase shift counter
-    primary_1[0] = radict[tmp][0]
-    secondary_1[0] = radict[tmp2][0]    #update the week lists...
-
-
-    ##picking other people means making sure they dont already have a shift ideally... going back to make shift counter
-
-   
     primary_2 = ["P2 Friday", "P2 Saturday Day", "P2 Saturday Night", "P2 Sunday Day"]
     secondary_2 = ["S2 Friday", "S2 Saturday Day", "S2 Saturday Night", "S2 Sunday Day"]
     primary_3 = ["P3 Friday", "P3 Saturday Day", "P3 Saturday Night", "P3 Sunday Day"]
@@ -65,8 +48,40 @@ def foo():
 		[primary_7, secondary_7], [primary_8, secondary_8], [primary_9, secondary_9], \
 		[primary_10, secondary_10]]
 
-    print(schedule)
-foo()
+    weekcount = 1
+    for i in range(3): #friday, saturday day, saturday night of week 1
+        tmp = random.choice(list(radict)) #pick primary worker
+        while weekcount == radict.get(tmp)[4] or weekcount == radict.get(tmp)[5] or weekcount == radict.get(tmp)[6]:
+            tmp = random.choice(list(radict)) #make sure they dont have the week off
+        radict[tmp][7] += 1 #increase shift counter
+        tmp2 = random.choice(list(radict)) #pick secondary worker
+        while [tmp,tmp2] == bad1 or [tmp2,tmp] == bad1 or [tmp,tmp2] == bad2 or [tmp2,tmp] == bad2 or tmp == tmp2 or weekcount == radict.get(tmp2)[4] or weekcount == radict.get(tmp2)[5]or weekcount == radict.get(tmp2)[6]: 
+            tmp2 = random.choice(list(radict)) #make sure they arent the same person, a bad pair or have the week off.
+        radict[tmp2][7] += 1 #increase shift counter
+        primary_1[i] = radict[tmp][0]
+        secondary_1[i] = radict[tmp2][0]    #update the week lists...
+    weekcount += 1
+
+    for x in range(1,10): #weeks 2-10
+        for i in range(4): #friday, saturday day, saturday night, sunday day
+            tmp = random.choice(list(radict)) #pick primary worker
+            while weekcount == radict.get(tmp)[4] or weekcount == radict.get(tmp)[5] or weekcount == radict.get(tmp)[6]:
+                tmp = random.choice(list(radict)) #make sure they dont have the week off
+            radict[tmp][7] += 1 #increase shift counter
+            tmp2 = random.choice(list(radict)) #pick secondary worker
+            while [tmp,tmp2] == bad1 or [tmp2,tmp] == bad1 or [tmp,tmp2] == bad2 or [tmp2,tmp] == bad2 or tmp == tmp2 or weekcount == radict.get(tmp2)[4] or weekcount == radict.get(tmp2)[5]or weekcount == radict.get(tmp2)[6]: 
+                tmp2 = random.choice(list(radict)) #make sure they arent the same person, a bad pair or have the week off.
+            radict[tmp2][7] += 1 #increase shift counter
+            schedule[x][0][i] = radict[tmp][0]
+            schedule[x][1][i] = radict[tmp2][0]    #update the week lists..
+        weekcount += 1
+
+    ##picking other people means making sure they dont already have a shift ideally... going back to make shift counter
+        ##TODO: account for the shifts now... 
+    for key in radict.keys():
+        print(radict[key][0], ' has ', radict[key][7], " shifts.") #prints 
+    return(schedule)
+
 
         
 
