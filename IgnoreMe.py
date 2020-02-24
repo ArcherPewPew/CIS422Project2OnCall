@@ -21,7 +21,8 @@ def foo():
             radict[key] = val
             radict[key].append(0) #add var to counts number of shifts
 
-    
+    avg = 78/len(list(radict)) #there are 78 slots to fill and the lngth of the list of keys is number of RAs. makes an average. used for number of shifts.
+ 
     primary_1 = ["P1 Friday", "P1 Saturday Day", "P1 Saturday Night", "X"]
     secondary_1 = ["S1 Friday", "S1 Saturday Day", "S1 Saturday Night", "X"]
     primary_2 = ["P2 Friday", "P2 Saturday Day", "P2 Saturday Night", "P2 Sunday Day"]
@@ -49,7 +50,7 @@ def foo():
 		[primary_10, secondary_10]]
 
     weekcount = 1
-    for i in range(3): #friday, saturday day, saturday night of week 1
+    for i in range(3): #friday, saturday day, saturday night of week 1. Number of shifts are not considered.
         tmp = random.choice(list(radict)) #pick primary worker
         while weekcount == radict.get(tmp)[4] or weekcount == radict.get(tmp)[5] or weekcount == radict.get(tmp)[6]:
             tmp = random.choice(list(radict)) #make sure they dont have the week off
@@ -61,25 +62,28 @@ def foo():
         primary_1[i] = radict[tmp][0]
         secondary_1[i] = radict[tmp2][0]    #update the week lists...
     weekcount += 1
-
-    for x in range(1,10): #weeks 2-10
+    
+    for x in range(1,10): #weeks 2-10 number of shifts could be considered.
         for i in range(4): #friday, saturday day, saturday night, sunday day
             tmp = random.choice(list(radict)) #pick primary worker
-            while weekcount == radict.get(tmp)[4] or weekcount == radict.get(tmp)[5] or weekcount == radict.get(tmp)[6]:
+            while weekcount == radict.get(tmp)[4] or weekcount == radict.get(tmp)[5] or weekcount == radict.get(tmp)[6] or radict.get(tmp)[7] > avg:
                 tmp = random.choice(list(radict)) #make sure they dont have the week off
             radict[tmp][7] += 1 #increase shift counter
             tmp2 = random.choice(list(radict)) #pick secondary worker
-            while [tmp,tmp2] == bad1 or [tmp2,tmp] == bad1 or [tmp,tmp2] == bad2 or [tmp2,tmp] == bad2 or tmp == tmp2 or weekcount == radict.get(tmp2)[4] or weekcount == radict.get(tmp2)[5]or weekcount == radict.get(tmp2)[6]: 
+            while [tmp,tmp2] == bad1 or [tmp2,tmp] == bad1 or [tmp,tmp2] == bad2 or [tmp2,tmp] == bad2 or tmp == tmp2 or weekcount == radict.get(tmp2)[4] or weekcount == radict.get(tmp2)[5] or weekcount == radict.get(tmp2)[6]or radict.get(tmp2)[7] > avg: 
                 tmp2 = random.choice(list(radict)) #make sure they arent the same person, a bad pair or have the week off.
             radict[tmp2][7] += 1 #increase shift counter
             schedule[x][0][i] = radict[tmp][0]
             schedule[x][1][i] = radict[tmp2][0]    #update the week lists..
         weekcount += 1
-
+        offset += 1
     ##picking other people means making sure they dont already have a shift ideally... going back to make shift counter
-        ##TODO: account for the shifts now... 
+        ##TODO: account for the shifts now...
+    numshifts = 0
     for key in radict.keys():
-        print(radict[key][0], ' has ', radict[key][7], " shifts.") #prints 
+        numshifts += radict[key][7]
+        print(radict[key][0], ' has ', radict[key][7], " shifts.") #prints
+    print("numshifts: ", numshifts)
     return(schedule)
 
 
