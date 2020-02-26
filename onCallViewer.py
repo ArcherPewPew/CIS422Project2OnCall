@@ -239,6 +239,7 @@ class OnCallViewer:
     
     
     ''' The following functions are for the Edit RA window '''
+    # TODO prevent this window from opening if one is already open
     def editRA(self, ra, field):
         '''
             int, int, int -> None
@@ -256,16 +257,16 @@ class OnCallViewer:
         nameLabel = tk.Label(prefEdit, text=self.raNames[ra])
         nameLabel.grid(column=0, row=0, padx=10, pady=10)
         
-        # Create label with preference getting changed:
-        prefLabel = tk.Label(prefEdit, text=('Preference #%d:' % (field)))
-        prefLabel.grid(column=1, row=0, padx=10, pady=10)
-        
-        # Create dropdown menu for new preference:
+        # Create label and dropdown menu for new preference:
         if(field <= 3):
+            prefLabel = tk.Label(prefEdit, text=('Weekday Preference #%d:' % (field)))
+            prefLabel.grid(column=1, row=0, padx=10, pady=10)
             self.weekdayDropdown = tk.ttk.Combobox(prefEdit, values=self.weekdayOptions, state='readonly')
             self.weekdayDropdown.grid(column=2, row=0, padx=10, pady=10)
             self.weekdayDropdown.bind('<<ComboboxSelected>>', self.updateWeekdayChoice)
         else:
+            prefLabel = tk.Label(prefEdit, text=('Weekend Off Preference #%d:' % (field - 3)))
+            prefLabel.grid(column=1, row=0, padx=10, pady=10)
             self.weekendDropdown = tk.ttk.Combobox(prefEdit, values=self.weekendOptions, state='readonly')
             self.weekendDropdown.grid(column=2, row=0, padx=10, pady=10)
             self.weekendDropdown.bind('<<ComboboxSelected>>', self.updateWeekendChoice)
@@ -473,6 +474,80 @@ class OnCallViewer:
         self.schedule = None
         return None
     
+    
+    ''' The following functions are for the Edit RA window ---------- This will be for editing schedule'''
+    '''# TODO prevent this window from opening if one is already open
+    def editRA(self, ra, field):
+        '''
+        '''
+        # Setup RA edit window:
+        self.prefEdit = tk.Toplevel()
+        prefEdit = self.prefEdit
+        prefEdit.title('On Call - Edit RA Preference')
+        prefEdit.geometry('500x100+400+300') # width x height + x_offset + y_offset
+        prefEdit.minsize(500, 100)
+        
+        # Create label with RA's name:
+        nameLabel = tk.Label(prefEdit, text=self.raNames[ra])
+        nameLabel.grid(column=0, row=0, padx=10, pady=10)
+        
+        # Create label and dropdown menu for new preference:
+        if(field <= 3):
+            prefLabel = tk.Label(prefEdit, text=('Weekday Preference #%d:' % (field)))
+            prefLabel.grid(column=1, row=0, padx=10, pady=10)
+            self.weekdayDropdown = tk.ttk.Combobox(prefEdit, values=self.weekdayOptions, state='readonly')
+            self.weekdayDropdown.grid(column=2, row=0, padx=10, pady=10)
+            self.weekdayDropdown.bind('<<ComboboxSelected>>', self.updateWeekdayChoice)
+        else:
+            prefLabel = tk.Label(prefEdit, text=('Weekend Off Preference #%d:' % (field - 3)))
+            prefLabel.grid(column=1, row=0, padx=10, pady=10)
+            self.weekendDropdown = tk.ttk.Combobox(prefEdit, values=self.weekendOptions, state='readonly')
+            self.weekendDropdown.grid(column=2, row=0, padx=10, pady=10)
+            self.weekendDropdown.bind('<<ComboboxSelected>>', self.updateWeekendChoice)
+        
+        # Create save button:
+        savePref = tk.Button(prefEdit, text='Save', command=partial(self.updateRA, ra, field))
+        savePref.grid(column=1, row=1, padx=10, pady=10)
+        
+        prefEdit.protocol('WM_DELETE_WINDOW', self.closeEditRA)
+        prefEdit.update()
+        
+        return None
+    
+    def updateRA(self, ra, field):
+        '''
+        '''
+        # TODO call input's function
+        if(field <= 3):
+            print(ra, field, self.weekdayChoice)
+        else:
+            print(ra, field, self.weekendChoice)
+        self.closeEditRA()
+        self.closePreferences()
+        return None
+    
+    def updateWeekdayChoice(self, event):
+        '''
+        '''
+        self.weekdayChoice = self.weekdayDropdown.get()
+        return None
+    
+    def updateWeekendChoice(self, event):
+        '''
+        '''
+        self.weekendChoice = self.weekendDropdown.get()
+        return None
+    
+    def closeEditRA(self):
+        '''
+        '''
+        self.prefEdit.destroy()
+        self.prefEdit = None
+        self.weekdayDropdown = None
+        self.weekdayChoice = None
+        self.weekendDropdown = None
+        self.weekendChoice = None
+        return None'''
     
     ''' The following functions are for the generate schedule settings window '''
     def settingsView(self):
