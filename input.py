@@ -39,7 +39,8 @@ class Input:
 				if contents[j][0][:3] != "951": # 1) first field is not a student ID
 					# print("error1")
 					return 1
-				elif len(contents[j]) < 8 or len(contents[j]) > 8: # 2) checking the right number of fields
+				# elif len(contents[j]) < 8 or len(contents[j]) > 8:
+				elif len(contents[j]) != 8 # 2) checking the right number of fields
 					# print("error2")
 					return 1
 				for item in contents[j][2:5]: # 3) checking the preference is a weekday
