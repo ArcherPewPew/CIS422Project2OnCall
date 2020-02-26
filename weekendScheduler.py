@@ -108,8 +108,10 @@ def weekendShifts():
             schedule[x][0][i] = radict[tmp][0]
             schedule[x][1][i] = radict[tmp2][0]    #update the week lists..
         weekcount += 1
+
     return(schedule)    
 
+''' These functions are for testing '''
 def clearshifts(): #clears shift count, useful for resetting.
     for key in radict.keys():
         radict[key][7] = 0
@@ -120,4 +122,3 @@ def shiftcount(): #counts shifts, useful for testing
         numshifts += radict[key][7]
         print(radict[key][0], ' has ', radict[key][7], " shifts.") #prints
     print("numshifts: ", numshifts)
-    

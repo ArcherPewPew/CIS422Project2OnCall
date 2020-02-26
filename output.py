@@ -11,9 +11,7 @@
 import importlib
 import shiftAssignments as sa
 import test_week as week # For testing
-# import test_end as end # For testing
-# import weekdayScheduler as week
-import weekendScheduler as end # Alex's weekend scheduler
+import test_end as end # For testing
 
 def generateSchedule():
 	'''
@@ -24,8 +22,8 @@ def generateSchedule():
 	'''
 
 	# For now, I am not "calling" the schedulers but I have created test files
-	# week_schedule = week.weekdayShifts()
-	end_schedule = end.weekendShifts()
+	# week_schedule = week.<function to call here>
+	# end_schedule = end.<function to call here>
 
 	# Dictionary that will get written to shiftAssignments.py
 	assignments = {}
@@ -41,17 +39,13 @@ def generateSchedule():
 	for i in range(10): # 10 weeks in a term
 
 		# Prepend Sunday Day
-		# assignments[i+1][0].insert(0, end.schedule[i][0][3]) # Test
-		# assignments[i+1][1].insert(0, end.schedule[i][1][3]) # Test
-		assignments[i+1][0].insert(0, end_schedule[i][0][3]) # Prepending Primary Sunday Day
-		assignments[i+1][1].insert(0, end_schedule[i][1][3]) # Prepending Secondary Sunday Day
+		assignments[i+1][0].insert(0, end.schedule[i][0][3]) # Prepending Primary Sunday Day
+		assignments[i+1][1].insert(0, end.schedule[i][1][3]) # Prepending Secondary Sunday Day
 
 		# Appending rest of weekend
 		for j in range(3): # Friday, Saturday Day, Sunday Night
-			# assignments[i+1][0].append(end.schedule[i][0][j]) # Test
-			# assignments[i+1][1].append(end.schedule[i][1][j]) # Test
-			assignments[i+1][0].append(end_schedule[i][0][j]) # Primary
-			assignments[i+1][1].append(end_schedule[i][1][j]) # Secondary
+			assignments[i+1][0].append(end.schedule[i][0][j]) # Primary
+			assignments[i+1][1].append(end.schedule[i][1][j]) # Secondary
 
 	# Writing assignment dictionary to shiftAssignments.py
 	f.write("shiftAssignments = %s\n" % (str(assignments)))
@@ -134,7 +128,6 @@ def updateSchedule(weekNum, secondary, index, newName):
 '''
 # generateSchedule()
 # exportFile("file_output.csv")
-# updateSchedule(2, 0, 1, "ALOOOHHHHAAAAAAAA")
-# exportFile("file_output.csv")
+# updateSchedule(2, 0, 1, "KIANA")
 # updateSchedule(11, 0, 0, "HOSAKA")
 
