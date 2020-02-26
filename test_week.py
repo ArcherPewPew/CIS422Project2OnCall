@@ -53,5 +53,3 @@ schedule = [[primary_1, secondary_1], [primary_2, secondary_2], [primary_3, seco
 		[primary_4, secondary_4], [primary_5, secondary_5], [primary_6, secondary_6], \
 		[primary_7, secondary_7], [primary_8, secondary_8], [primary_9, secondary_9], \
 		[primary_10, secondary_10]]
-
-print(schedule)
