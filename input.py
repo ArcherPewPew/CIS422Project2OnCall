@@ -1,36 +1,65 @@
 '''
 Author: Alyssa Huque
-Date of last modification: 2-22-2020
+Date of last modification: 2-25-2020
 Description: This produces the functionality of the RA Preferences module
 References:
     https://www.geeksforgeeks.org/python-add-new-keys-to-a-dictionary/
     https://www.w3resource.com/python-exercises/dictionary/python-data-type-dictionary-exercise-34.php
     https://stackoverflow.com/questions/2212433/counting-the-number-of-keywords-in-a-dictionary-in-python
+    https://stackoverflow.com/questions/29334276/capitalize-first-letter-of-the-first-word-in-a-list-in-python
 '''
 
 import ast
 
 class Input:
-	# all of these are Alyssa's functions
+	# all of these are Alyssa's internal functions
 	def __init__(self):
 		pass
 
 	def input_preferences(filename):
 		'''file -> dictionary
-		parses the file of RA preferences and adds to raPreferences dictionary
+		parses the file of RA preferences and adds to raPreferences dictionary.
+		Also contains error checking for input file.
+		1) checks that the first entry is a valid student ID
+		2) checks that there is the correct number of fields
+		3) checks that the given weekdays are valid weekday entries
+		4) checks that the weekends requested off are valid (in the range of 0-10)
+		5) checks the correct number of weekends have been provided
+		6) checks that the weekdays provided are not repeats
 		'''
+		weekdays = ["Monday", "Tuesday", "Wednesday", "Thursday", "Sunday"] # list of weekdays
+
 		with open(filename, "r") as file:
 			contents = file.readlines()
 			for i in range(len(contents)):
 				contents[i] = contents[i].strip('\n')
 				contents[i] = contents[i].split(',')
-				# contents[i] = contents[i].split(',')
 			for j in range(len(contents)): # error checking
-				if contents[j][0][:3] != "951": # first field is not a student ID
+				contents[j][2:5] = [item.capitalize() for item in contents[j][2:5]] # will capitalize input for consistency
+				if contents[j][0][:3] != "951": # 1) first field is not a student ID
+					# print("error1")
 					return 1
-				raPreferences = {j[0]: j[1:8] for j in contents}
-		file.close()
-		return raPreferences
+				elif len(contents[j]) < 8 or len(contents[j]) > 8: # 2) checking the right number of fields
+					# print("error2")
+					return 1
+				for item in contents[j][2:5]: # 3) checking the preference is a weekday
+					if item not in weekdays:
+						# print("error3")
+						return 1
+				for item in contents[j][5:]: # checking the preference is a valid weekend
+					try:
+						if int(item) > 10 or int(item) < 0: # 4) checking that the weekend input is valid
+							# print("error4")
+							return 1
+					except ValueError: # 5) checking proper number weekends have been given
+						# print("error5")
+						return 1
+				if contents[j][2] == contents[j][3] or contents[j][2] == contents[j][4] or contents[j][3] == contents[j][4]: # 6) no weekday preferences are the same
+					# print("error6")
+					return 1
+				raPreferences = {j[0]: j[1:8] for j in contents} # write raPreferences dictionary
+		file.close() # closes input file
+		return raPreferences # returns dictionary
 
 	def reading_dict_py(filename):
 		'''file -> dictionary
@@ -211,15 +240,15 @@ class Preferences:
 		return 0
 
 
-if __name__ == '__main__':
-	Preferences.weekendsOffcheck()
+# if __name__ == '__main__':
+	# Preferences.weekendsOffcheck()
 	# Preferences.resetPreferences()
-	# Preferences.importFile("example.csv")
+	# Preferences.importFile("Example Input/example.csv")
 	# Preferences.setGoldstar("2")
 	# Preferences.setTiebreaker("0")
 	# Preferences.setBadpairings(1,2,3,4)
-	# Preferences.importFile("example5.csv")
-	# Preferences.importFile("updatedexample.csv")
+	# Preferences.importFile("Example Input/example5.csv")
+	# Preferences.importFile("Example Input/updatedexample.csv")
 	# Preferences.deletePreferences('1')
 	# Preferences.deletePreferences('2')
 	# Preferences.deletePreferences('3')
