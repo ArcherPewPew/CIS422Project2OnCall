@@ -478,8 +478,6 @@ class OnCallViewer:
     ''' The following functions are for the Edit RA window ---------- This will be for editing schedule'''
     '''# TODO prevent this window from opening if one is already open
     def editRA(self, ra, field):
-        '''
-        '''
         # Setup RA edit window:
         self.prefEdit = tk.Toplevel()
         prefEdit = self.prefEdit
@@ -515,8 +513,6 @@ class OnCallViewer:
         return None
     
     def updateRA(self, ra, field):
-        '''
-        '''
         # TODO call input's function
         if(field <= 3):
             print(ra, field, self.weekdayChoice)
@@ -527,20 +523,14 @@ class OnCallViewer:
         return None
     
     def updateWeekdayChoice(self, event):
-        '''
-        '''
         self.weekdayChoice = self.weekdayDropdown.get()
         return None
     
     def updateWeekendChoice(self, event):
-        '''
-        '''
         self.weekendChoice = self.weekendDropdown.get()
         return None
     
     def closeEditRA(self):
-        '''
-        '''
         self.prefEdit.destroy()
         self.prefEdit = None
         self.weekdayDropdown = None
