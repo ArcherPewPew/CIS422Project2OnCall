@@ -265,13 +265,17 @@ class Preferences:
 		file.close()
 		return None
 
-	'''
 	def undo():
+		'''None -> None
+		The undo functionality. Pulls from the global list inputUpdates to revert to previous action.
+		'''
 		current_dictionary = Input.reading_dict_py("raPreferences.py") # obtains current raPreferences dictionary
-		previous = inputUpdates.pop()
-		print(current_dictionary[previous[0]])
-		# change = [idNum, index, old]
-	'''
+		previous = inputUpdates.pop() #[idNum, index, old]
+		current_dictionary[previous[0]][1] = previous[2]
+		file = open("raPreferences.py", "w+") # opens the file containing raPreferences dictionary
+		file.write("raPreferences = %s\n" % (str(current_dictionary))) # writes the new dictionary to raPreferences.py
+		file.close()
+		return None
 
 if __name__ == '__main__':
 	Preferences.updatePreferences("951318175", 2, "Monday")
