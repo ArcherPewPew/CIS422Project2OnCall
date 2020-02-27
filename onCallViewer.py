@@ -27,6 +27,7 @@ import raPreferences as raPrefs
 import shiftAssignments as sa
 
 # TODO add undo buttons
+# TODO call weekendsOffCheck
 
 class OnCallViewer:
     def __init__(self):
@@ -286,11 +287,13 @@ class OnCallViewer:
         '''
             TODO
         '''
-        # TODO call input's function
+        # TODO remove print statements
         if(field <= 3):
-            print(ra, field, self.weekdayChoice)
+            print(self.raIDs[ra], field, self.weekdayChoice)
+            input.Preferences.updatePreferences(self.raIDs[ra], field, self.weekdayChoice)
         else:
-            print(ra, field, self.weekendChoice)
+            print(self.raIDs[ra], field, self.weekendChoice)
+            input.Preferences.updatePreferences(self.raIDs[ra], field, self.weekendChoice)
         self.closeEditRA()
         self.closePreferences()
         return None

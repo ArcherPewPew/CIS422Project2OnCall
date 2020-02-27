@@ -10,6 +10,7 @@ References:
 '''
 
 import ast
+inputUpdates = []
 
 class Input:
 	# all of these are Alyssa's internal functions
@@ -73,6 +74,17 @@ class Input:
 		file.close()
 		raPreferences = ast.literal_eval(raPreferences) # converts from string to dictionary
 		return raPreferences
+
+	def save(current_dictionary, idNum, index):
+		''' str, int, str
+		This function saves changes, is used for the undo functionality.
+		'''
+		old = current_dictionary[idNum][index]
+		change = [idNum, index, old]
+		inputUpdates.append(change)
+		print("inputUpdates", inputUpdates)
+		print("what is being changed", change)
+		return None
 
 class Preferences:
 	def __init__(self):
@@ -196,7 +208,7 @@ class Preferences:
 		file.close()
 		return None
 
-	def weekendsOffcheck():
+	def weekendsOffCheck():
 		''' None -> boolean (0 or 1)
 		The function checks that no more than half the RA team has requested the same weekend off.
 		If more than half the RA team has requested the same weekend off, this is a violation of
@@ -240,8 +252,32 @@ class Preferences:
 					return 1
 		return 0
 
+	def updatePreferences(idNum, index, newPref):
+		'''str, int, str
+		This function allows for updates of individual fields of the dictionary to allow for updating preferences.
+		'''
+		current_dictionary = Input.reading_dict_py("raPreferences.py") # obtains current raPreferences dictionary
+		# print(current_dictionary[idNum][index])
+		Input.save(current_dictionary, idNum, index)
+		current_dictionary[idNum][index] = newPref
+		file = open("raPreferences.py", "w+") # opens the file containing raPreferences dictionary
+		file.write("raPreferences = %s\n" % (str(current_dictionary))) # writes the new dictionary to raPreferences.py
+		file.close()
+		return None
 
-# if __name__ == '__main__':
+	'''
+	def undo():
+		current_dictionary = Input.reading_dict_py("raPreferences.py") # obtains current raPreferences dictionary
+		previous = inputUpdates.pop()
+		print(current_dictionary[previous[0]])
+		# change = [idNum, index, old]
+	'''
+
+if __name__ == '__main__':
+	Preferences.updatePreferences("951318175", 2, "Monday")
+	Preferences.undo()
+	# Preferences.save("951545641", 1)
+	# Preferences.save("951318175", 2)
 	# Preferences.weekendsOffcheck()
 	# Preferences.resetPreferences()
 	# Preferences.importFile("Example Input/example.csv")
