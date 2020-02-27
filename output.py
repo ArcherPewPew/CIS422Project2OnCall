@@ -15,6 +15,9 @@ import test_week as week # For testing
 # import weekdayScheduler as week
 import weekendScheduler as end # Alex's weekend scheduler
 
+outputUpdates = [] # list of lists
+# outputUpdates - [[weeknum, sec, index, old], ...]
+
 def generateSchedule():
 	'''
 		(None) -> int
@@ -114,9 +117,12 @@ def updateSchedule(weekNum, secondary, index, newName):
 		Returns 0 if no errors occured or 1 if an error occured.
 	'''
 	#TODO: Does update schedule need to generate a new output file?
-	importlib.reload(sa) # Reloading dictionary
+
+	# SAVE HERE(weekNum, secondary, index)	
+	save(weekNum, secondary, index)
 
 	# Copy of current shift assignments	
+	importlib.reload(sa) # Reloading dictionary
 	new_assignments = sa.shiftAssignments
 
 	# Update new assignment 
@@ -129,12 +135,53 @@ def updateSchedule(weekNum, secondary, index, newName):
 
 	return 0
 
+
+def save(weekNum, secondary, index):
+	'''
+		(Term week: int, Secondary?: int, Index of old name: int) -> int
+
+		Receives an int indicating the week number, 0 if the RA is the primary
+		for the shift or 1 if they are secondary, and an int indicating the field
+		in the list that was changed.
+		Saves the old values from shiftAssignments
+	'''
+	# Copy of shift assignments
+	old_assignments = sa.shiftAssignments
+
+	# Append to outputUpdates
+	outputUpdates.append([weekNum, secondary, index, old_assignments])
+	#print(outputUpdates)
+	#print("save\n")
+
+	return 0
+
+def undo():
+	# Getting the last state and removing from outputUpdates
+	last_state = outputUpdates.pop()
+
+	# Copy of current shift assignments
+	importlib.reload(sa) # Reloading dictionary
+	new_assignments = sa.shiftAssignments
+
+	# Assigning all fields	
+	weekNum = last_state[0]	
+	secondary = last_state[1]
+	index = last_state[2]
+	old_assignments = last_state[3]
+
+	# print("old assignments are:",  old_assignments)
+	# Update shiftAssignments dictionary
+	f = open("shiftAssignments.py", "w")
+	f.write("shiftAssignments = %s\n" % (str(old_assignments)))
+	f.close()
+
 '''
 	Calling methods to test program functionality.
 '''
 # generateSchedule()
-# exportFile("file_output.csv")
 # updateSchedule(2, 0, 1, "ALOOOHHHHAAAAAAAA")
-# exportFile("file_output.csv")
-# updateSchedule(11, 0, 0, "HOSAKA")
-
+# updateSchedule(10, 0, 0, "HOSAKA")
+# print("main\n")
+# print(sa.shiftAssignments)
+# undo()
+# print(sa.shiftAssignments)
