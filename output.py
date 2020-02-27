@@ -106,6 +106,21 @@ def exportFile(fileName):
 	return 0
 
  
+def rewriteSchedule(assignments):
+	'''
+		(Updated assignments: dict) -> None
+		
+		Recieves an updated assignments dictionary and rewrites the sa.shiftAssignments file.
+		Called by updateScehdule(...) and undo().
+		Returns 0.
+	'''
+
+	f = open("shiftAssignments.py", "w")
+	f.write("shiftAssignments = %s\n" % (str(assignments)))
+	f.close()
+
+	return 0
+
 def updateSchedule(weekNum, secondary, index, newName):
 	'''
 		(Term week: int, Secondary?: int, Index of old name: int, New RA: str) -> int
@@ -129,13 +144,17 @@ def updateSchedule(weekNum, secondary, index, newName):
 	new_assignments[weekNum][secondary][index] = newName
 	
 	# Update shiftAssignments dictionary
+	rewriteSchedule(new_assignments)
+	'''
 	f = open("shiftAssignments.py", "w")
 	f.write("shiftAssignments = %s\n" % (str(new_assignments)))
 	f.close()
+	'''
 
 	return 0
 
 
+		
 def save(weekNum, secondary, index):
 	'''
 		(Term week: int, Secondary?: int, Index of old name: int) -> int
@@ -156,6 +175,11 @@ def save(weekNum, secondary, index):
 	return 0
 
 def undo():
+	'''
+		() -> None
+		
+		Rewrites the sa.shiftAssignments with the previous state.
+	'''
 	# Getting the last state and removing from outputUpdates
 	last_state = outputUpdates.pop()
 
@@ -171,9 +195,14 @@ def undo():
 
 	# print("old assignments are:",  old_assignments)
 	# Update shiftAssignments dictionary
+	rewriteSchedule(old_assignments)
+	'''
 	f = open("shiftAssignments.py", "w")
 	f.write("shiftAssignments = %s\n" % (str(old_assignments)))
 	f.close()
+	'''
+
+	return 0
 
 '''
 	Calling methods to test program functionality.
