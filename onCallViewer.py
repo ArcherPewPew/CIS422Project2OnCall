@@ -26,6 +26,8 @@ import output
 import raPreferences as raPrefs
 import shiftAssignments as sa
 
+# TODO add undo buttons
+
 class OnCallViewer:
     def __init__(self):
         '''
