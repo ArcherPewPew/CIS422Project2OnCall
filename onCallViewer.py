@@ -46,6 +46,14 @@ class OnCallViewer:
         self.delRaDropdown = None
         self.raSelectedToDelete = None
         
+        # RA Preference Edit Tracker:
+        self.weekdayOptions = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday']
+        self.weekdayDropdown = None
+        self.weekdayChoice = None
+        self.weekendOptions = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+        self.weekendDropdown = None
+        self.weekendChoice = None
+        
         # Preference Settings Tracker:
         self.settingsIDs = None
         self.settingsNames = None
@@ -123,22 +131,22 @@ class OnCallViewer:
                 nameLabel = tk.Label(pref, text=raPrefs.raPreferences.get(ra)[0])
                 nameLabel.grid(column=0, row=index)
                 # Show weekday preferences
-                pref1 = tk.Label(pref, text=raPrefs.raPreferences.get(ra)[1])
+                pref1 = tk.Button(pref, text=raPrefs.raPreferences.get(ra)[1], relief='flat', command=partial(self.editRA, index, 1))
                 pref1.grid(column=1, row=index)
-                pref2 = tk.Label(pref, text=raPrefs.raPreferences.get(ra)[2])
+                pref2 = tk.Button(pref, text=raPrefs.raPreferences.get(ra)[2], relief='flat', command=partial(self.editRA, index, 2))
                 pref2.grid(column=2, row=index)
-                pref3 = tk.Label(pref, text=raPrefs.raPreferences.get(ra)[3])
+                pref3 = tk.Button(pref, text=raPrefs.raPreferences.get(ra)[3], relief='flat', command=partial(self.editRA, index, 3))
                 pref3.grid(column=3, row=index)
                 # Show weekend off requests
-                pref4 = tk.Label(pref, text=raPrefs.raPreferences.get(ra)[4])
+                pref4 = tk.Button(pref, text=raPrefs.raPreferences.get(ra)[4], relief='flat', command=partial(self.editRA, index, 4))
                 pref4.grid(column=4, row=index)
-                pref5 = tk.Label(pref, text=raPrefs.raPreferences.get(ra)[5])
+                pref5 = tk.Button(pref, text=raPrefs.raPreferences.get(ra)[5], relief='flat', command=partial(self.editRA, index, 5))
                 pref5.grid(column=5, row=index)
-                pref6 = tk.Label(pref, text=raPrefs.raPreferences.get(ra)[6])
+                pref6 = tk.Button(pref, text=raPrefs.raPreferences.get(ra)[6], relief='flat', command=partial(self.editRA, index, 6))
                 pref6.grid(column=6, row=index)
                 # Create edit button
-                editButton = tk.Button(pref, text='Edit', relief='flat', command=partial(self.testRaEdit, index)) # TODO change to raEdit
-                editButton.grid(column=7, row=index)
+                #editButton = tk.Button(pref, text='Edit', relief='flat', command=partial(self.testRaEdit, index)) # TODO change to raEdit
+                #editButton.grid(column=7, row=index)
                 index += 1
         
         # TODO provide way to update a preference ---- instead of 'edit' button make each preference clickable
@@ -213,12 +221,102 @@ class OnCallViewer:
             This closes the preferences window
             It resets the RA Preferences Tracker variables
         '''
+        if self.prefEdit != None:
+            # TODO
+            self.prefEdit.destroy()
+            self.prefEdit = None
+            self.weekdayDropdown = None
+            self.weekdayChoice = None
+            self.weekendDropdown = None
+            self.weekendChoice = None
         self.preferences.destroy()
         self.preferences = None
         self.raIDs = None
         self.raNames = None
         self.delRaDropdown = None
         self.raSelectedToDelete = None
+        return None
+    
+    
+    ''' The following functions are for the Edit RA window '''
+    # TODO prevent this window from opening if one is already open
+    def editRA(self, ra, field):
+        '''
+            int, int, int -> None
+            This opens a new window and allows the user to input a new preference for an RA
+            This calls updatePreference in input.py
+        '''
+        # Setup RA edit window:
+        self.prefEdit = tk.Toplevel()
+        prefEdit = self.prefEdit
+        prefEdit.title('On Call - Edit RA Preference')
+        prefEdit.geometry('500x100+400+300') # width x height + x_offset + y_offset
+        prefEdit.minsize(500, 100)
+        
+        # Create label with RA's name:
+        nameLabel = tk.Label(prefEdit, text=self.raNames[ra])
+        nameLabel.grid(column=0, row=0, padx=10, pady=10)
+        
+        # Create label and dropdown menu for new preference:
+        if(field <= 3):
+            prefLabel = tk.Label(prefEdit, text=('Weekday Preference #%d:' % (field)))
+            prefLabel.grid(column=1, row=0, padx=10, pady=10)
+            self.weekdayDropdown = tk.ttk.Combobox(prefEdit, values=self.weekdayOptions, state='readonly')
+            self.weekdayDropdown.grid(column=2, row=0, padx=10, pady=10)
+            self.weekdayDropdown.bind('<<ComboboxSelected>>', self.updateWeekdayChoice)
+        else:
+            prefLabel = tk.Label(prefEdit, text=('Weekend Off Preference #%d:' % (field - 3)))
+            prefLabel.grid(column=1, row=0, padx=10, pady=10)
+            self.weekendDropdown = tk.ttk.Combobox(prefEdit, values=self.weekendOptions, state='readonly')
+            self.weekendDropdown.grid(column=2, row=0, padx=10, pady=10)
+            self.weekendDropdown.bind('<<ComboboxSelected>>', self.updateWeekendChoice)
+        
+        # Create save button:
+        savePref = tk.Button(prefEdit, text='Save', command=partial(self.updateRA, ra, field))
+        savePref.grid(column=1, row=1, padx=10, pady=10)
+        
+        prefEdit.protocol('WM_DELETE_WINDOW', self.closeEditRA)
+        prefEdit.update()
+        
+        return None
+    
+    def updateRA(self, ra, field):
+        '''
+            TODO
+        '''
+        # TODO call input's function
+        if(field <= 3):
+            print(ra, field, self.weekdayChoice)
+        else:
+            print(ra, field, self.weekendChoice)
+        self.closeEditRA()
+        self.closePreferences()
+        return None
+    
+    def updateWeekdayChoice(self, event):
+        '''
+            TODO
+        '''
+        self.weekdayChoice = self.weekdayDropdown.get()
+        return None
+    
+    def updateWeekendChoice(self, event):
+        '''
+            TODO
+        '''
+        self.weekendChoice = self.weekendDropdown.get()
+        return None
+    
+    def closeEditRA(self):
+        '''
+            TODO
+        '''
+        self.prefEdit.destroy()
+        self.prefEdit = None
+        self.weekdayDropdown = None
+        self.weekdayChoice = None
+        self.weekendDropdown = None
+        self.weekendChoice = None
         return None
     
     
@@ -267,44 +365,44 @@ class OnCallViewer:
             # Primary RA row
             weekNum = tk.Label(sched, text=('Week %d Primary' % (week)))
             weekNum.grid(column=0, row=(week*2)-1)
-            slot1 = tk.Label(sched, text=sa.shiftAssignments[week][0][0])
+            slot1 = tk.Button(sched, text=sa.shiftAssignments[week][0][0], relief='flat', command=partial(self.testSchedEdit, week, 0, 0))
             slot1.grid(column=1, row=(week*2)-1)
-            slot2 = tk.Label(sched, text=sa.shiftAssignments[week][0][1])
+            slot2 = tk.Button(sched, text=sa.shiftAssignments[week][0][1], relief='flat', command=partial(self.testSchedEdit, week, 0, 1))
             slot2.grid(column=2, row=(week*2)-1)
-            slot3 = tk.Label(sched, text=sa.shiftAssignments[week][0][2])
+            slot3 = tk.Button(sched, text=sa.shiftAssignments[week][0][2], relief='flat', command=partial(self.testSchedEdit, week, 0, 2))
             slot3.grid(column=3, row=(week*2)-1)
-            slot4 = tk.Label(sched, text=sa.shiftAssignments[week][0][3])
+            slot4 = tk.Button(sched, text=sa.shiftAssignments[week][0][3], relief='flat', command=partial(self.testSchedEdit, week, 0, 3))
             slot4.grid(column=4, row=(week*2)-1)
-            slot5 = tk.Label(sched, text=sa.shiftAssignments[week][0][4])
+            slot5 = tk.Button(sched, text=sa.shiftAssignments[week][0][4], relief='flat', command=partial(self.testSchedEdit, week, 0, 4))
             slot5.grid(column=5, row=(week*2)-1)
-            slot6 = tk.Label(sched, text=sa.shiftAssignments[week][0][5])
+            slot6 = tk.Button(sched, text=sa.shiftAssignments[week][0][5], relief='flat', command=partial(self.testSchedEdit, week, 0, 5))
             slot6.grid(column=6, row=(week*2)-1)
-            slot7 = tk.Label(sched, text=sa.shiftAssignments[week][0][6])
+            slot7 = tk.Button(sched, text=sa.shiftAssignments[week][0][6], relief='flat', command=partial(self.testSchedEdit, week, 0, 6))
             slot7.grid(column=7, row=(week*2)-1)
-            slot8 = tk.Label(sched, text=sa.shiftAssignments[week][0][7])
+            slot8 = tk.Button(sched, text=sa.shiftAssignments[week][0][7], relief='flat', command=partial(self.testSchedEdit, week, 0, 7))
             slot8.grid(column=8, row=(week*2)-1)
-            slot9 = tk.Label(sched, text=sa.shiftAssignments[week][0][8])
+            slot9 = tk.Button(sched, text=sa.shiftAssignments[week][0][8], relief='flat', command=partial(self.testSchedEdit, week, 0, 8))
             slot9.grid(column=9, row=(week*2)-1)
             # Secondary RA row
             weekNum = tk.Label(sched, text=('Week %d Secondary' % (week)))
             weekNum.grid(column=0, row=week*2)
-            slot11 = tk.Label(sched, text=sa.shiftAssignments[week][1][0])
+            slot11 = tk.Button(sched, text=sa.shiftAssignments[week][1][0], relief='flat', command=partial(self.testSchedEdit, week, 1, 0))
             slot11.grid(column=1, row=week*2)
-            slot12 = tk.Label(sched, text=sa.shiftAssignments[week][1][1])
+            slot12 = tk.Button(sched, text=sa.shiftAssignments[week][1][1], relief='flat', command=partial(self.testSchedEdit, week, 1, 1))
             slot12.grid(column=2, row=week*2)
-            slot13 = tk.Label(sched, text=sa.shiftAssignments[week][1][2])
+            slot13 = tk.Button(sched, text=sa.shiftAssignments[week][1][2], relief='flat', command=partial(self.testSchedEdit, week, 1, 2))
             slot13.grid(column=3, row=week*2)
-            slot14 = tk.Label(sched, text=sa.shiftAssignments[week][1][3])
+            slot14 = tk.Button(sched, text=sa.shiftAssignments[week][1][3], relief='flat', command=partial(self.testSchedEdit, week, 1, 3))
             slot14.grid(column=4, row=week*2)
-            slot15 = tk.Label(sched, text=sa.shiftAssignments[week][1][4])
+            slot15 = tk.Button(sched, text=sa.shiftAssignments[week][1][4], relief='flat', command=partial(self.testSchedEdit, week, 1, 4))
             slot15.grid(column=5, row=week*2)
-            slot16 = tk.Label(sched, text=sa.shiftAssignments[week][1][5])
+            slot16 = tk.Button(sched, text=sa.shiftAssignments[week][1][5], relief='flat', command=partial(self.testSchedEdit, week, 1, 5))
             slot16.grid(column=6, row=week*2)
-            slot17 = tk.Label(sched, text=sa.shiftAssignments[week][1][6])
+            slot17 = tk.Button(sched, text=sa.shiftAssignments[week][1][6], relief='flat', command=partial(self.testSchedEdit, week, 1, 6))
             slot17.grid(column=7, row=week*2)
-            slot18 = tk.Label(sched, text=sa.shiftAssignments[week][1][7])
+            slot18 = tk.Button(sched, text=sa.shiftAssignments[week][1][7], relief='flat', command=partial(self.testSchedEdit, week, 1, 7))
             slot18.grid(column=8, row=week*2)
-            slot19 = tk.Label(sched, text=sa.shiftAssignments[week][1][8])
+            slot19 = tk.Button(sched, text=sa.shiftAssignments[week][1][8], relief='flat', command=partial(self.testSchedEdit, week, 1, 8))
             slot19.grid(column=9, row=week*2)
             
         # TODO provide way to update a shift
@@ -358,6 +456,15 @@ class OnCallViewer:
             tk.messagebox.showerror(message='No schedule to export. Please generate a schedule first.')
         return None
     
+    def editSchedule(self, week, secondary, index):
+        '''
+            int, int, int -> None
+            This opens a new window and allows the user to input new text for a shift in the schedule
+            This calls updateSchedule in output.py
+        '''
+        # TODO
+        return None
+    
     def closeSchedule(self):
         '''
             None -> None
@@ -367,6 +474,70 @@ class OnCallViewer:
         self.schedule = None
         return None
     
+    
+    ''' The following functions are for the Edit RA window ---------- This will be for editing schedule'''
+    '''# TODO prevent this window from opening if one is already open
+    def editRA(self, ra, field):
+        # Setup RA edit window:
+        self.prefEdit = tk.Toplevel()
+        prefEdit = self.prefEdit
+        prefEdit.title('On Call - Edit RA Preference')
+        prefEdit.geometry('500x100+400+300') # width x height + x_offset + y_offset
+        prefEdit.minsize(500, 100)
+        
+        # Create label with RA's name:
+        nameLabel = tk.Label(prefEdit, text=self.raNames[ra])
+        nameLabel.grid(column=0, row=0, padx=10, pady=10)
+        
+        # Create label and dropdown menu for new preference:
+        if(field <= 3):
+            prefLabel = tk.Label(prefEdit, text=('Weekday Preference #%d:' % (field)))
+            prefLabel.grid(column=1, row=0, padx=10, pady=10)
+            self.weekdayDropdown = tk.ttk.Combobox(prefEdit, values=self.weekdayOptions, state='readonly')
+            self.weekdayDropdown.grid(column=2, row=0, padx=10, pady=10)
+            self.weekdayDropdown.bind('<<ComboboxSelected>>', self.updateWeekdayChoice)
+        else:
+            prefLabel = tk.Label(prefEdit, text=('Weekend Off Preference #%d:' % (field - 3)))
+            prefLabel.grid(column=1, row=0, padx=10, pady=10)
+            self.weekendDropdown = tk.ttk.Combobox(prefEdit, values=self.weekendOptions, state='readonly')
+            self.weekendDropdown.grid(column=2, row=0, padx=10, pady=10)
+            self.weekendDropdown.bind('<<ComboboxSelected>>', self.updateWeekendChoice)
+        
+        # Create save button:
+        savePref = tk.Button(prefEdit, text='Save', command=partial(self.updateRA, ra, field))
+        savePref.grid(column=1, row=1, padx=10, pady=10)
+        
+        prefEdit.protocol('WM_DELETE_WINDOW', self.closeEditRA)
+        prefEdit.update()
+        
+        return None
+    
+    def updateRA(self, ra, field):
+        # TODO call input's function
+        if(field <= 3):
+            print(ra, field, self.weekdayChoice)
+        else:
+            print(ra, field, self.weekendChoice)
+        self.closeEditRA()
+        self.closePreferences()
+        return None
+    
+    def updateWeekdayChoice(self, event):
+        self.weekdayChoice = self.weekdayDropdown.get()
+        return None
+    
+    def updateWeekendChoice(self, event):
+        self.weekendChoice = self.weekendDropdown.get()
+        return None
+    
+    def closeEditRA(self):
+        self.prefEdit.destroy()
+        self.prefEdit = None
+        self.weekdayDropdown = None
+        self.weekdayChoice = None
+        self.weekendDropdown = None
+        self.weekendChoice = None
+        return None'''
     
     ''' The following functions are for the generate schedule settings window '''
     def settingsView(self):
@@ -548,12 +719,20 @@ class OnCallViewer:
         print('Button Pressed') # Prints to terminal
         return None
     
-    def testRaEdit(self, index):
+    def testRaEdit(self, ra, field):
         '''
             int -> None
             This function was created to test how the edit RA preferences button works
         '''
-        print(index)
+        print(ra, field)
+        return None
+    
+    def testSchedEdit(self, week, secondary, index):
+        '''
+            int, int, int -> None
+            This function was created to test how the edit schedule button works
+        '''
+        print(week, secondary, index)
         return None
     
 if __name__ == "__main__":
