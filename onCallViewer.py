@@ -122,7 +122,7 @@ class OnCallViewer:
         self.raIDs = []
         self.raNames = []
         for ra in raPrefs.raPreferences:
-            if(ra != 1 and ra != 2 and ra != 3):
+            if(ra != '1' and ra != '2' and ra != '3'):
                 self.raIDs.append(ra)
                 self.raNames.append(raPrefs.raPreferences.get(ra)[0])
                 # TODO "header" labels
@@ -557,7 +557,7 @@ class OnCallViewer:
         self.settingsIDs = []
         self.settingsNames = []
         for ra in raPrefs.raPreferences:
-            if(ra != 1 and ra != 2 and ra != 3):
+            if(ra != '1' and ra != '2' and ra != '3'):
                 self.settingsIDs.append(ra)
                 self.settingsNames.append(raPrefs.raPreferences.get(ra)[0])
         names = self.settingsNames
@@ -630,12 +630,34 @@ class OnCallViewer:
         # TODO include error checking for the pairing choices
             # an RA cannot be paired with theirself
             # an RA cannot be paired with 'no one'
-        print(self.goldStarChoice)
-        print(self.tiebreakerChoice)
-        print(self.pairingChoice1)
-        print(self.pairingChoice2)
-        print(self.pairingChoice3)
-        print(self.pairingChoice4)
+        nameIndex = self.settingsNames.index(self.goldStarChoice)
+        input.Preferences.setGoldStar(self.settingsIDs[nameIndex])
+        print(self.goldStarChoice, self.settingsIDs[nameIndex])
+        
+        tiebreakerIndex = self.tiebreakerOptions.index(self.tiebreakerChoice)
+        input.Preferences.setTiebreaker(tiebreakerIndex)
+        print(self.tiebreakerChoice, self.tiebreakerOptions.index(self.tiebreakerChoice))
+        
+        p1 = 0
+        p2 = 0
+        p3 = 0
+        p4 = 0
+        if(self.pairingChoice1 != None and self.pairingChoice2 != None):
+            pairingIndex1 = self.settingsNames.index(self.pairingChoice1)
+            pairingIndex2 = self.settingsNames.index(self.pairingChoice2)
+            p1 = self.settingsIDs[pairingIndex1]
+            p2 = self.settingsIDs[pairingIndex2]
+        if(self.pairingChoice3 != None and self.pairingChoice4 != None):
+            pairingIndex3 = self.settingsNames.index(self.pairingChoice3)
+            pairingIndex4 = self.settingsNames.index(self.pairingChoice4)
+            p3 = self.settingsIDs[pairingIndex3]
+            p4 = self.settingsIDs[pairingIndex4]
+        input.Preferences.setBadPairings(p1, p2, p3, p4)
+        print(self.pairingChoice1, p1)
+        print(self.pairingChoice2, p2)
+        print(self.pairingChoice3, p3)
+        print(self.pairingChoice4, p4)
+        # TODO remove print statements
         #self.settingsSaved = True # TODO
         self.closeSettings()
         self.closeSchedule() # close schedule window to force a refresh
