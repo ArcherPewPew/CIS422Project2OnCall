@@ -82,8 +82,6 @@ class Input:
 		old = current_dictionary[idNum][index]
 		change = [idNum, index, old]
 		inputUpdates.append(change)
-		print("inputUpdates", inputUpdates)
-		print("what is being changed", change)
 		return None
 
 class Preferences:
@@ -224,7 +222,7 @@ class Preferences:
 		key_list = list(current_dictionary.keys()) # list of each RA's student's IDs
 
 		if len(key_list) < 10: # checks that thee team is the minimum size necessary to generate the schedule
-			print("The RA team is too small. Likely, not all the RAs have been uploaded. A schedule cannot be generated")
+			print("A schedule cannot be generated: The RA team is too small. A minimum of 10 RAs are needed. Likely, not all the RAs have been uploaded.")
 			return 1
 
 		for i in key_list:
@@ -277,9 +275,9 @@ class Preferences:
 		file.close()
 		return None
 
-if __name__ == '__main__':
-	Preferences.updatePreferences("951318175", 2, "Monday")
-	Preferences.undo()
+# if __name__ == '__main__':
+# 	Preferences.updatePreferences("951318175", 2, "Monday")
+# 	Preferences.undo()
 	# Preferences.save("951545641", 1)
 	# Preferences.save("951318175", 2)
 	# Preferences.weekendsOffcheck()
