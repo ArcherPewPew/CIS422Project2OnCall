@@ -134,7 +134,7 @@ class Preferences:
 		file.close()
 		return None
 
-	def setGoldstar(student_id):
+	def setGoldStar(student_id):
 		'''string -> None
 		Accepts a student ID of the selected RA that will recieve they're preferred schedule.
 		'''
@@ -160,7 +160,7 @@ class Preferences:
 		file.close()
 		return None
 
-	def setBadpairings(student1, student2, student3, student4):
+	def setBadPairings(student1, student2, student3, student4):
 		'''string -> None
 		Accepts four student IDs.
 		student1 and student2 cannot be paired together.

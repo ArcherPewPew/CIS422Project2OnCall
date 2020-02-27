@@ -23,15 +23,15 @@ def weekendShifts():
         print("WeekdnScheduler: danger, Preference input has failed, switching to default values to avoid crash!")
         #in case input fails!
         
-    if raPreferences.get(3): #setting key
-        p1ra1 = raPreferences.get(3)[0][0] #student 1 of bad pair 1
-        p1ra2 = raPreferences.get(3)[0][1] #student 2 of bad pair 1
+    if raPreferences.get('3'): #setting key
+        p1ra1 = raPreferences.get('3')[0][0] #student 1 of bad pair 1
+        p1ra2 = raPreferences.get('3')[0][1] #student 2 of bad pair 1
         bad1 = [p1ra1,p1ra2] #bad pair 1.
             #if the student pair is passed as [0,0] meaning no student pair was selected
             #then dict.get() will turn it into a None.
             #S.T. comparison is made to None later and it doesn't matter
-        p2ra1 = raPreferences.get(3)[1][1]  
-        p2ra2 = raPreferences.get(3)[1][1]
+        p2ra1 = raPreferences.get('3')[1][1]  
+        p2ra2 = raPreferences.get('3')[1][1]
         bad2 = [p2ra1,p2ra2]
             
         badpairs = [bad1,bad2]
@@ -41,7 +41,7 @@ def weekendShifts():
     radict = {}
 
     for key,val in raPreferences.items(): ##copy dictonary w/o preferences
-        if key not in [1,2,3]:
+        if key not in ['1','2','3']:
             radict[key] = val
             radict[key].append(0) #add var to counts number of shifts
 
