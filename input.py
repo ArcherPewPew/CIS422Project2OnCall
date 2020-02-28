@@ -1,8 +1,9 @@
 '''
 Author: Alyssa Huque
-Date of last modification: 2-25-2020
+Date of last modification: 2-27-2020
 Description: This produces the functionality of the RA Preferences module
 References:
+	On Deck Development Team's Project 1 fileInput.py file
     https://www.geeksforgeeks.org/python-add-new-keys-to-a-dictionary/
     https://www.w3resource.com/python-exercises/dictionary/python-data-type-dictionary-exercise-34.php
     https://stackoverflow.com/questions/2212433/counting-the-number-of-keywords-in-a-dictionary-in-python
@@ -10,7 +11,7 @@ References:
 '''
 
 import ast
-inputUpdates = []
+inputUpdates = [] # global dictionary used for keep track of actions in a session
 
 class Input:
 	# all of these are Alyssa's internal functions
@@ -76,12 +77,12 @@ class Input:
 		return raPreferences
 
 	def save(current_dictionary, idNum, index):
-		''' str, int, str
+		''' str, int, str -> None
 		This function saves changes, is used for the undo functionality.
 		'''
-		old = current_dictionary[idNum][index]
-		change = [idNum, index, old]
-		inputUpdates.append(change)
+		old = current_dictionary[idNum][index] # tracks action and location of action
+		change = [idNum, index, old] # stores action
+		inputUpdates.append(change) # adds action to global dictionary of actions
 		return None
 
 class Preferences:
@@ -251,13 +252,13 @@ class Preferences:
 		return 0
 
 	def updatePreferences(idNum, index, newPref):
-		'''str, int, str
+		'''str, int, str -> None
 		This function allows for updates of individual fields of the dictionary to allow for updating preferences.
 		'''
 		current_dictionary = Input.reading_dict_py("raPreferences.py") # obtains current raPreferences dictionary
 		# print(current_dictionary[idNum][index])
-		Input.save(current_dictionary, idNum, index)
-		current_dictionary[idNum][index] = newPref
+		Input.save(current_dictionary, idNum, index) # adds action to global dictionary
+		current_dictionary[idNum][index] = newPref # makes modifications
 		file = open("raPreferences.py", "w+") # opens the file containing raPreferences dictionary
 		file.write("raPreferences = %s\n" % (str(current_dictionary))) # writes the new dictionary to raPreferences.py
 		file.close()
