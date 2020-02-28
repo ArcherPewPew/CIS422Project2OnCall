@@ -277,16 +277,16 @@ class Preferences:
 		return None
 
 # if __name__ == '__main__':
-# 	Preferences.updatePreferences("951318175", 2, "Monday")
-# 	Preferences.undo()
+	# Preferences.updatePreferences("951318175", 2, "Monday")
+	# Preferences.undo()
 	# Preferences.save("951545641", 1)
 	# Preferences.save("951318175", 2)
 	# Preferences.weekendsOffcheck()
 	# Preferences.resetPreferences()
 	# Preferences.importFile("Example Input/example.csv")
-	# Preferences.setGoldstar("2")
+	# Preferences.setGoldStar("2")
 	# Preferences.setTiebreaker("0")
-	# Preferences.setBadpairings(1,2,3,4)
+	# Preferences.setBadPairings(1,2,3,4)
 	# Preferences.importFile("Example Input/example5.csv")
 	# Preferences.importFile("Example Input/updatedexample.csv")
 	# Preferences.deletePreferences('1')
