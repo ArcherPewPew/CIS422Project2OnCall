@@ -1,6 +1,6 @@
 '''
 	Author: Kiana Hosaka
-	Date of Last Modification: February 20, 2020
+	Date of Last Modification: February 28, 2020
 	Description: File produces the functionality of the Shift Assignments Module.
 	References:
 	- Prepending to a list: https://kite.com/python/answers/how-to-prepend-to-a-list-in-python
@@ -205,7 +205,7 @@ def undo():
 '''
 	Calling methods to test program functionality.
 '''
-generateSchedule()
+# generateSchedule()
 # updateSchedule(2, 0, 1, "ALOOOHHHHAAAAAAAA")
 # updateSchedule(10, 0, 0, "HOSAKA")
 # print("main\n")
