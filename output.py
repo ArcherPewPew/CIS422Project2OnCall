@@ -160,10 +160,12 @@ def save(weekNum, secondary, index):
 		Saves the old values from shiftAssignments
 	'''
 	# Copy of shift assignments
-	old_assignments = sa.shiftAssignments
+	last_state = sa.shiftAssignments
 
 	# Append to outputUpdates
-	outputUpdates.append([weekNum, secondary, index, old_assignments])
+	# outputUpdates.append([weekNum, secondary, index, old_assignments])
+	outputUpdates.append(last_state)
+
 	#print(outputUpdates)
 	#print("save\n")
 
@@ -180,17 +182,18 @@ def undo():
 
 	# Copy of current shift assignments
 	importlib.reload(sa) # Reloading dictionary
-	new_assignments = sa.shiftAssignments
 
 	# Assigning all fields	
+	'''
 	weekNum = last_state[0]	
 	secondary = last_state[1]
 	index = last_state[2]
 	old_assignments = last_state[3]
-
+	'''
 	# print("old assignments are:",  old_assignments)
 	# Update shiftAssignments dictionary
-	rewriteSchedule(old_assignments)
+	# rewriteSchedule(old_assignments)
+	rewriteSchedule(last_state)
 	'''
 	f = open("shiftAssignments.py", "w")
 	f.write("shiftAssignments = %s\n" % (str(old_assignments)))
@@ -202,7 +205,7 @@ def undo():
 '''
 	Calling methods to test program functionality.
 '''
-# generateSchedule()
+generateSchedule()
 # updateSchedule(2, 0, 1, "ALOOOHHHHAAAAAAAA")
 # updateSchedule(10, 0, 0, "HOSAKA")
 # print("main\n")
