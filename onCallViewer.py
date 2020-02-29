@@ -12,7 +12,6 @@
         List methods: https://www.geeksforgeeks.org/python-list/ and https://www.programiz.com/python-programming/methods/list/index
         Dictionary methods: https://www.geeksforgeeks.org/iterate-over-a-dictionary-in-python/ and https://www.geeksforgeeks.org/get-method-dictionaries-python/
         Button with args: https://stackoverflow.com/questions/6920302/how-to-pass-arguments-to-a-button-command-in-tkinter
-        TODO
 '''
 
 import tkinter as tk
@@ -62,7 +61,6 @@ class OnCallViewer:
         self.weekendChoice = None
         
         # Schedule Edit Tracker:
-        self.scheduleIDs = None
         self.scheduleNames = None
         self.changeRaDropdown = None
         self.changeRaChoice = None
@@ -115,7 +113,7 @@ class OnCallViewer:
         return None
     
     
-    ''' The following functions are for the preferences window '''
+    ''' The following functions are for the RA Preferences window '''
     def preferencesView(self):
         '''
             None -> None
@@ -162,8 +160,6 @@ class OnCallViewer:
                 #editButton = tk.Button(pref, text='Edit', relief='flat', command=partial(self.testRaEdit, index)) # TODO change to raEdit
                 #editButton.grid(column=7, row=index)
                 index += 1
-        
-        # TODO provide way to update a preference ---- instead of 'edit' button make each preference clickable
         
         # TODO add scrollbar
         
@@ -217,11 +213,8 @@ class OnCallViewer:
         '''
         if(self.raSelectedToDelete != None):
             # TODO send warning to user
-            #print(self.raSelectedToDelete)
             pos = self.raNames.index(self.raSelectedToDelete)
-            #print(pos)
             studentID = self.raIDs[pos]
-            #print(studentID)
             input.Preferences.deletePreferences(studentID)
             self.closePreferences() # terminates preferences window forcing the user to reopen it, refreshing the information
         else:
@@ -236,7 +229,6 @@ class OnCallViewer:
             It resets the RA Preferences Tracker variables
         '''
         if self.prefEdit != None:
-            # TODO
             self.prefEdit.destroy()
             self.prefEdit = None
             self.weekdayDropdown = None
@@ -252,7 +244,7 @@ class OnCallViewer:
         return None
     
     
-    ''' The following functions are for the Edit RA window '''
+    ''' The following functions are for the Edit RA Preference window '''
     # TODO prevent this window from opening if one is already open
     def editRA(self, ra, field):
         '''
@@ -296,14 +288,14 @@ class OnCallViewer:
     
     def updateRA(self, ra, field):
         '''
-            TODO
+            int, int -> None
+            This updates an RA's preference to the selected choice in the dropdown menu
+            When the user clicks save when updating an RA's preference field, this function will get called
+            This calls input's updatePreferences function
         '''
-        # TODO remove print statements
         if(field <= 3):
-            print(self.raIDs[ra], field, self.weekdayChoice)
             input.Preferences.updatePreferences(self.raIDs[ra], field, self.weekdayChoice)
         else:
-            print(self.raIDs[ra], field, self.weekendChoice)
             input.Preferences.updatePreferences(self.raIDs[ra], field, self.weekendChoice)
         self.closeEditRA()
         self.closePreferences()
@@ -311,21 +303,23 @@ class OnCallViewer:
     
     def updateWeekdayChoice(self, event):
         '''
-            TODO
+            This updates the selected weekday choice in the dropdown menu
         '''
         self.weekdayChoice = self.weekdayDropdown.get()
         return None
     
     def updateWeekendChoice(self, event):
         '''
-            TODO
+            This updates the selected weekend choice in the dropdown menu
         '''
         self.weekendChoice = self.weekendDropdown.get()
         return None
     
     def closeEditRA(self):
         '''
-            TODO
+            None -> None
+            This closes the Edit RA Preferences window
+            It resets the RA Preference Edit Tracker variables
         '''
         self.prefEdit.destroy()
         self.prefEdit = None
@@ -336,7 +330,7 @@ class OnCallViewer:
         return None
     
     
-    ''' The following functions are for the schedule window '''
+    ''' The following functions are for the Schedule window '''
     def scheduleView(self):
         '''
             None -> None
@@ -447,8 +441,6 @@ class OnCallViewer:
         # TODO check if schedule already exists
         # TODO if schedule already exists, warn user of overwriting
         # TODO if schedule doesn't exist, tell user what will happen
-        # TODO run settings screen
-        # TODO check that settings are saved, if not do not run generate (both from the user clicking 'x' on the settings window or ignoring the settings window)
         self.settingsSaved = False
         self.settingsClosed.set(False)
         self.settingsView()
@@ -456,7 +448,6 @@ class OnCallViewer:
         if(self.settingsSaved):
             error = output.generateSchedule()
         # TODO handle error
-        #self.settingsSaved = False # ready the system for the next generate schedule button press
         return None
     
     def exportSchedule(self):
@@ -498,20 +489,21 @@ class OnCallViewer:
     ''' The following functions are for the Edit Schedule window '''
     # TODO prevent this window from opening if one is already open
     def editSchedule(self, weekNum, secondary, index):
+        '''
+            TODO
+        '''
         # Setup schedule edit window:
         self.schedEdit = tk.Toplevel()
         schedEdit = self.schedEdit
-        schedEdit.title('On Call - Edit RA Preference')
+        schedEdit.title('On Call - Edit Schedule')
         schedEdit.geometry('400x200+400+300') # width x height + x_offset + y_offset
         schedEdit.minsize(400, 200)
         
         # Get RA info for dropdown menu:
         importlib.reload(raPrefs)
-        #self.scheduleIDs = []
         self.scheduleNames = []
         for ra in raPrefs.raPreferences:
             if(ra != '1' and ra != '2' and ra != '3'):
-                #self.scheduleIDs.append(ra)
                 self.scheduleNames.append(raPrefs.raPreferences.get(ra)[0])
         
         # Create label with shift getting changed:
@@ -536,22 +528,31 @@ class OnCallViewer:
         return None
     
     def updateShift(self, weekNum, secondary, index):
-        # TODO call output's function
-        #new = self.scheduleIDs[self.scheduleNames.index(self.changeRaChoice)]
-        print(weekNum, secondary, index, self.changeRaChoice)
+        '''
+            int, int, int -> None
+            This updates the chosen field in the schedule
+            This calls output's function
+        '''
         output.updateSchedule(weekNum, secondary, index, self.changeRaChoice)
         self.closeEditSchedule()
         self.closeSchedule()
         return None
     
     def updateChangeRaChoice(self, event):
+        '''
+            This updates the selected RA in the dropdown menu
+        '''
         self.changeRaChoice = self.changeRaDropdown.get()
         return None
     
     def closeEditSchedule(self):
+        '''
+            None -> None
+            This closes the Edit Schedule window
+            It resets the Schedule Edit Tracker variables
+        '''
         self.schedEdit.destroy()
         self.schedEdit = None
-        #self.scheduleIDs = None
         self.scheduleNames = None
         self.changeRaDropdown = None
         self.changeRaChoice = None
@@ -645,18 +646,22 @@ class OnCallViewer:
             This calls input.py's function to save the settings
             This also closes the settings window
         '''
-        # TODO call input's function(s)
         # TODO include error checking for the pairing choices
             # an RA cannot be paired with theirself
             # an RA cannot be paired with 'no one'
+        # TODO remove print statements
+        
+        # Handle gold star choice
         nameIndex = self.settingsNames.index(self.goldStarChoice)
         input.Preferences.setGoldStar(self.settingsIDs[nameIndex])
         print(self.goldStarChoice, self.settingsIDs[nameIndex])
         
+        # Handle tiebreaker choice
         tiebreakerIndex = self.tiebreakerOptions.index(self.tiebreakerChoice)
         input.Preferences.setTiebreaker(tiebreakerIndex)
         print(self.tiebreakerChoice, self.tiebreakerOptions.index(self.tiebreakerChoice))
         
+        # Handle bad pairing choices
         p1 = 0
         p2 = 0
         p3 = 0
@@ -676,7 +681,8 @@ class OnCallViewer:
         print(self.pairingChoice2, p2)
         print(self.pairingChoice3, p3)
         print(self.pairingChoice4, p4)
-        # TODO remove print statements
+        
+        # Close window
         self.settingsSaved = True
         self.closeSettings()
         self.closeSchedule() # close schedule window to force a refresh
