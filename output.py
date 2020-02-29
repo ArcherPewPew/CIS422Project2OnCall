@@ -197,14 +197,12 @@ def undo():
 '''
 	Calling methods to test program functionality.
 '''
-'''
 #generateSchedule()
-updateSchedule(2, 0, 1, "ALOOOHHHHAAAAAAAA")
-updateSchedule(10, 0, 0, "HOSSSAAKKAAAA")
+#updateSchedule(2, 0, 1, "ALOOOHHHHAAAAAAAA")
+#updateSchedule(10, 0, 0, "HOSSSAAKKAAAA")
 #print("From main:")
 #print(sa.shiftAssignments)
-undo()
+#undo()
 #print("After undo:")
 #print(sa.shiftAssignments)
-exportFile("file_output.csv")
-'''
+#exportFile("file_output.csv")

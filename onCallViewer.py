@@ -7,6 +7,8 @@
         Tkinter ComboBox: https://www.delftstack.com/tutorial/tkinter-tutorial/tkinter-combobox/
         Tkinter Grid: https://www.tutorialspoint.com/python/tk_grid.htm
         Tkinter entry: https://www.tutorialspoint.com/python/tk_entry.htm
+        Tkinter variable: https://www.geeksforgeeks.org/python-setting-and-retrieving-values-of-tkinter-variable/
+        Tkinter wait_variable: http://www.scoberlin.de/content/media/http/informatik/tkinter/x8996-event-processing.htm and https://stackoverflow.com/questions/44790449/making-tkinter-wait-untill-button-is-pressed
         List methods: https://www.geeksforgeeks.org/python-list/ and https://www.programiz.com/python-programming/methods/list/index
         Dictionary methods: https://www.geeksforgeeks.org/iterate-over-a-dictionary-in-python/ and https://www.geeksforgeeks.org/get-method-dictionaries-python/
         Button with args: https://stackoverflow.com/questions/6920302/how-to-pass-arguments-to-a-button-command-in-tkinter
@@ -66,10 +68,11 @@ class OnCallViewer:
         self.changeRaChoice = None
         
         # Preference Settings Tracker:
+        self.settingsSaved = False
+        self.settingsClosed = tk.BooleanVar(self.root, True)
         self.settingsIDs = None
         self.settingsNames = None
         self.tiebreakerOptions = ['Random', 'Alphabetical Order by Last Name', 'Numerical Order by ID Number']
-        self.settingsSaved = False
         # Dropdown menus
         self.goldStarDropdown = None
         self.tiebreakerDropdown = None
@@ -446,8 +449,12 @@ class OnCallViewer:
         # TODO if schedule doesn't exist, tell user what will happen
         # TODO run settings screen
         # TODO check that settings are saved, if not do not run generate (both from the user clicking 'x' on the settings window or ignoring the settings window)
+        self.settingsSaved = False
+        self.settingsClosed.set(False)
         self.settingsView()
-        error = output.generateSchedule()
+        self.root.wait_variable(self.settingsClosed)
+        if(self.settingsSaved):
+            error = output.generateSchedule()
         # TODO handle error
         #self.settingsSaved = False # ready the system for the next generate schedule button press
         return None
@@ -629,6 +636,7 @@ class OnCallViewer:
         
         # Start screen:
         # TODO set close function to clear variables when x is clicked
+        settings.protocol('WM_DELETE_WINDOW', self.closeSettings)
         settings.update()
         return None
     
@@ -670,7 +678,7 @@ class OnCallViewer:
         print(self.pairingChoice3, p3)
         print(self.pairingChoice4, p4)
         # TODO remove print statements
-        #self.settingsSaved = True # TODO
+        self.settingsSaved = True
         self.closeSettings()
         self.closeSchedule() # close schedule window to force a refresh
         return None
@@ -685,6 +693,7 @@ class OnCallViewer:
         self.settings = None
         self.settingsIDs = None
         self.settingsNames = None
+        self.settingsClosed.set(True)
         # Dropdown menus
         self.goldStarDropdown = None
         self.tiebreakerDropdown = None
