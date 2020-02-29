@@ -77,12 +77,15 @@ class Input:
 		return raPreferences
 
 	def save(current_dictionary, idNum, index):
-		''' str, int, str -> None
+		''' str, int, int -> None
 		This function saves changes, is used for the undo functionality.
 		'''
 		old = current_dictionary[idNum][index] # tracks action and location of action
+		# print(old)
 		change = [idNum, index, old] # stores action
+		# print(change)
 		inputUpdates.append(change) # adds action to global dictionary of actions
+		# print(inputUpdates)
 		return None
 
 class Preferences:
@@ -99,6 +102,7 @@ class Preferences:
 		'''
 		updated_dict = Input.inputPreferences(filename) #now i have a dictionary with the new information, I need to compare
 		if(updated_dict == 1):
+			# print("error7")
 			return 1 # returns 1 for GUI warning
 		original_dict = Input.readingDictPy("raPreferences.py")
 
@@ -138,8 +142,7 @@ class Preferences:
 		'''None -> None
 		Resets the raPreferencesee dictionary.
 		'''
-		current_dictionary = Input.readingDictPy("raPreferences.py") # obtains current raPreferences dictionary
-
+		# current_dictionary = Input.readingDictPy("raPreferences.py") # obtains current raPreferences dictionary
 		file = open("raPreferences.py", "w+") # opens the file containing raPrefernces dictionary
 		file.write("raPreferences = {}") # writes an empty dictionary to raPreferences.py
 		file.close()
@@ -185,7 +188,7 @@ class Preferences:
 		file.close()
 		return None
 
-	def exportRApreferences(filename):
+	def exportRaPreferences(filename):
 		'''string -> None
 		Recieves the name of a file and writes the current raPreferences
 			dictionary to that file.
@@ -265,31 +268,35 @@ class Preferences:
 		return None
 
 	def undo():
-		'''None -> None
+		'''None -> int
 		The undo functionality. Pulls from the global list inputUpdates to revert to previous action.
 		'''
-		current_dictionary = Input.readingDictPy("raPreferences.py") # obtains current raPreferences dictionary
-		previous = inputUpdates.pop() #[idNum, index, old]
-		current_dictionary[previous[0]][1] = previous[2]
-		file = open("raPreferences.py", "w+") # opens the file containing raPreferences dictionary
-		file.write("raPreferences = %s\n" % (str(current_dictionary))) # writes the new dictionary to raPreferences.py
-		file.close()
-		return None
+		try:
+			current_dictionary = Input.readingDictPy("raPreferences.py") # obtains current raPreferences dictionary
+			previous = inputUpdates.pop() #[idNum, index, old]
+			current_dictionary[previous[0]][previous[1]] = previous[2]
+			file = open("raPreferences.py", "w+") # opens the file containing raPreferences dictionary
+			file.write("raPreferences = %s\n" % (str(current_dictionary))) # writes the new dictionary to raPreferences.py
+			file.close()
+		except IndexError:
+			# print("list is empty")
+			return 1
+		return 0
 
 # if __name__ == '__main__':
-	# Preferences.updatePreferences("951318175", 2, "Monday")
+	# Preferences.importFile("Example Input/example.csv")
+	# Preferences.updatePreferences("951545641", 2, "Thursday")
 	# Preferences.undo()
 	# Preferences.save("951545641", 1)
 	# Preferences.save("951318175", 2)
 	# Preferences.weekendsOffcheck()
 	# Preferences.resetPreferences()
-	# Preferences.importFile("Example Input/example.csv")
 	# Preferences.setGoldStar("2")
 	# Preferences.setTiebreaker("0")
 	# Preferences.setBadPairings(1,2,3,4)
 	# Preferences.importFile("Example Input/example5.csv")
-	# Preferences.importFile("Example Input/updatedexample.csv")
 	# Preferences.deletePreferences('1')
 	# Preferences.deletePreferences('2')
 	# Preferences.deletePreferences('3')
-	# Preferences.exportRApreferences("test.csv")
+	# Preferences.exportRaPreferences("test.csv")
+	# print(inputUpdates)
