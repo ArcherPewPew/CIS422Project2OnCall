@@ -88,6 +88,9 @@ class OnCallViewer:
         return None
     
     
+    
+    
+    
     ''' The following function is for the home window and runs the whole application '''
     def home(self):
         '''
@@ -111,6 +114,9 @@ class OnCallViewer:
         # Start screen:
         root.mainloop()
         return None
+    
+    
+    
     
     
     ''' The following functions are for the RA Preferences window '''
@@ -244,13 +250,15 @@ class OnCallViewer:
         return None
     
     
+    
+    
+    
     ''' The following functions are for the Edit RA Preference window '''
     # TODO prevent this window from opening if one is already open
     def editRA(self, ra, field):
         '''
             int, int, int -> None
             This opens a new window and allows the user to input a new preference for an RA
-            This calls updatePreference in input.py
         '''
         # Setup RA edit window:
         self.prefEdit = tk.Toplevel()
@@ -301,20 +309,6 @@ class OnCallViewer:
         self.closePreferences()
         return None
     
-    def updateWeekdayChoice(self, event):
-        '''
-            This updates the selected weekday choice in the dropdown menu
-        '''
-        self.weekdayChoice = self.weekdayDropdown.get()
-        return None
-    
-    def updateWeekendChoice(self, event):
-        '''
-            This updates the selected weekend choice in the dropdown menu
-        '''
-        self.weekendChoice = self.weekendDropdown.get()
-        return None
-    
     def closeEditRA(self):
         '''
             None -> None
@@ -328,6 +322,9 @@ class OnCallViewer:
         self.weekendDropdown = None
         self.weekendChoice = None
         return None
+    
+    
+    
     
     
     ''' The following functions are for the Schedule window '''
@@ -467,15 +464,6 @@ class OnCallViewer:
             tk.messagebox.showerror(message='No schedule to export. Please generate a schedule first.')
         return None
     
-    def editSchedule(self, week, secondary, index):
-        '''
-            int, int, int -> None
-            This opens a new window and allows the user to input new text for a shift in the schedule
-            This calls updateSchedule in output.py
-        '''
-        # TODO
-        return None
-    
     def closeSchedule(self):
         '''
             None -> None
@@ -486,11 +474,15 @@ class OnCallViewer:
         return None
     
     
+    
+    
+    
     ''' The following functions are for the Edit Schedule window '''
     # TODO prevent this window from opening if one is already open
     def editSchedule(self, weekNum, secondary, index):
         '''
-            TODO
+            int, int, int -> None
+            This creates the screen to update a shift in the schedule
         '''
         # Setup schedule edit window:
         self.schedEdit = tk.Toplevel()
@@ -538,13 +530,6 @@ class OnCallViewer:
         self.closeSchedule()
         return None
     
-    def updateChangeRaChoice(self, event):
-        '''
-            This updates the selected RA in the dropdown menu
-        '''
-        self.changeRaChoice = self.changeRaDropdown.get()
-        return None
-    
     def closeEditSchedule(self):
         '''
             None -> None
@@ -557,6 +542,10 @@ class OnCallViewer:
         self.changeRaDropdown = None
         self.changeRaChoice = None
         return None
+    
+    
+    
+    
     
     ''' The following functions are for the generate schedule settings window '''
     def settingsView(self):
@@ -715,47 +704,8 @@ class OnCallViewer:
         self.pairingChoice4 = None
         return None
     
-    def updateGoldStarChoice(self, event):
-        '''
-            This updates the selected RA in the gold star dropdown menu
-        '''
-        self.goldStarChoice = self.goldStarDropdown.get()
-        return None
     
-    def updateTiebreakerChoice(self, event):
-        '''
-            This updates the selected tiebreaker choice in the dropdown menu
-        '''
-        self.tiebreakerChoice = self.tiebreakerDropdown.get()
-        return None
     
-    def updatePairingOne(self, event):
-        '''
-            This updates the selected RA in the first dropdown menu for the first dis-allowed pair
-        '''
-        self.pairingChoice1 = self.pairingDropdown1.get()
-        return None
-    
-    def updatePairingTwo(self, event):
-        '''
-            This updates the selected RA in the second dropdown menu for the first dis-allowed pair
-        '''
-        self.pairingChoice2 = self.pairingDropdown2.get()
-        return None
-    
-    def updatePairingThree(self, event):
-        '''
-            This updates the selected RA in the first dropdown menu for the second dis-allowed pair
-        '''
-        self.pairingChoice3 = self.pairingDropdown3.get()
-        return None
-    
-    def updatePairingFour(self, event):
-        '''
-            This updates the selected RA in the second dropdown menu for the second dis-allowed pair
-        '''
-        self.pairingChoice4 = self.pairingDropdown4.get()
-        return None
     
     
     ''' The following functions are for testing '''
@@ -783,6 +733,85 @@ class OnCallViewer:
         print(week, secondary, index)
         return None
     
+    
+    
+    
+    
+    ''' The following functions are for tracking dropdown menus '''
+    def updateWeekdayChoice(self, event):
+        '''
+            This updates the selected weekday choice in the dropdown menu
+            Dropdown menu is in Edit RA Preference window
+        '''
+        self.weekdayChoice = self.weekdayDropdown.get()
+        return None
+    
+    def updateWeekendChoice(self, event):
+        '''
+            This updates the selected weekend choice in the dropdown menu
+            Dropdown menu is in Edit RA Preference window
+        '''
+        self.weekendChoice = self.weekendDropdown.get()
+        return None
+    
+    def updateChangeRaChoice(self, event):
+        '''
+            This updates the selected RA in the dropdown menu
+            Dropdown menu is in Edit Schedule window
+        '''
+        self.changeRaChoice = self.changeRaDropdown.get()
+        return None
+    
+    def updateGoldStarChoice(self, event):
+        '''
+            This updates the selected RA in the gold star dropdown menu
+            Dropdown menu is in Settings window
+        '''
+        self.goldStarChoice = self.goldStarDropdown.get()
+        return None
+    
+    def updateTiebreakerChoice(self, event):
+        '''
+            This updates the selected tiebreaker choice in the dropdown menu
+            Dropdown menu is in Settings window
+        '''
+        self.tiebreakerChoice = self.tiebreakerDropdown.get()
+        return None
+    
+    def updatePairingOne(self, event):
+        '''
+            This updates the selected RA in the first dropdown menu for the first dis-allowed pair
+            Dropdown menu is in Settings window
+        '''
+        self.pairingChoice1 = self.pairingDropdown1.get()
+        return None
+    
+    def updatePairingTwo(self, event):
+        '''
+            This updates the selected RA in the second dropdown menu for the first dis-allowed pair
+            Dropdown menu is in Settings window
+        '''
+        self.pairingChoice2 = self.pairingDropdown2.get()
+        return None
+    
+    def updatePairingThree(self, event):
+        '''
+            This updates the selected RA in the first dropdown menu for the second dis-allowed pair
+            Dropdown menu is in Settings window
+        '''
+        self.pairingChoice3 = self.pairingDropdown3.get()
+        return None
+    
+    def updatePairingFour(self, event):
+        '''
+            This updates the selected RA in the second dropdown menu for the second dis-allowed pair
+            Dropdown menu is in Settings window
+        '''
+        self.pairingChoice4 = self.pairingDropdown4.get()
+        return None
+
+
+
 if __name__ == "__main__":
     screen = OnCallViewer()
     screen.home()
