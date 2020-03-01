@@ -179,7 +179,7 @@ def save():
 
 def undo():
 	'''
-		() -> None
+		() -> int
 		
 		Rewrites the sa.shiftAssignments with the previous state.
 	'''
@@ -191,6 +191,23 @@ def undo():
 
 	# Update shiftAssignments dictionary
 	rewriteSchedule(last_state)
+
+	return 0
+
+def resetAssignments():
+	'''
+		() -> int
+
+		Resets the shiftAssignments dictionary in shiftAssignments.py to be empty.	
+	'''
+	try:
+		f = open("shiftAssignments.py", "w")
+	except:
+		return 1
+
+	f.write("shiftAssignments = {}")
+	f.close()
+	importlib.reload(sa) # Reloading dictionary
 
 	return 0
 
