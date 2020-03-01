@@ -139,8 +139,10 @@ class OnCallViewer:
         numRAs = len(raPrefs.raPreferences)
         
         # Create undo button
-        undoButton = tk.Button(pref, text='Undo', command=input.Preferences.undo)
+        undoButton = tk.Button(pref, text='Undo', command=self.undoPreferences)
         undoButton.grid(column=0, row=0)
+        if(len(input.inputUpdates) == 0):
+            undoButton.configure(state='disabled')
         
         # Display current RAs in the system
         index = 0
@@ -152,9 +154,11 @@ class OnCallViewer:
                 self.raNames.append(raPrefs.raPreferences.get(ra)[0])
                 # TODO "header" labels
                 # TODO set column/row sizes
+                
                 # Show RA name
                 nameLabel = tk.Label(pref, text=raPrefs.raPreferences.get(ra)[0])
                 nameLabel.grid(column=0, row=index+1)
+                
                 # Show weekday preferences
                 pref1 = tk.Button(pref, text=raPrefs.raPreferences.get(ra)[1], command=partial(self.editRA, index, 1))
                 pref1.grid(column=1, row=index+1)
@@ -162,6 +166,7 @@ class OnCallViewer:
                 pref2.grid(column=2, row=index+1)
                 pref3 = tk.Button(pref, text=raPrefs.raPreferences.get(ra)[3], command=partial(self.editRA, index, 3))
                 pref3.grid(column=3, row=index+1)
+                
                 # Show weekend off requests
                 pref4 = tk.Button(pref, text=raPrefs.raPreferences.get(ra)[4], command=partial(self.editRA, index, 4))
                 pref4.grid(column=4, row=index+1)
@@ -169,9 +174,8 @@ class OnCallViewer:
                 pref5.grid(column=5, row=index+1)
                 pref6 = tk.Button(pref, text=raPrefs.raPreferences.get(ra)[6], command=partial(self.editRA, index, 6))
                 pref6.grid(column=6, row=index+1)
-                # Create edit button
-                #editButton = tk.Button(pref, text='Edit', relief='flat', command=partial(self.testRaEdit, index)) # TODO change to raEdit
-                #editButton.grid(column=7, row=index)
+                
+                # Increase counter for widget placement
                 index += 1
         
         # TODO add scrollbar
@@ -195,6 +199,15 @@ class OnCallViewer:
         # Start screen:
         pref.protocol('WM_DELETE_WINDOW', self.closePreferences)
         pref.update() # use update, not mainloop so other functions can still run
+        return None
+    
+    def undoPreferences(self):
+        '''
+            None -> None
+            Calls input.py's undo function
+        '''
+        input.Preferences.undo()
+        self.closePreferences()
         return None
     
     def importPreferences(self):
@@ -348,8 +361,10 @@ class OnCallViewer:
         sched.minsize(400, 400)
         
         # Create undo button
-        undoButton = tk.Button(sched, text='Undo', command=output.undo)
+        undoButton = tk.Button(sched, text='Undo', command=self.undoShiftChange)
         undoButton.grid(column=0, row=0)
+        if(len(output.outputUpdates) == 0):
+            undoButton.configure(state='disabled')
         
         importlib.reload(sa)
         existingSchedule = 0
@@ -437,6 +452,15 @@ class OnCallViewer:
         
         # Start screen:
         sched.update() # use update, not mainloop so other functions can still run
+        return None
+    
+    def undoShiftChange(self):
+        '''
+            None -> None
+            This calls output.py's undo function
+        '''
+        output.undo()
+        self.closeSchedule()
         return None
     
     def generateNewSchedule(self):
