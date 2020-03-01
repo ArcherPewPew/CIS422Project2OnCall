@@ -45,19 +45,17 @@ class WeekdayShifts:
         This function acts like a main function specific to scheduling weekdays and is called by output.py
         Returns a dictionary of the weekday shifts
         '''
-        # IDEA: get list of all people that want to work on each work day, then randomly select from that list to fill all spots.
-        #weekdays = {'Sunday':[], 'Monday':[], 'Tuesday':[], 'Wednesday':[], 'Thursday':[]}
-
-       # for ra in self.raPreferences:
-
        #for testing
-        weekdays = {'Sunday':['951111111', '951111112', '951111113', '951111114'], 'Monday':['951111115', '951111116', '951111117'],
-                    'Tuesday': ['951111118', '951111119', '951111121'], 'Wednesday':['951111122', '951111123', '951111124'],
-                    'Thursday': ['951111125', '951111126', '951111127']}
+        #weekdays = {'Sunday':['951111111', '951111112', '951111113', '951111114'], 'Monday':['951111115', '951111116', '951111117'],
+        #            'Tuesday': ['951111118', '951111119', '951111121'], 'Wednesday':['951111122', '951111123', '951111124'],
+        #            'Thursday': ['951111125', '951111126', '951111127']}
 
-        #self.assignDays()
-        schedule = self.scheduleShifts(weekdays)
-        return schedule
+        if(len(self.raPreferences) != 0):
+            weekdays = self.assignDays()
+            schedule = self.scheduleShifts(weekdays)
+            return schedule
+        else:
+            print("Error in loading RA preferences")
 
     def assignDays(self):
         #schedule  this many per day at first, then fill in the last few later
@@ -104,30 +102,40 @@ class WeekdayShifts:
         raList = [ra for ra in raList if ra not in rasToRemove]
 
         #make sure everyday has three people on it before assigning extra days
-        #for day in weekdays:
-          #  while(len(weekdays[day] != raPerDay):
-
-        #for leftover people
-        rasToRemove = []
+        tieSetting = self.settings['2']
         random.shuffle(raList)
-        for ra in raList:
-            raPreferences = self.raPreferences[ra][1:4]
-            for i in range(3):
-                day = raPreferences[i]
-                if(len(weekdays[day]) < raPerDay + 1 and ra not in rasToRemove):
-                    weekdays[day].append(ra)
-                    rasToRemove.append(ra)
-        raList = [ra for ra in raList if ra not in rasToRemove]
+        for day in weekdays:
+            while(len(weekdays[day]) != raPerDay):
+                raSelected = self.tiebreaker(tieSetting, raList)
+                weekdays[day].append(raSelected)       #adds the student selected by the tie breaker
+                raList.remove(raSelected)
 
+        if(len(raList) != 0):
+            #for leftover people
+            rasToRemove = []
+            random.shuffle(raList)
+            for ra in raList:
+                raPreferences = self.raPreferences[ra][1:4]
+                for i in range(3):
+                    day = raPreferences[i]
+                    if(len(weekdays[day]) < raPerDay + 1 and ra not in rasToRemove):
+                        weekdays[day].append(ra)
+                        rasToRemove.append(ra)
+                if ra not in rasToRemove:                               #this would happen if an extra spot needs to be filled but it is not one of the ras preferences
+                    for day in weekdays:
+                        if(len(weekdays[day]) < raPerDay + 1 and ra not in rasToRemove):
+                            weekdays[day].append(ra)
+                            rasToRemove.append(ra)
 
-        print(weekdays)
+            raList = [ra for ra in raList if ra not in rasToRemove]
 
-        #for i in range(3):      #to loop through each choice
+        return weekdays
 
-
-
-        #four/five different loops: one for first choice, one for second, one for third, and then tiebreakers and then leftovers if needed
-
+    def tiebreaker(self, tieSetting, raList):
+        #todo: implement tiebreaker settings for alphabetical/numerical
+        if(tieSetting == 0):
+            randomRa = random.choice(raList)
+            return randomRa
 
     def scheduleShifts(self, initialWeekdays):
         '''
@@ -173,10 +181,3 @@ class WeekdayShifts:
             finalShiftList.append(weekList)
 
         return finalShiftList
-
-
-
-shifts = WeekdayShifts()
-shifts.assignDays()
-shifts.weekdayShifts()
-
