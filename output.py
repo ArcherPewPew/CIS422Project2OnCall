@@ -179,7 +179,7 @@ def save():
 
 def undo():
 	'''
-		() -> int
+		() -> None
 		
 		Rewrites the sa.shiftAssignments with the previous state.
 	'''
