@@ -34,6 +34,13 @@ import shiftAssignments as sa
 # TODO call weekendsOffCheck
 # TODO don't let duplicate windows open
 # TODO dropdown lists of RAs should have 'none' as an option
+# TODO require 10 RAs to generate schedule
+# TODO limit max RAs
+# TODO "header" labels to RA preferences
+# TODO set column/row sizes
+# TODO add delete all RAs button
+# TODO add clear/delete schedule button
+# TODO add warnings/messages when clicking buttons
 
 class OnCallViewer:
     def __init__(self):
@@ -153,8 +160,6 @@ class OnCallViewer:
                 if(ra != '1' and ra != '2' and ra != '3'):
                     self.raIDs.append(ra)
                     self.raNames.append(raPrefs.raPreferences.get(ra)[0])
-                    # TODO "header" labels
-                    # TODO set column/row sizes
 
                     # Show RA name
                     nameLabel = tk.Label(pref, text=raPrefs.raPreferences.get(ra)[0])
@@ -194,8 +199,6 @@ class OnCallViewer:
         # Create deletion save button:
         saveDeletion = tk.Button(pref, text='Save', command=self.deleteRA)
         saveDeletion.grid(column=2, row=numRAs+2, padx=10, pady=10)
-        
-        # TODO add delete all RAs button?
         
         # Start screen:
         pref.protocol('WM_DELETE_WINDOW', self.closePreferences)
@@ -438,8 +441,6 @@ class OnCallViewer:
             # Show message that there is not a schedule in the system
             noSchedLabel = tk.Label(sched, text='No Existing Schedule\nPlease Generate New Schedule')
             noSchedLabel.grid(column=0, row=0)
-        
-        # TODO add clear/delete schedule button?
         
         # Create Generate button:
         generateSched = tk.Button(sched, text='Generate New Schedule', command=self.generateNewSchedule)
