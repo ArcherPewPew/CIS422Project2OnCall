@@ -11,7 +11,9 @@ import random
 
 class WeekdayShifts:
     def __init__(self):
-        self.raPreferences = self.getRaInformation()
+        raInfo = self.getRaInformation()
+        self.raPreferences = raInfo[0]
+        self.settings = raInfo[1]
         return None
 
     def getRaInformation(self):
@@ -26,11 +28,16 @@ class WeekdayShifts:
             fileContents = prefFile.readlines()[0]
             tempRaPreferences = ast.literal_eval(fileContents.strip("raPreferences = "))
 
+        finalReference = {}
+        settings = {}
         for raId in tempRaPreferences:
-            tempRaPreferences[raId] = tempRaPreferences[raId][0:4]       #gets rid of weekend information
-            tempRaPreferences[raId].append(0)           #to keep track of shift counter
+            if raId not in ['1','2','3']:       #to save just the RA information
+                finalReference[raId] = tempRaPreferences[raId][0:4]       #gets rid of weekend information
+                finalReference[raId].append(0)           #to keep track of shift counter
+            else:
+                settings[raId] = tempRaPreferences[raId]
 
-        return tempRaPreferences
+        return finalReference,settings
 
     def weekdayShifts(self):
         '''
@@ -48,8 +55,79 @@ class WeekdayShifts:
                     'Tuesday': ['951111118', '951111119', '951111121'], 'Wednesday':['951111122', '951111123', '951111124'],
                     'Thursday': ['951111125', '951111126', '951111127']}
 
+        #self.assignDays()
         schedule = self.scheduleShifts(weekdays)
         return schedule
+
+    def assignDays(self):
+        #schedule  this many per day at first, then fill in the last few later
+        raPerDay = len(self.raPreferences) // 5
+        leftOver = len(self.raPreferences) - (raPerDay * 5)
+        weekdays = {"Sunday": [], "Monday": [], "Tuesday": [], "Wednesday": [], "Thursday": []}
+        raList = list(self.raPreferences.keys())
+        
+        #Gold star RA gets their first preference
+        goldStarRa = self.settings['1']
+        goldStarInfo = self.raPreferences[goldStarRa]
+        goldStarDay = goldStarInfo[1]
+        weekdays[goldStarDay].append(goldStarRa)
+        raList.remove(goldStarRa)
+
+        rasToRemove = []
+        random.shuffle(raList)          #so every ra has an equal chance of being scheduled first/last
+        #first choice loop
+        for ra in raList:
+            firstPreference = self.raPreferences[ra][1]
+            if(len(weekdays[firstPreference]) < raPerDay):
+                weekdays[firstPreference].append(ra)
+                rasToRemove.append(ra)
+        raList = [ra for ra in raList if ra not in rasToRemove]     #removes the scheduled RAs so they are not considered later
+
+        #second choice loop
+        rasToRemove = []
+        random.shuffle(raList)
+        for ra in raList:
+            secondPreference = self.raPreferences[ra][2]
+            if(len(weekdays[secondPreference]) < raPerDay):
+                weekdays[secondPreference].append(ra)
+                rasToRemove.append(ra)
+        raList = [ra for ra in raList if ra not in rasToRemove]
+
+        #third choice loop
+        rasToRemove = []
+        random.shuffle(raList)
+        for ra in raList:
+            thirdPreference = self.raPreferences[ra][3]
+            if(len(weekdays[thirdPreference]) < raPerDay):
+                weekdays[thirdPreference].append(ra)
+                rasToRemove.append(ra)
+        raList = [ra for ra in raList if ra not in rasToRemove]
+
+        #make sure everyday has three people on it before assigning extra days
+        #for day in weekdays:
+          #  while(len(weekdays[day] != raPerDay):
+
+        #for leftover people
+        rasToRemove = []
+        random.shuffle(raList)
+        for ra in raList:
+            raPreferences = self.raPreferences[ra][1:4]
+            for i in range(3):
+                day = raPreferences[i]
+                if(len(weekdays[day]) < raPerDay + 1 and ra not in rasToRemove):
+                    weekdays[day].append(ra)
+                    rasToRemove.append(ra)
+        raList = [ra for ra in raList if ra not in rasToRemove]
+
+
+        print(weekdays)
+
+        #for i in range(3):      #to loop through each choice
+
+
+
+        #four/five different loops: one for first choice, one for second, one for third, and then tiebreakers and then leftovers if needed
+
 
     def scheduleShifts(self, initialWeekdays):
         '''
@@ -97,14 +175,8 @@ class WeekdayShifts:
         return finalShiftList
 
 
-    def assignDays(self):
-        #schedule  this many per day at first, then fill in the last few later
-        raPerDay = len(self.raPreferences) // 5
-        leftOver = len(self.raPreferences) - (raPerDay * 5)
-        weekdays = {"Sunday": [], "Monday": [], "Tuesday": [], "Wednesday": [], "Thursday": []}
-
 
 shifts = WeekdayShifts()
-#shifts.assignDays()
+shifts.assignDays()
 shifts.weekdayShifts()
 
