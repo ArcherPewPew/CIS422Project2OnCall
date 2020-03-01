@@ -15,7 +15,6 @@
         List methods: https://www.geeksforgeeks.org/python-list/ and https://www.programiz.com/python-programming/methods/list/index
         Dictionary methods: https://www.geeksforgeeks.org/iterate-over-a-dictionary-in-python/ and https://www.geeksforgeeks.org/get-method-dictionaries-python/
         Button with args: https://stackoverflow.com/questions/6920302/how-to-pass-arguments-to-a-button-command-in-tkinter
-    Note: Portions of the code related to Tkinter's frame and canvas are copied from https://stackoverflow.com/questions/43731784/tkinter-canvas-scrollbar-with-grid
 '''
 
 import tkinter as tk
@@ -105,16 +104,14 @@ class OnCallViewer:
         # Setup home window:
         root = self.root
         root.title('On Call - Home')
-        root.geometry('400x400+200+100') # width x height + x_offset + y_offset
-        root.minsize(400, 400)
+        root.geometry('400x200+200+100') # width x height + x_offset + y_offset
+        root.minsize(400, 200)
         
         # Create buttons:
-        prefButton = tk.Button(root, text='RA\nPreferences', command=self.preferencesView)
-        prefButton['font'] = tk.font.Font(size=20) # TODO check if we want it to look like this or all the other buttons
+        prefButton = tk.Button(root, text='RA Preferences', command=self.preferencesView)
         prefButton.pack(padx=50, side=tk.LEFT)
         
         scheduleButton = tk.Button(root, text='Schedule', command=self.scheduleView)
-        scheduleButton['font'] = tk.font.Font(size=20) # TODO check if we want it to look like this or all the other buttons
         scheduleButton.pack(padx=50, side=tk.LEFT)
         
         # Start screen:
@@ -142,46 +139,45 @@ class OnCallViewer:
         numRAs = len(raPrefs.raPreferences)
         
         # Create undo button
-        undoButton = tk.Button(pref, text='Undo', command=self.undoPreferences)
-        undoButton.grid(column=0, row=0)
-        if(len(input.inputUpdates) == 0):
-            undoButton.configure(state='disabled')
+        if(numRAs != 0):
+            undoButton = tk.Button(pref, text='Undo', command=self.undoPreferences)
+            undoButton.grid(column=0, row=0)
+            if(len(input.inputUpdates) == 0):
+                undoButton.configure(state='disabled')
         
-        # Display current RAs in the system
-        index = 0
-        self.raIDs = []
-        self.raNames = []
-        for ra in raPrefs.raPreferences:
-            if(ra != '1' and ra != '2' and ra != '3'):
-                self.raIDs.append(ra)
-                self.raNames.append(raPrefs.raPreferences.get(ra)[0])
-                # TODO "header" labels
-                # TODO set column/row sizes
-                
-                # Show RA name
-                nameLabel = tk.Label(pref, text=raPrefs.raPreferences.get(ra)[0])
-                nameLabel.grid(column=0, row=index+1)
-                
-                # Show weekday preferences
-                pref1 = tk.Button(pref, text=raPrefs.raPreferences.get(ra)[1], command=partial(self.editRA, index, 1))
-                pref1.grid(column=1, row=index+1)
-                pref2 = tk.Button(pref, text=raPrefs.raPreferences.get(ra)[2], command=partial(self.editRA, index, 2))
-                pref2.grid(column=2, row=index+1)
-                pref3 = tk.Button(pref, text=raPrefs.raPreferences.get(ra)[3], command=partial(self.editRA, index, 3))
-                pref3.grid(column=3, row=index+1)
-                
-                # Show weekend off requests
-                pref4 = tk.Button(pref, text=raPrefs.raPreferences.get(ra)[4], command=partial(self.editRA, index, 4))
-                pref4.grid(column=4, row=index+1)
-                pref5 = tk.Button(pref, text=raPrefs.raPreferences.get(ra)[5], command=partial(self.editRA, index, 5))
-                pref5.grid(column=5, row=index+1)
-                pref6 = tk.Button(pref, text=raPrefs.raPreferences.get(ra)[6], command=partial(self.editRA, index, 6))
-                pref6.grid(column=6, row=index+1)
-                
-                # Increase counter for widget placement
-                index += 1
-        
-        # TODO add scrollbar
+            # Display current RAs in the system
+            index = 0
+            self.raIDs = []
+            self.raNames = []
+            for ra in raPrefs.raPreferences:
+                if(ra != '1' and ra != '2' and ra != '3'):
+                    self.raIDs.append(ra)
+                    self.raNames.append(raPrefs.raPreferences.get(ra)[0])
+                    # TODO "header" labels
+                    # TODO set column/row sizes
+
+                    # Show RA name
+                    nameLabel = tk.Label(pref, text=raPrefs.raPreferences.get(ra)[0])
+                    nameLabel.grid(column=0, row=index+1)
+
+                    # Show weekday preferences
+                    pref1 = tk.Button(pref, text=raPrefs.raPreferences.get(ra)[1], command=partial(self.editRA, index, 1))
+                    pref1.grid(column=1, row=index+1)
+                    pref2 = tk.Button(pref, text=raPrefs.raPreferences.get(ra)[2], command=partial(self.editRA, index, 2))
+                    pref2.grid(column=2, row=index+1)
+                    pref3 = tk.Button(pref, text=raPrefs.raPreferences.get(ra)[3], command=partial(self.editRA, index, 3))
+                    pref3.grid(column=3, row=index+1)
+
+                    # Show weekend off requests
+                    pref4 = tk.Button(pref, text=raPrefs.raPreferences.get(ra)[4], command=partial(self.editRA, index, 4))
+                    pref4.grid(column=4, row=index+1)
+                    pref5 = tk.Button(pref, text=raPrefs.raPreferences.get(ra)[5], command=partial(self.editRA, index, 5))
+                    pref5.grid(column=5, row=index+1)
+                    pref6 = tk.Button(pref, text=raPrefs.raPreferences.get(ra)[6], command=partial(self.editRA, index, 6))
+                    pref6.grid(column=6, row=index+1)
+
+                    # Increase counter for widget placement
+                    index += 1
         
         # Create import button:
         importPrefs = tk.Button(pref, text='Import Preferences', command=self.importPreferences)
@@ -444,7 +440,6 @@ class OnCallViewer:
             noSchedLabel.grid(column=0, row=0)
         
         # TODO add clear/delete schedule button?
-        # TODO add scrollbar
         
         # Create Generate button:
         generateSched = tk.Button(sched, text='Generate New Schedule', command=self.generateNewSchedule)
@@ -683,12 +678,12 @@ class OnCallViewer:
         # Handle gold star choice
         nameIndex = self.settingsNames.index(self.goldStarChoice)
         input.Preferences.setGoldStar(self.settingsIDs[nameIndex])
-        print(self.goldStarChoice, self.settingsIDs[nameIndex])
+        #print(self.goldStarChoice, self.settingsIDs[nameIndex])
         
         # Handle tiebreaker choice
         tiebreakerIndex = self.tiebreakerOptions.index(self.tiebreakerChoice)
         input.Preferences.setTiebreaker(tiebreakerIndex)
-        print(self.tiebreakerChoice, self.tiebreakerOptions.index(self.tiebreakerChoice))
+        #print(self.tiebreakerChoice, self.tiebreakerOptions.index(self.tiebreakerChoice))
         
         # Handle bad pairing choices
         p1 = 0
@@ -706,10 +701,10 @@ class OnCallViewer:
             p3 = self.settingsIDs[pairingIndex3]
             p4 = self.settingsIDs[pairingIndex4]
         input.Preferences.setBadPairings(p1, p2, p3, p4)
-        print(self.pairingChoice1, p1)
-        print(self.pairingChoice2, p2)
-        print(self.pairingChoice3, p3)
-        print(self.pairingChoice4, p4)
+        #print(self.pairingChoice1, p1)
+        #print(self.pairingChoice2, p2)
+        #print(self.pairingChoice3, p3)
+        #print(self.pairingChoice4, p4)
         
         # Close window
         self.settingsSaved = True
