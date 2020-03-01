@@ -196,6 +196,8 @@ class OnCallViewer:
         saveDeletion = tk.Button(pref, text='Save', command=self.deleteRA)
         saveDeletion.grid(column=2, row=numRAs+2, padx=10, pady=10)
         
+        # TODO add delete all RAs button?
+        
         # Start screen:
         pref.protocol('WM_DELETE_WINDOW', self.closePreferences)
         pref.update() # use update, not mainloop so other functions can still run
@@ -360,95 +362,94 @@ class OnCallViewer:
         sched.geometry('1500x800+0+0') # width x height + x_offset + y_offset
         sched.minsize(400, 400)
         
-        # Create undo button
-        undoButton = tk.Button(sched, text='Undo', command=self.undoShiftChange)
-        undoButton.grid(column=0, row=0)
-        if(len(output.outputUpdates) == 0):
-            undoButton.configure(state='disabled')
-        
         importlib.reload(sa)
-        existingSchedule = 0
+        # Only show schedule if there is a schedule
         if(len(sa.shiftAssignments) != 0):
-            existingSchedule = 1
-        
-        # TODO show 'headers' only if there is a schedule to display
-        sundayDay = tk.Label(sched, text='Sunday Day')
-        sundayDay.grid(column=1, row=1)
-        sundayNight = tk.Label(sched, text='Sunday Night')
-        sundayNight.grid(column=2, row=1)
-        monday = tk.Label(sched, text='Monday')
-        monday.grid(column=3, row=1)
-        tuesday = tk.Label(sched, text='Tuesday')
-        tuesday.grid(column=4, row=1)
-        wednesday = tk.Label(sched, text='Wednesday')
-        wednesday.grid(column=5, row=1)
-        thursday = tk.Label(sched, text='Thursday')
-        thursday.grid(column=6, row=1)
-        friday = tk.Label(sched, text='Friday')
-        friday.grid(column=7, row=1)
-        saturdayDay = tk.Label(sched, text='Saturday Day')
-        saturdayDay.grid(column=8, row=1)
-        saturdayNight = tk.Label(sched, text='Saturday Day')
-        saturdayNight.grid(column=9, row=1)
-        
-        # TODO show message that there is not schedule in the system
-        
-        # TODO display current schedule in the system
-        for week in sa.shiftAssignments:
-            # Primary RA row
-            weekNum = tk.Label(sched, text=('Week %d Primary' % (week)))
-            weekNum.grid(column=0, row=(week*2))
-            slot1 = tk.Button(sched, text=sa.shiftAssignments[week][0][0], command=partial(self.editSchedule, week, 0, 0))
-            slot1.grid(column=1, row=(week*2))
-            slot2 = tk.Button(sched, text=sa.shiftAssignments[week][0][1], command=partial(self.editSchedule, week, 0, 1))
-            slot2.grid(column=2, row=(week*2))
-            slot3 = tk.Button(sched, text=sa.shiftAssignments[week][0][2], command=partial(self.editSchedule, week, 0, 2))
-            slot3.grid(column=3, row=(week*2))
-            slot4 = tk.Button(sched, text=sa.shiftAssignments[week][0][3], command=partial(self.editSchedule, week, 0, 3))
-            slot4.grid(column=4, row=(week*2))
-            slot5 = tk.Button(sched, text=sa.shiftAssignments[week][0][4], command=partial(self.editSchedule, week, 0, 4))
-            slot5.grid(column=5, row=(week*2))
-            slot6 = tk.Button(sched, text=sa.shiftAssignments[week][0][5], command=partial(self.editSchedule, week, 0, 5))
-            slot6.grid(column=6, row=(week*2))
-            slot7 = tk.Button(sched, text=sa.shiftAssignments[week][0][6], command=partial(self.editSchedule, week, 0, 6))
-            slot7.grid(column=7, row=(week*2))
-            slot8 = tk.Button(sched, text=sa.shiftAssignments[week][0][7], command=partial(self.editSchedule, week, 0, 7))
-            slot8.grid(column=8, row=(week*2))
-            slot9 = tk.Button(sched, text=sa.shiftAssignments[week][0][8], command=partial(self.editSchedule, week, 0, 8))
-            slot9.grid(column=9, row=(week*2))
-            # Secondary RA row
-            weekNum = tk.Label(sched, text=('Week %d Secondary' % (week)))
-            weekNum.grid(column=0, row=(week*2)+1)
-            slot11 = tk.Button(sched, text=sa.shiftAssignments[week][1][0], command=partial(self.editSchedule, week, 1, 0))
-            slot11.grid(column=1, row=(week*2)+1)
-            slot12 = tk.Button(sched, text=sa.shiftAssignments[week][1][1], command=partial(self.editSchedule, week, 1, 1))
-            slot12.grid(column=2, row=(week*2)+1)
-            slot13 = tk.Button(sched, text=sa.shiftAssignments[week][1][2], command=partial(self.editSchedule, week, 1, 2))
-            slot13.grid(column=3, row=(week*2)+1)
-            slot14 = tk.Button(sched, text=sa.shiftAssignments[week][1][3], command=partial(self.editSchedule, week, 1, 3))
-            slot14.grid(column=4, row=(week*2)+1)
-            slot15 = tk.Button(sched, text=sa.shiftAssignments[week][1][4], command=partial(self.editSchedule, week, 1, 4))
-            slot15.grid(column=5, row=(week*2)+1)
-            slot16 = tk.Button(sched, text=sa.shiftAssignments[week][1][5], command=partial(self.editSchedule, week, 1, 5))
-            slot16.grid(column=6, row=(week*2)+1)
-            slot17 = tk.Button(sched, text=sa.shiftAssignments[week][1][6], command=partial(self.editSchedule, week, 1, 6))
-            slot17.grid(column=7, row=(week*2)+1)
-            slot18 = tk.Button(sched, text=sa.shiftAssignments[week][1][7], command=partial(self.editSchedule, week, 1, 7))
-            slot18.grid(column=8, row=(week*2)+1)
-            slot19 = tk.Button(sched, text=sa.shiftAssignments[week][1][8], command=partial(self.editSchedule, week, 1, 8))
-            slot19.grid(column=9, row=(week*2)+1)
+            # Create undo button
+            undoButton = tk.Button(sched, text='Undo', command=self.undoShiftChange)
+            undoButton.grid(column=0, row=0)
+            if(len(output.outputUpdates) == 0):
+                undoButton.configure(state='disabled')
             
-        # TODO provide way to update a shift
+            # Display 'headers' for the schedule
+            sundayDay = tk.Label(sched, text='Sunday Day')
+            sundayDay.grid(column=1, row=1)
+            sundayNight = tk.Label(sched, text='Sunday Night')
+            sundayNight.grid(column=2, row=1)
+            monday = tk.Label(sched, text='Monday')
+            monday.grid(column=3, row=1)
+            tuesday = tk.Label(sched, text='Tuesday')
+            tuesday.grid(column=4, row=1)
+            wednesday = tk.Label(sched, text='Wednesday')
+            wednesday.grid(column=5, row=1)
+            thursday = tk.Label(sched, text='Thursday')
+            thursday.grid(column=6, row=1)
+            friday = tk.Label(sched, text='Friday')
+            friday.grid(column=7, row=1)
+            saturdayDay = tk.Label(sched, text='Saturday Day')
+            saturdayDay.grid(column=8, row=1)
+            saturdayNight = tk.Label(sched, text='Saturday Day')
+            saturdayNight.grid(column=9, row=1)
+            
+            # Display current schedule in the system
+            for week in sa.shiftAssignments:
+                # Primary RA row
+                weekNum = tk.Label(sched, text=('Week %d Primary' % (week)))
+                weekNum.grid(column=0, row=(week*2))
+                slot1 = tk.Button(sched, text=sa.shiftAssignments[week][0][0], command=partial(self.editSchedule, week, 0, 0))
+                slot1.grid(column=1, row=(week*2))
+                slot2 = tk.Button(sched, text=sa.shiftAssignments[week][0][1], command=partial(self.editSchedule, week, 0, 1))
+                slot2.grid(column=2, row=(week*2))
+                slot3 = tk.Button(sched, text=sa.shiftAssignments[week][0][2], command=partial(self.editSchedule, week, 0, 2))
+                slot3.grid(column=3, row=(week*2))
+                slot4 = tk.Button(sched, text=sa.shiftAssignments[week][0][3], command=partial(self.editSchedule, week, 0, 3))
+                slot4.grid(column=4, row=(week*2))
+                slot5 = tk.Button(sched, text=sa.shiftAssignments[week][0][4], command=partial(self.editSchedule, week, 0, 4))
+                slot5.grid(column=5, row=(week*2))
+                slot6 = tk.Button(sched, text=sa.shiftAssignments[week][0][5], command=partial(self.editSchedule, week, 0, 5))
+                slot6.grid(column=6, row=(week*2))
+                slot7 = tk.Button(sched, text=sa.shiftAssignments[week][0][6], command=partial(self.editSchedule, week, 0, 6))
+                slot7.grid(column=7, row=(week*2))
+                slot8 = tk.Button(sched, text=sa.shiftAssignments[week][0][7], command=partial(self.editSchedule, week, 0, 7))
+                slot8.grid(column=8, row=(week*2))
+                slot9 = tk.Button(sched, text=sa.shiftAssignments[week][0][8], command=partial(self.editSchedule, week, 0, 8))
+                slot9.grid(column=9, row=(week*2))
+                # Secondary RA row
+                weekNum = tk.Label(sched, text=('Week %d Secondary' % (week)))
+                weekNum.grid(column=0, row=(week*2)+1)
+                slot11 = tk.Button(sched, text=sa.shiftAssignments[week][1][0], command=partial(self.editSchedule, week, 1, 0))
+                slot11.grid(column=1, row=(week*2)+1)
+                slot12 = tk.Button(sched, text=sa.shiftAssignments[week][1][1], command=partial(self.editSchedule, week, 1, 1))
+                slot12.grid(column=2, row=(week*2)+1)
+                slot13 = tk.Button(sched, text=sa.shiftAssignments[week][1][2], command=partial(self.editSchedule, week, 1, 2))
+                slot13.grid(column=3, row=(week*2)+1)
+                slot14 = tk.Button(sched, text=sa.shiftAssignments[week][1][3], command=partial(self.editSchedule, week, 1, 3))
+                slot14.grid(column=4, row=(week*2)+1)
+                slot15 = tk.Button(sched, text=sa.shiftAssignments[week][1][4], command=partial(self.editSchedule, week, 1, 4))
+                slot15.grid(column=5, row=(week*2)+1)
+                slot16 = tk.Button(sched, text=sa.shiftAssignments[week][1][5], command=partial(self.editSchedule, week, 1, 5))
+                slot16.grid(column=6, row=(week*2)+1)
+                slot17 = tk.Button(sched, text=sa.shiftAssignments[week][1][6], command=partial(self.editSchedule, week, 1, 6))
+                slot17.grid(column=7, row=(week*2)+1)
+                slot18 = tk.Button(sched, text=sa.shiftAssignments[week][1][7], command=partial(self.editSchedule, week, 1, 7))
+                slot18.grid(column=8, row=(week*2)+1)
+                slot19 = tk.Button(sched, text=sa.shiftAssignments[week][1][8], command=partial(self.editSchedule, week, 1, 8))
+                slot19.grid(column=9, row=(week*2)+1)
+        else:
+            # Show message that there is not a schedule in the system
+            noSchedLabel = tk.Label(sched, text='No Existing Schedule\nPlease Generate New Schedule')
+            noSchedLabel.grid(column=0, row=0)
+        
+        # TODO add clear/delete schedule button?
         # TODO add scrollbar
-        # TODO add a way to zoom in and out?
         
         # Create Generate button:
         generateSched = tk.Button(sched, text='Generate New Schedule', command=self.generateNewSchedule)
-        generateSched.grid(column=0, row=21, pady=50)
+        generateSched.grid(column=0, row=22, pady=50)
         
         # Create export button:
         exportSched = tk.Button(sched, text='Export Schedule', command=self.exportSchedule)
-        exportSched.grid(column=0, row=22)
+        exportSched.grid(column=0, row=23)
         
         # Start screen:
         sched.update() # use update, not mainloop so other functions can still run
