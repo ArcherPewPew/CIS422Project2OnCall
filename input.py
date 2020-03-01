@@ -59,6 +59,7 @@ class Input:
 					# print("error6")
 					return 1
 				raPreferences = {j[0]: j[1:8] for j in contents} # write raPreferences dictionary
+		file.close() # closes input file
 		return raPreferences # returns dictionary
 
 	def reading_dict_py(filename):

@@ -8,6 +8,8 @@ References:
 
 import ast
 import random
+import raPreferences
+import importlib
 
 class WeekdayShifts:
     def __init__(self):
@@ -22,6 +24,7 @@ class WeekdayShifts:
         Reads the dictionary in raPreferences.py.
         Returns a dictionary containing the preference information.
         '''
+        importlib.reload(raPreferences)
         fileContents = ''
         tempRaPreferences = {}
         with open("raPreferences.py", "r") as prefFile:
