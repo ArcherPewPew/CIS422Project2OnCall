@@ -6,13 +6,16 @@
         On Deck Development Team's Project 1 interface.py file
         Tkinter ComboBox: https://www.delftstack.com/tutorial/tkinter-tutorial/tkinter-combobox/
         Tkinter Grid: https://www.tutorialspoint.com/python/tk_grid.htm
+        Tkinter Button: https://www.tutorialspoint.com/python/tk_button.htm
         Tkinter Button Config Options: https://effbot.org/tkinterbook/button.htm
         Tkinter Button Text Config: https://pythonexamples.org/python-tkinter-button-change-font/
         Tkinter variable: https://www.geeksforgeeks.org/python-setting-and-retrieving-values-of-tkinter-variable/
         Tkinter wait_variable: http://www.scoberlin.de/content/media/http/informatik/tkinter/x8996-event-processing.htm and https://stackoverflow.com/questions/44790449/making-tkinter-wait-untill-button-is-pressed
+        Tkinter Scrollbar: https://stackoverflow.com/questions/43731784/tkinter-canvas-scrollbar-with-grid
         List methods: https://www.geeksforgeeks.org/python-list/ and https://www.programiz.com/python-programming/methods/list/index
         Dictionary methods: https://www.geeksforgeeks.org/iterate-over-a-dictionary-in-python/ and https://www.geeksforgeeks.org/get-method-dictionaries-python/
         Button with args: https://stackoverflow.com/questions/6920302/how-to-pass-arguments-to-a-button-command-in-tkinter
+    Note: Portions of the code related to Tkinter's frame and canvas are copied from https://stackoverflow.com/questions/43731784/tkinter-canvas-scrollbar-with-grid
 '''
 
 import tkinter as tk
@@ -851,3 +854,132 @@ class OnCallViewer:
 if __name__ == "__main__":
     screen = OnCallViewer()
     screen.home()
+    
+    
+'''Alternate Code
+
+def preferencesView(self):
+        # Setup preferences window:
+        self.preferences = tk.Toplevel()
+        pref = self.preferences
+        pref.title('On Call - RA Preferences')
+        pref.geometry('700x400+250+150') # width x height + x_offset + y_offset
+        pref.minsize(700, 400)
+        pref.maxsize(700, 400)
+        
+        # Set up main frame
+        prefMain = tk.Frame(pref)
+        prefMain.grid(sticky='news') # Frame extends to north, east, west, and south of the window
+        prefMain.grid_rowconfigure(0, weight=1) # TODO find out if this line is necessary
+        prefMain.grid_columnconfigure(0, weight=1) # TODO find out if this line is necessary
+        prefMain.grid_propagate(False)
+        prefMain.config(width=700, height=400)
+        # Create Canvas with scrollbar
+        canvas = tk.Canvas(prefMain)
+        canvas.grid(column=0, row=0, sticky='news')
+        scroll = tk.Scrollbar(prefMain, orient="vertical", command=canvas.yview)
+        scroll.grid(row=0, column=1, sticky='ns')
+        canvas.configure(yscrollcommand=scroll.set)
+        prefWidgets = tk.Frame(canvas)
+        canvas.create_window((0, 0), window=prefWidgets, anchor='nw')
+        
+        importlib.reload(raPrefs)
+        numRAs = len(raPrefs.raPreferences)
+        
+        if(numRAs != 0):
+            # Create undo button
+            undoButton = tk.Button(prefWidgets, text='Undo', command=self.undoPreferences)
+            undoButton.grid(column=0, row=0)
+            if(len(input.inputUpdates) == 0):
+                undoButton.configure(state='disabled')
+            
+            # TODO add 'header' labels to prefMain
+            # labels in row 1
+            
+            # Create RA list frame
+            #prefList = tk.Frame(prefMain)
+            #prefList.grid(row=2, column=1, sticky='nw')
+            #prefList.grid_rowconfigure(0, weight=1) # TODO find out if this line is necessary
+            #prefList.grid_columnconfigure(0, weight=1) # TODO find out if this line is necessary
+            #prefList.grid_propagate(False)
+            #prefList.config(width=800, height=300)
+            
+            # Create canvas for the list frame
+            #canvas = tk.Canvas(prefList)
+            #canvas.grid(row=0, column=0, sticky="news")
+            
+            # Link a scrollbar to the canvas
+            #scroll = tk.Scrollbar(prefList, orient="vertical", command=canvas.yview)
+            #scroll.grid(row=0, column=1, sticky='ns')
+            #canvas.configure(yscrollcommand=scroll.set)
+            
+            # Create a frame to contain the buttons
+            #frameButtons = tk.Frame(canvas)
+            #canvas.create_window((0, 0), window=frameButtons, anchor='nw')
+            
+            # Display current RAs in the system
+            index = 0
+            self.raIDs = []
+            self.raNames = []
+            for ra in raPrefs.raPreferences:
+                if(ra != '1' and ra != '2' and ra != '3'):
+                    self.raIDs.append(ra)
+                    self.raNames.append(raPrefs.raPreferences.get(ra)[0])
+                    # TODO set column/row sizes
+
+                    # Show RA name
+                    nameLabel = tk.Label(prefWidgets, text=raPrefs.raPreferences.get(ra)[0])
+                    nameLabel.grid(column=0, row=index+1, sticky='news')
+
+                    # Show weekday preferences
+                    pref1 = tk.Button(prefWidgets, text=raPrefs.raPreferences.get(ra)[1], command=partial(self.editRA, index, 1))
+                    pref1.grid(column=1, row=index+1, sticky='news')
+                    pref2 = tk.Button(prefWidgets, text=raPrefs.raPreferences.get(ra)[2], command=partial(self.editRA, index, 2))
+                    pref2.grid(column=2, row=index+1, sticky='news')
+                    pref3 = tk.Button(prefWidgets, text=raPrefs.raPreferences.get(ra)[3], command=partial(self.editRA, index, 3))
+                    pref3.grid(column=3, row=index+1, sticky='news')
+
+                    # Show weekend off requests
+                    pref4 = tk.Button(prefWidgets, text=raPrefs.raPreferences.get(ra)[4], command=partial(self.editRA, index, 4))
+                    pref4.grid(column=4, row=index+1, sticky='news')
+                    pref5 = tk.Button(prefWidgets, text=raPrefs.raPreferences.get(ra)[5], command=partial(self.editRA, index, 5))
+                    pref5.grid(column=5, row=index+1, sticky='news')
+                    pref6 = tk.Button(prefWidgets, text=raPrefs.raPreferences.get(ra)[6], command=partial(self.editRA, index, 6))
+                    pref6.grid(column=6, row=index+1, sticky='news')
+
+                    # Increase counter for widget placement
+                    index += 1
+            
+            # Update buttons frames idle tasks to let tkinter calculate buttons sizes
+            #frameButtons.update_idletasks()
+            
+            # Set the canvas scrolling region
+            #canvas.config(scrollregion=canvas.bbox("all"))
+        
+        # TODO add scrollbar
+        
+        # Create import button:
+        importPrefs = tk.Button(prefWidgets, text='Import Preferences', command=self.importPreferences)
+        importPrefs.grid(column=1, row=numRAs+2, padx=50, pady=50)
+        
+        # Create RA deletion section:
+        # Create Delete RA label
+        delRaLabel = tk.Label(prefWidgets, text='Delete RA:')
+        delRaLabel.grid(column=0, row=numRAs+3, padx=10, pady=10)
+        # Create dropdown menu
+        self.delRaDropdown = tk.ttk.Combobox(prefWidgets, values=self.raNames, state='readonly')
+        self.delRaDropdown.grid(column=1, row=numRAs+3, padx=10, pady=10)
+        self.delRaDropdown.bind('<<ComboboxSelected>>', self.selectedForDeletion)
+        # Create deletion save button:
+        saveDeletion = tk.Button(prefWidgets, text='Save', command=self.deleteRA)
+        saveDeletion.grid(column=2, row=numRAs+3, padx=10, pady=10)
+        
+        # TODO add delete all RAs button?
+        
+        # Start screen:
+        prefWidgets.update_idletasks()
+        canvas.config(scrollregion=canvas.bbox("all"))
+        pref.protocol('WM_DELETE_WINDOW', self.closePreferences)
+        pref.update() # use update, not mainloop so other functions can still run
+        return None
+'''
