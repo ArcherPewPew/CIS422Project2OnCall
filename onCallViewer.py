@@ -6,7 +6,8 @@
         On Deck Development Team's Project 1 interface.py file
         Tkinter ComboBox: https://www.delftstack.com/tutorial/tkinter-tutorial/tkinter-combobox/
         Tkinter Grid: https://www.tutorialspoint.com/python/tk_grid.htm
-        Tkinter entry: https://www.tutorialspoint.com/python/tk_entry.htm
+        Tkinter Button Config Options: https://effbot.org/tkinterbook/button.htm
+        Tkinter Button Text Config: https://pythonexamples.org/python-tkinter-button-change-font/
         Tkinter variable: https://www.geeksforgeeks.org/python-setting-and-retrieving-values-of-tkinter-variable/
         Tkinter wait_variable: http://www.scoberlin.de/content/media/http/informatik/tkinter/x8996-event-processing.htm and https://stackoverflow.com/questions/44790449/making-tkinter-wait-untill-button-is-pressed
         List methods: https://www.geeksforgeeks.org/python-list/ and https://www.programiz.com/python-programming/methods/list/index
@@ -18,6 +19,7 @@ import tkinter as tk
 from tkinter import ttk
 from tkinter import filedialog
 from tkinter import messagebox
+from tkinter import font
 
 import importlib
 from functools import partial
@@ -27,7 +29,6 @@ import output
 import raPreferences as raPrefs
 import shiftAssignments as sa
 
-# TODO add undo buttons
 # TODO call weekendsOffCheck
 # TODO don't let duplicate windows open
 # TODO dropdown lists of RAs should have 'none' as an option
@@ -105,10 +106,12 @@ class OnCallViewer:
         root.minsize(400, 400)
         
         # Create buttons:
-        prefButton = tk.Button(root, text='RA Preferences', command=self.preferencesView)
+        prefButton = tk.Button(root, text='RA\nPreferences', command=self.preferencesView)
+        prefButton['font'] = tk.font.Font(size=20) # TODO check if we want it to look like this or all the other buttons
         prefButton.pack(padx=50, side=tk.LEFT)
         
         scheduleButton = tk.Button(root, text='Schedule', command=self.scheduleView)
+        scheduleButton['font'] = tk.font.Font(size=20) # TODO check if we want it to look like this or all the other buttons
         scheduleButton.pack(padx=50, side=tk.LEFT)
         
         # Start screen:
