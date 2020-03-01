@@ -1,18 +1,21 @@
 '''
 	Author: Kiana Hosaka
-	Date of Last Modification: February 20, 2020
+	Date of Last Modification: February 28, 2020
 	Description: File produces the functionality of the Shift Assignments Module.
 	References:
 	- Prepending to a list: https://kite.com/python/answers/how-to-prepend-to-a-list-in-python
+	- Ensuring file could be opened: https://stackoverflow.com/questions/6825994/check-if-a-file-is-open-in-python
 
 '''
-#TODO: Add error checking
 
 import importlib
 import shiftAssignments as sa
-#import test_week as week # For testing
-import weekdayScheduler as week
-import test_end as end # For testing
+import test_week as week # For testing
+#import test_end as end # For testing
+import weekendScheduler as end # Not using Alex's file right now because it's giving me errors
+
+# List of previous shiftAssignments dictionary states
+outputUpdates = []
 
 def generateSchedule():
 	'''
@@ -23,31 +26,37 @@ def generateSchedule():
 	'''
 
 	# For now, I am not "calling" the schedulers but I have created test files
-	# week_schedule = week.<function to call here>
-	week_schedule = week.WeekdayShifts().weekdayShifts()
-	# end_schedule = end.<function to call here>
+	# week_schedule = week.weekdayShifts()
+	end_schedule = end.weekendShifts() 
 
 	# Dictionary that will get written to shiftAssignments.py
 	assignments = {}
 	
 	# File containing shift assignment dictionary
-	f = open("shiftAssignments.py", "w")	
+	try:
+		f = open("shiftAssignments.py", "w")
+	except:
+		return 1
 
 	# Adding the WEEKDAYS to the dictionary
 	for i in range(10): # 10 weeks in a term
-		assignments.update({i+1: [week_schedule[i][0], week_schedule[i][1]]})
+		assignments.update({i+1: [week.schedule[i][0], week.schedule[i][1]]})
 
 	# Adding the WEEKENDS to the dictionary
 	for i in range(10): # 10 weeks in a term
 
 		# Prepend Sunday Day
-		assignments[i+1][0].insert(0, end.schedule[i][0][3]) # Prepending Primary Sunday Day
-		assignments[i+1][1].insert(0, end.schedule[i][1][3]) # Prepending Secondary Sunday Day
+		assignments[i+1][0].insert(0, end_schedule[i][0][3]) # Prepending Primary Sunday Day
+		assignments[i+1][1].insert(0, end_schedule[i][1][3]) # Prepending Secondary Sunday Day
+		#assignments[i+1][0].insert(0, end.schedule[i][0][3]) # Using test file
+		#assignments[i+1][1].insert(0, end.schedule[i][1][3]) # Using test file
 
 		# Appending rest of weekend
 		for j in range(3): # Friday, Saturday Day, Sunday Night
-			assignments[i+1][0].append(end.schedule[i][0][j]) # Primary
-			assignments[i+1][1].append(end.schedule[i][1][j]) # Secondary
+			assignments[i+1][0].append(end_schedule[i][0][j]) # Primary
+			assignments[i+1][1].append(end_schedule[i][1][j]) # Secondary
+			#assignments[i+1][0].append(end.schedule[i][0][j]) # Using test file
+			#assignments[i+1][1].append(end.schedule[i][1][j]) # Using test file
 
 	# Writing assignment dictionary to shiftAssignments.py
 	f.write("shiftAssignments = %s\n" % (str(assignments)))
@@ -67,8 +76,13 @@ def exportFile(fileName):
 	
 	importlib.reload(sa) # Reloading dictionary
 
-	# Creating user inputted output file and headers
-	output_file = open(fileName, "w")
+	# Creating user inputted output file
+	try:
+		output_file = open(fileName, "w")
+	except:
+		return 1
+
+	# Writing header
 	output_file.write(",,SUNDAY DAY,SUNDAY NIGHT,MONDAY,TUESDAY,WEDNESDAY,THURSDAY,"
 				"FRIDAY,SATURDAY DAY,SATURDAY NIGHT\n")	
 
@@ -99,6 +113,25 @@ def exportFile(fileName):
 	return 0
 
  
+def rewriteSchedule(assignments):
+	'''
+		(Updated assignments: dict) -> None
+		
+		Recieves an updated assignments dictionary and rewrites the sa.shiftAssignments file.
+		Called by updateScehdule(...) and undo().
+		Returns 0 if no errors occured and 1 if an error occured.
+	'''
+	try:
+		f = open("shiftAssignments.py", "w")
+	except:
+		return 1
+
+	f.write("shiftAssignments = %s\n" % (str(assignments)))
+	f.close()
+	importlib.reload(sa) # Reloading dictionary
+
+	return 0
+
 def updateSchedule(weekNum, secondary, index, newName):
 	'''
 		(Term week: int, Secondary?: int, Index of old name: int, New RA: str) -> int
@@ -109,27 +142,67 @@ def updateSchedule(weekNum, secondary, index, newName):
 		This function updates a field in the shiftAssignmnets dictionary.
 		Returns 0 if no errors occured or 1 if an error occured.
 	'''
-	#TODO: Does update schedule need to generate a new output file?
-	importlib.reload(sa) # Reloading dictionary
+	# Save the current state
+	save()
 
 	# Copy of current shift assignments	
+	importlib.reload(sa) # Reloading dictionary
 	new_assignments = sa.shiftAssignments
 
 	# Update new assignment 
 	new_assignments[weekNum][secondary][index] = newName
 	
 	# Update shiftAssignments dictionary
-	f = open("shiftAssignments.py", "w")
-	f.write("shiftAssignments = %s\n" % (str(new_assignments)))
-	f.close()
+	rewriteSchedule(new_assignments)
+
+	return 0
+
+
+		
+def save():
+	'''
+		() -> int
+
+		Saves the old states of shiftAssignments.
+	'''
+	# Copy of shift assignments
+	last_state = sa.shiftAssignments
+
+	# Append to outputUpdates
+	outputUpdates.append(last_state)
+
+	# print("outputUpdates:")
+	# print(outputUpdates)
+
+	return 0
+
+
+def undo():
+	'''
+		() -> None
+		
+		Rewrites the sa.shiftAssignments with the previous state.
+	'''
+	# Getting the last state and removing from outputUpdates
+	last_state = outputUpdates.pop()
+
+	# Copy of current shift assignments
+	importlib.reload(sa) # Reloading dictionary
+
+	# Update shiftAssignments dictionary
+	rewriteSchedule(last_state)
 
 	return 0
 
 '''
 	Calling methods to test program functionality.
 '''
-# generateSchedule()
-# exportFile("file_output.csv")
-# updateSchedule(2, 0, 1, "KIANA")
-# updateSchedule(11, 0, 0, "HOSAKA")
-
+#generateSchedule()
+#updateSchedule(2, 0, 1, "ALOOOHHHHAAAAAAAA")
+#updateSchedule(10, 0, 0, "HOSSSAAKKAAAA")
+#print("From main:")
+#print(sa.shiftAssignments)
+#undo()
+#print("After undo:")
+#print(sa.shiftAssignments)
+#exportFile("file_output.csv")
