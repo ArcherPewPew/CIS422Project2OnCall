@@ -16,32 +16,32 @@ def weekendShifts():
     This function acts like a main function specific to scheduling weekends and is called by output.py
     Returns a list of two-lists of the weekend shifts
     '''
-    raPreferences = input.Input.reading_dict_py("raPreferences.py") #Alyssa's import function. makes a copy of read dictonary
+    raPreferences = input.Input.readingDictPy("raPreferences.py") #Alyssa's import function. makes a copy of read dictonary
 
-    if not raPreferences:
-        raPreferences = {951111111:	["Alex Archer",	"Tuesday",	"Thursday",	"Sunday", 3, 5, 8], 951111112: ["Kiana Hosaka", "Sunday", "Thursday", "Monday", 2, 6, 4], 951111113: ["Alyssa Huque", "Wednesday", "Monday", "Sunday", 0, 0, 0], 951111114: ["Lily Jim", "Thursday", "Sunday", "Tuesday", 5, 3, 9], 951111115: ["Max Terry", "Monday", "Sunday", "Thursday", 10, 5, 1], 951111116: ["Lucas Hyatt", "Wednesday", "Tuesday", "Monday", 5, 7, 2], 951111117: ["James Kang", "Tuesday", "Monday", "Sunday", 4, 8, 3], 951111118: ["Claire Kolln", "Thursday", "Wednesday", "Tuesday", 6, 9, 0], 951111119: ["Leonie Way", "Sunday", "Tuesday", "Thursday", 3, 2, 8], 951111121: ["Stefan Fields", "Wednesday", "Monday", "Sunday", 10, 1, 5], 951111122: ["Justin Becker", "Thursday", "Wednesday", "Monday", 5, 0, 9], 951111123: ["Cory Ingram", "Monday", "Sunday", "Tuesday", 10, 4, 3], 951111124: ["Samuel Lundquist", "Thursday", "Monday", "Wednesday", 3, 7, 10], 951111125: ["Olivia Pannell", "Monday", "Wednesday", "Thursday", 2, 4, 9], 951111126: ["Bethany Van Meter", "Sunday", "Thursday", "Tuesday", 9, 3, 8], 951111127: ["Ryan Gurnick", "Thursday", "Monday", "Wednesday", 0, 7, 10], 1: 951111116, 2: 2, 3: [[951111114, 951111127], [0, 0]]}
-        print("WeekdnScheduler: danger, Preference input has failed, switching to default values to avoid crash!")
+    #if not raPreferences:
+        #raPreferences = {951111111:	["Alex Archer",	"Tuesday",	"Thursday",	"Sunday", 3, 5, 8], 951111112: ["Kiana Hosaka", "Sunday", "Thursday", "Monday", 2, 6, 4], 951111113: ["Alyssa Huque", "Wednesday", "Monday", "Sunday", 0, 0, 0], 951111114: ["Lily Jim", "Thursday", "Sunday", "Tuesday", 5, 3, 9], 951111115: ["Max Terry", "Monday", "Sunday", "Thursday", 10, 5, 1], 951111116: ["Lucas Hyatt", "Wednesday", "Tuesday", "Monday", 5, 7, 2], 951111117: ["James Kang", "Tuesday", "Monday", "Sunday", 4, 8, 3], 951111118: ["Claire Kolln", "Thursday", "Wednesday", "Tuesday", 6, 9, 0], 951111119: ["Leonie Way", "Sunday", "Tuesday", "Thursday", 3, 2, 8], 951111121: ["Stefan Fields", "Wednesday", "Monday", "Sunday", 10, 1, 5], 951111122: ["Justin Becker", "Thursday", "Wednesday", "Monday", 5, 0, 9], 951111123: ["Cory Ingram", "Monday", "Sunday", "Tuesday", 10, 4, 3], 951111124: ["Samuel Lundquist", "Thursday", "Monday", "Wednesday", 3, 7, 10], 951111125: ["Olivia Pannell", "Monday", "Wednesday", "Thursday", 2, 4, 9], 951111126: ["Bethany Van Meter", "Sunday", "Thursday", "Tuesday", 9, 3, 8], 951111127: ["Ryan Gurnick", "Thursday", "Monday", "Wednesday", 0, 7, 10], 1: 951111116, 2: 2, 3: [[951111114, 951111127], [0, 0]]}
+        #print("WeekdnScheduler: danger, Preference input has failed, switching to default values to avoid crash!")
         #in case input fails!
         
-    if raPreferences.get(3): #setting key
-        p1ra1 = raPreferences.get(3)[0][0] #student 1 of bad pair 1
-        p1ra2 = raPreferences.get(3)[0][1] #student 2 of bad pair 1
-        bad1 = [p1ra1,p1ra2] #bad pair 1.
-            #if the student pair is passed as [0,0] meaning no student pair was selected
-            #then dict.get() will turn it into a None.
-            #S.T. comparison is made to None later and it doesn't matter
-        p2ra1 = raPreferences.get(3)[1][1]  
-        p2ra2 = raPreferences.get(3)[1][1]
-        bad2 = [p2ra1,p2ra2]
-            
-        badpairs = [bad1,bad2]
-    else:
-        print("WeekdnScheduler: danger, setting 3 input has failed, bad pairings settings were not passed or defined.")
+    #if raPreferences.get('3'): #setting key
+    p1ra1 = raPreferences.get('3')[0][0] #student 1 of bad pair 1
+    p1ra2 = raPreferences.get('3')[0][1] #student 2 of bad pair 1
+    bad1 = [p1ra1,p1ra2] #bad pair 1.
+        #if the student pair is passed as [0,0] meaning no student pair was selected
+        #then dict.get() will turn it into a None.
+        #S.T. comparison is made to None later and it doesn't matter
+    p2ra1 = raPreferences.get('3')[1][1]  
+    p2ra2 = raPreferences.get('3')[1][1]
+    bad2 = [p2ra1,p2ra2]
+
+    badpairs = [bad1,bad2]
+    #else:
+        #print("WeekdnScheduler: danger, setting 3 input has failed, bad pairings settings were not passed or defined.")
 
     radict = {}
 
     for key,val in raPreferences.items(): ##copy dictonary w/o preferences
-        if key not in [1,2,3]:
+        if key not in ['1','2','3']:
             radict[key] = val
             radict[key].append(0) #add var to counts number of shifts
 
