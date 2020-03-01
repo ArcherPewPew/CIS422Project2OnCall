@@ -677,12 +677,12 @@ class OnCallViewer:
         # Handle gold star choice
         nameIndex = self.settingsNames.index(self.goldStarChoice)
         input.Preferences.setGoldStar(self.settingsIDs[nameIndex])
-        print(self.goldStarChoice, self.settingsIDs[nameIndex])
+        #print(self.goldStarChoice, self.settingsIDs[nameIndex])
         
         # Handle tiebreaker choice
         tiebreakerIndex = self.tiebreakerOptions.index(self.tiebreakerChoice)
         input.Preferences.setTiebreaker(tiebreakerIndex)
-        print(self.tiebreakerChoice, self.tiebreakerOptions.index(self.tiebreakerChoice))
+        #print(self.tiebreakerChoice, self.tiebreakerOptions.index(self.tiebreakerChoice))
         
         # Handle bad pairing choices
         p1 = 0
@@ -700,10 +700,10 @@ class OnCallViewer:
             p3 = self.settingsIDs[pairingIndex3]
             p4 = self.settingsIDs[pairingIndex4]
         input.Preferences.setBadPairings(p1, p2, p3, p4)
-        print(self.pairingChoice1, p1)
-        print(self.pairingChoice2, p2)
-        print(self.pairingChoice3, p3)
-        print(self.pairingChoice4, p4)
+        #print(self.pairingChoice1, p1)
+        #print(self.pairingChoice2, p2)
+        #print(self.pairingChoice3, p3)
+        #print(self.pairingChoice4, p4)
         
         # Close window
         self.settingsSaved = True

@@ -10,8 +10,9 @@
 
 import importlib
 import shiftAssignments as sa
-import test_week as week # For testing
+#import test_week as week # For testing
 #import test_end as end # For testing
+import weekdayScheduler as week
 import weekendScheduler as end # Not using Alex's file right now because it's giving me errors
 
 # List of previous shiftAssignments dictionary states
@@ -26,7 +27,7 @@ def generateSchedule():
 	'''
 
 	# For now, I am not "calling" the schedulers but I have created test files
-	# week_schedule = week.weekdayShifts()
+	week_schedule = week.WeekdayShifts().weekdayShifts()
 	end_schedule = end.weekendShifts() 
 
 	# Dictionary that will get written to shiftAssignments.py
@@ -40,7 +41,7 @@ def generateSchedule():
 
 	# Adding the WEEKDAYS to the dictionary
 	for i in range(10): # 10 weeks in a term
-		assignments.update({i+1: [week.schedule[i][0], week.schedule[i][1]]})
+		assignments.update({i+1: [week_schedule[i][0], week_schedule[i][1]]})
 
 	# Adding the WEEKENDS to the dictionary
 	for i in range(10): # 10 weeks in a term
