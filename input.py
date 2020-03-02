@@ -210,7 +210,7 @@ class Preferences:
 		file.close()
 		return 0
 
-	def weekendsOffCheck():
+	def generateCheck():
 		''' None -> int (0 or 1)
 		The function checks that no more than half the RA team has requested the same weekend off.
 		If more than half the RA team has requested the same weekend off, this is a violation of
@@ -238,6 +238,9 @@ class Preferences:
 
 		for i in key_list:
 			requests += current_dictionary[i][4:] # adds RA's weekend off requests to list
+			if current_dictionary[i][1] == current_dictionary[i][2] or current_dictionary[i][1] == current_dictionary[i][3] or current_dictionary[i][2] == current_dictionary[i][3]:
+				print("An RA has been given multiple of the same weekday preference. Please resolve this issue before a schedule can be generated")
+				return 3
 		
 		for j in requests:
 			j = int(j) # converts string to integer
@@ -272,19 +275,6 @@ class Preferences:
 
 		Input.save(current_dictionary, idNum, index) # adds action to global dictionary
 		current_dictionary[idNum][index] = newPref # makes modifications
-		
-		if index == 1: # error checking that the updated preference isn't the same as the other two
-			if current_dictionary[idNum][1] == current_dictionary[idNum][2] or current_dictionary[idNum][1] == current_dictionary[idNum][3]:
-				# print("error1")
-				return 1
-		elif index == 2: # error checking that the updated preference isn't the same as the other two
-			if current_dictionary[idNum][2] == current_dictionary[idNum][1] or current_dictionary[idNum][2] == current_dictionary[idNum][3]:
-				# print("error2")
-				return 1
-		elif index == 3: # error checking that the updated preference isn't the same as the other two
-			if current_dictionary[idNum][3] == current_dictionary[idNum][1] or current_dictionary[idNum][3] == current_dictionary[idNum][2]:
-				# print("error3")
-				return 1
 
 		file = open("raPreferences.py", "w+") # opens the file containing raPreferences dictionary
 		file.write("raPreferences = %s\n" % (str(current_dictionary))) # writes the new dictionary to raPreferences.py
