@@ -1,6 +1,6 @@
 '''
     Author: Lily Jim
-    Date of last modification: 2-28-2020
+    Date of last modification: 3-1-2020
     Description: This creates the graphical user interface
     References:
         On Deck Development Team's Project 1 interface.py file
@@ -34,7 +34,6 @@ import raPreferences as raPrefs
 import shiftAssignments as sa
 
 # TODO dropdown lists of RAs should have 'none' as an option in settings
-# TODO integrate with output.py's reset function
 
 class OnCallViewer:
     def __init__(self):
