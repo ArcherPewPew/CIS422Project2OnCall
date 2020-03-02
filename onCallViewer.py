@@ -1,6 +1,6 @@
 '''
     Author: Lily Jim
-    Date of last modification: 2-28-2020
+    Date of last modification: 3-1-2020
     Description: This creates the graphical user interface
     References:
         On Deck Development Team's Project 1 interface.py file
@@ -11,11 +11,12 @@
         Tkinter Button Text Config: https://pythonexamples.org/python-tkinter-button-change-font/
         Tkinter variable: https://www.geeksforgeeks.org/python-setting-and-retrieving-values-of-tkinter-variable/
         Tkinter wait_variable: http://www.scoberlin.de/content/media/http/informatik/tkinter/x8996-event-processing.htm and https://stackoverflow.com/questions/44790449/making-tkinter-wait-untill-button-is-pressed
+        Tkinter columnspan: https://stackoverflow.com/questions/21009232/how-to-make-tkinter-columns-of-equal-width-when-widgets-span-multiple-columns-p
+        Tkinter Underline Text: https://stackoverflow.com/questions/3655449/underline-text-in-tkinter-label-widget
         Tkinter Scrollbar: https://stackoverflow.com/questions/43731784/tkinter-canvas-scrollbar-with-grid
         List methods: https://www.geeksforgeeks.org/python-list/ and https://www.programiz.com/python-programming/methods/list/index
         Dictionary methods: https://www.geeksforgeeks.org/iterate-over-a-dictionary-in-python/ and https://www.geeksforgeeks.org/get-method-dictionaries-python/
         Button with args: https://stackoverflow.com/questions/6920302/how-to-pass-arguments-to-a-button-command-in-tkinter
-    Note: Portions of the code related to Tkinter's frame and canvas are copied from https://stackoverflow.com/questions/43731784/tkinter-canvas-scrollbar-with-grid
 '''
 
 import tkinter as tk
@@ -32,9 +33,7 @@ import output
 import raPreferences as raPrefs
 import shiftAssignments as sa
 
-# TODO call weekendsOffCheck
-# TODO don't let duplicate windows open
-# TODO dropdown lists of RAs should have 'none' as an option
+# TODO dropdown lists of RAs should have 'none' as an option in settings
 
 class OnCallViewer:
     def __init__(self):
@@ -105,16 +104,14 @@ class OnCallViewer:
         # Setup home window:
         root = self.root
         root.title('On Call - Home')
-        root.geometry('400x400+200+100') # width x height + x_offset + y_offset
-        root.minsize(400, 400)
+        root.geometry('400x200+200+100') # width x height + x_offset + y_offset
+        root.minsize(400, 200)
         
         # Create buttons:
-        prefButton = tk.Button(root, text='RA\nPreferences', command=self.preferencesView)
-        prefButton['font'] = tk.font.Font(size=20) # TODO check if we want it to look like this or all the other buttons
+        prefButton = tk.Button(root, text='RA Preferences', command=self.preferencesView)
         prefButton.pack(padx=50, side=tk.LEFT)
         
         scheduleButton = tk.Button(root, text='Schedule', command=self.scheduleView)
-        scheduleButton['font'] = tk.font.Font(size=20) # TODO check if we want it to look like this or all the other buttons
         scheduleButton.pack(padx=50, side=tk.LEFT)
         
         # Start screen:
@@ -131,75 +128,111 @@ class OnCallViewer:
             None -> None
             This creates the RA Preferences screen
         '''
-        # Setup preferences window:
-        self.preferences = tk.Toplevel()
-        pref = self.preferences
-        pref.title('On Call - RA Preferences')
-        pref.geometry('800x400+250+150') # width x height + x_offset + y_offset
-        pref.minsize(400, 600)
+        if(self.preferences != None):
+            self.preferences.lift()
+            return None # Only allow one preferences view at a time
         
         importlib.reload(raPrefs)
         numRAs = len(raPrefs.raPreferences)
         
+        # Setup preferences window:
+        self.preferences = tk.Toplevel()
+        pref = self.preferences
+        pref.title('On Call - RA Preferences')
+        if(numRAs == 0):
+            pref.geometry('225x125+250+150') # width x height + x_offset + y_offset
+            pref.minsize(225, 125)
+        elif(numRAs > 20):
+            pref.geometry('800x750+0+0') # width x height + x_offset + y_offset
+            pref.minsize(600, 750)
+        else:
+            pref.geometry('800x600+250+150') # width x height + x_offset + y_offset
+            pref.minsize(600, 600)
+        
         # Create undo button
-        undoButton = tk.Button(pref, text='Undo', command=self.undoPreferences)
-        undoButton.grid(column=0, row=0)
-        if(len(input.inputUpdates) == 0):
-            undoButton.configure(state='disabled')
+        if(numRAs != 0):
+            undoButton = tk.Button(pref, text='Undo', command=self.undoPreferences)
+            undoButton.grid(column=0, row=0)
+            if(len(input.inputUpdates) == 0):
+                undoButton.configure(state='disabled')
         
-        # Display current RAs in the system
-        index = 0
-        self.raIDs = []
-        self.raNames = []
-        for ra in raPrefs.raPreferences:
-            if(ra != '1' and ra != '2' and ra != '3'):
-                self.raIDs.append(ra)
-                self.raNames.append(raPrefs.raPreferences.get(ra)[0])
-                # TODO "header" labels
-                # TODO set column/row sizes
-                
-                # Show RA name
-                nameLabel = tk.Label(pref, text=raPrefs.raPreferences.get(ra)[0])
-                nameLabel.grid(column=0, row=index+1)
-                
-                # Show weekday preferences
-                pref1 = tk.Button(pref, text=raPrefs.raPreferences.get(ra)[1], command=partial(self.editRA, index, 1))
-                pref1.grid(column=1, row=index+1)
-                pref2 = tk.Button(pref, text=raPrefs.raPreferences.get(ra)[2], command=partial(self.editRA, index, 2))
-                pref2.grid(column=2, row=index+1)
-                pref3 = tk.Button(pref, text=raPrefs.raPreferences.get(ra)[3], command=partial(self.editRA, index, 3))
-                pref3.grid(column=3, row=index+1)
-                
-                # Show weekend off requests
-                pref4 = tk.Button(pref, text=raPrefs.raPreferences.get(ra)[4], command=partial(self.editRA, index, 4))
-                pref4.grid(column=4, row=index+1)
-                pref5 = tk.Button(pref, text=raPrefs.raPreferences.get(ra)[5], command=partial(self.editRA, index, 5))
-                pref5.grid(column=5, row=index+1)
-                pref6 = tk.Button(pref, text=raPrefs.raPreferences.get(ra)[6], command=partial(self.editRA, index, 6))
-                pref6.grid(column=6, row=index+1)
-                
-                # Increase counter for widget placement
-                index += 1
+            # Display 'headers' for the preferences
+            raNameLabel = tk.Label(pref, text='RA Name')
+            raNameLabel.grid(column=0, row=1)
+            weekdayLabel = tk.Label(pref, text='Weekday Preferences')
+            weekdayLabel.grid(column=1, row=1, columnspan=3)
+            weekendLabel = tk.Label(pref, text='Weekend Off Requests')
+            weekendLabel.grid(column=4, row=1, columnspan=3)
+            # Set 'header' font
+            underline = tk.font.Font(raNameLabel, raNameLabel.cget("font"))
+            underline.configure(size=14, underline=True)
+            raNameLabel.configure(font=underline)
+            weekdayLabel.configure(font=underline)
+            weekendLabel.configure(font=underline)
         
-        # TODO add scrollbar
+            # Display current RAs in the system
+            index = 0
+            self.raIDs = []
+            self.raNames = []
+            for ra in raPrefs.raPreferences:
+                if(ra != '1' and ra != '2' and ra != '3'):
+                    self.raIDs.append(ra)
+                    self.raNames.append(raPrefs.raPreferences.get(ra)[0])
+
+                    # Show RA name
+                    nameLabel = tk.Label(pref, text=raPrefs.raPreferences.get(ra)[0])
+                    nameLabel.grid(column=0, row=index+2)
+
+                    # Show weekday preferences
+                    pref1 = tk.Button(pref, text=raPrefs.raPreferences.get(ra)[1], command=partial(self.editRA, index, 1))
+                    pref1.grid(column=1, row=index+2)
+                    pref2 = tk.Button(pref, text=raPrefs.raPreferences.get(ra)[2], command=partial(self.editRA, index, 2))
+                    pref2.grid(column=2, row=index+2)
+                    pref3 = tk.Button(pref, text=raPrefs.raPreferences.get(ra)[3], command=partial(self.editRA, index, 3))
+                    pref3.grid(column=3, row=index+2)
+
+                    # Show weekend off requests
+                    pref4 = tk.Button(pref, text=raPrefs.raPreferences.get(ra)[4], command=partial(self.editRA, index, 4))
+                    pref4.grid(column=4, row=index+2)
+                    pref5 = tk.Button(pref, text=raPrefs.raPreferences.get(ra)[5], command=partial(self.editRA, index, 5))
+                    pref5.grid(column=5, row=index+2)
+                    pref6 = tk.Button(pref, text=raPrefs.raPreferences.get(ra)[6], command=partial(self.editRA, index, 6))
+                    pref6.grid(column=6, row=index+2)
+
+                    # Increase counter for widget placement
+                    index += 1
         
         # Create import button:
         importPrefs = tk.Button(pref, text='Import Preferences', command=self.importPreferences)
-        importPrefs.grid(column=1, row=numRAs+1, padx=50, pady=50)
         
-        # Create RA deletion section:
-        # Create Delete RA label
-        delRaLabel = tk.Label(pref, text='Delete RA:')
-        delRaLabel.grid(column=0, row=numRAs+2, padx=10, pady=10)
-        # Create dropdown menu
-        self.delRaDropdown = tk.ttk.Combobox(pref, values=self.raNames, state='readonly')
-        self.delRaDropdown.grid(column=1, row=numRAs+2, padx=10, pady=10)
-        self.delRaDropdown.bind('<<ComboboxSelected>>', self.selectedForDeletion)
-        # Create deletion save button:
-        saveDeletion = tk.Button(pref, text='Save', command=self.deleteRA)
-        saveDeletion.grid(column=2, row=numRAs+2, padx=10, pady=10)
-        
-        # TODO add delete all RAs button?
+        if(numRAs != 0):
+            # Add import button:
+            importPrefs.grid(column=1, row=numRAs+2, pady=25, columnspan=2)
+            
+            # Create RA deletion section:
+            # Create Delete RA label
+            delRaLabel = tk.Label(pref, text='Delete RA:')
+            delRaLabel.grid(column=0, row=numRAs+3, padx=10)
+            # Create dropdown menu
+            self.delRaDropdown = tk.ttk.Combobox(pref, values=self.raNames, state='readonly')
+            self.delRaDropdown.grid(column=1, row=numRAs+3, columnspan=2)
+            self.delRaDropdown.bind('<<ComboboxSelected>>', self.selectedForDeletion)
+            # Create deletion save button:
+            saveDeletion = tk.Button(pref, text='Save', command=self.deleteRA)
+            saveDeletion.grid(column=3, row=numRAs+3, padx=10)
+            
+            # Create delete all button
+            delAll = tk.Button(pref, text='Delete All', command=self.deleteAllRAs)
+            delAll.grid(column=4, row=numRAs+3, columnspan=3)
+            
+        else:
+            # Show message that there are no RAs in the system 
+            noRaLabel = tk.Label(pref, text='No Existing RAs\nPlease Import Preferences')
+            noRaLabel.grid(column=0, row=0, pady=15)
+            # Add import button:
+            importPrefs.grid(column=0, row=1)
+            # Center horizontally
+            pref.grid_columnconfigure(0, weight=1)
         
         # Start screen:
         pref.protocol('WM_DELETE_WINDOW', self.closePreferences)
@@ -221,13 +254,23 @@ class OnCallViewer:
             Asks user for csv file name
             Calls input.py's importFile function
         '''
-        # TODO notify user what this will do
-        files = [('CSV Files', '*.csv')]
-        fileName = tk.filedialog.askopenfilename(filetypes = files)
-        if(fileName != ''):
-            error = input.Preferences.importFile(fileName)
-            # TODO if error indicator returned, send message to user
-        self.closePreferences()
+        if(len(raPrefs.raPreferences) == 25):
+            tk.messagebox.showerror(message='The maximum limit of RAs has been reached. Please remove an RA before importing a new file.')
+            return None
+        continueYes = True
+        if(len(raPrefs.raPreferences) == 0):
+            continueYes = tk.messagebox.askokcancel(message='You can import either a single RA or several RAs in the same file.\nContinue?')
+        else:
+            continueYes = tk.messagebox.askokcancel(message='New RAs will be added to the current list. Existing RAs will be permanently updated.\nContinue?')
+        if(continueYes):
+            files = [('CSV Files', '*.csv')]
+            fileName = tk.filedialog.askopenfilename(filetypes = files)
+            if(fileName != ''):
+                error = input.Preferences.importFile(fileName)
+                if(error == 1):
+                    tk.messagebox.showerror(message='Invalid file.\nPlease check the following:\nID numbers are correct.\nAll preferences are filled out with valid choices.\nThe same weekday preference is not chosen multiple times per RA.')
+                else:
+                    self.closePreferences()
         return None
     
     def selectedForDeletion(self, event):
@@ -243,14 +286,23 @@ class OnCallViewer:
             This calls input.py's function to delete the selected RA
         '''
         if(self.raSelectedToDelete != None):
-            # TODO send warning to user
-            pos = self.raNames.index(self.raSelectedToDelete)
-            studentID = self.raIDs[pos]
-            input.Preferences.deletePreferences(studentID)
-            self.closePreferences() # terminates preferences window forcing the user to reopen it, refreshing the information
+            if(tk.messagebox.askokcancel(message='This will permanently delete %s.\nContinue?' % self.raSelectedToDelete)):
+                pos = self.raNames.index(self.raSelectedToDelete)
+                studentID = self.raIDs[pos]
+                input.Preferences.deletePreferences(studentID)
+                self.closePreferences() # terminates preferences window forcing the user to reopen it, refreshing the information
         else:
-            # TODO send message to user to select RA
-            print('No RA selected to delete')
+            tk.messagebox.showerror(message='No RA selected.\nPlease select an RA to delete.')
+        return None
+    
+    def deleteAllRAs(self):
+        '''
+            None -> None
+            This calls input.py's function to clear all the RAs in the system
+        '''
+        if(tk.messagebox.askokcancel(message='This will permanently delete all of the RAs in the system.\nContinue?')):
+            input.Preferences.resetPreferences()
+            self.closePreferences()
         return None
     
     def closePreferences(self):
@@ -279,12 +331,15 @@ class OnCallViewer:
     
     
     ''' The following functions are for the Edit RA Preference window '''
-    # TODO prevent this window from opening if one is already open
     def editRA(self, ra, field):
         '''
             int, int, int -> None
             This opens a new window and allows the user to input a new preference for an RA
         '''
+        if(self.prefEdit != None):
+            self.prefEdit.lift()
+            return None # Only allow one RA to be edited at a time
+        
         # Setup RA edit window:
         self.prefEdit = tk.Toplevel()
         prefEdit = self.prefEdit
@@ -326,12 +381,19 @@ class OnCallViewer:
             When the user clicks save when updating an RA's preference field, this function will get called
             This calls input's updatePreferences function
         '''
-        if(field <= 3):
-            input.Preferences.updatePreferences(self.raIDs[ra], field, self.weekdayChoice)
+        if(self.weekdayChoice == None and self.weekendChoice == None):
+            tk.messagebox.showerror(message='No preference selected.\nPlease make a selection.')
         else:
-            input.Preferences.updatePreferences(self.raIDs[ra], field, self.weekendChoice)
-        self.closeEditRA()
-        self.closePreferences()
+            if(field <= 3):
+                if(raPrefs.raPreferences.get(self.raIDs[ra])[field] != self.weekdayChoice):
+                    # only call update if it is a new choice
+                    input.Preferences.updatePreferences(self.raIDs[ra], field, self.weekdayChoice)
+            else:
+                if(raPrefs.raPreferences.get(self.raIDs[ra])[field] != self.weekendChoice):
+                    # only call update if it is a new choice
+                    input.Preferences.updatePreferences(self.raIDs[ra], field, self.weekendChoice)
+            self.closeEditRA()
+            self.closePreferences()
         return None
     
     def closeEditRA(self):
@@ -358,16 +420,26 @@ class OnCallViewer:
             None -> None
             This creates the schedule screen
         '''
+        if(self.schedule != None):
+            self.schedule.lift()
+            return None # Only allow one schedule view at a time
+        
+        importlib.reload(sa)
+        numShifts = len(sa.shiftAssignments)
+        
         # Setup schedule window:
         self.schedule = tk.Toplevel()
         sched = self.schedule
         sched.title('On Call - Schedule')
-        sched.geometry('1500x800+0+0') # width x height + x_offset + y_offset
-        sched.minsize(400, 400)
+        if(numShifts == 0):
+            sched.geometry('225x125+250+150') # width x height + x_offset + y_offset
+            sched.minsize(225, 125)
+        else:
+            sched.geometry('1225x700+0+0') # width x height + x_offset + y_offset
+            sched.minsize(1200, 700)
         
-        importlib.reload(sa)
         # Only show schedule if there is a schedule
-        if(len(sa.shiftAssignments) != 0):
+        if(numShifts != 0):
             # Create undo button
             undoButton = tk.Button(sched, text='Undo', command=self.undoShiftChange)
             undoButton.grid(column=0, row=0)
@@ -375,30 +447,44 @@ class OnCallViewer:
                 undoButton.configure(state='disabled')
             
             # Display 'headers' for the schedule
+            underline = tk.font.Font(undoButton, undoButton.cget("font"))
+            underline.configure(size=14, underline=True)
             sundayDay = tk.Label(sched, text='Sunday Day')
             sundayDay.grid(column=1, row=1)
+            sundayDay.configure(font=underline)
             sundayNight = tk.Label(sched, text='Sunday Night')
             sundayNight.grid(column=2, row=1)
+            sundayNight.configure(font=underline)
             monday = tk.Label(sched, text='Monday')
             monday.grid(column=3, row=1)
+            monday.configure(font=underline)
             tuesday = tk.Label(sched, text='Tuesday')
             tuesday.grid(column=4, row=1)
+            tuesday.configure(font=underline)
             wednesday = tk.Label(sched, text='Wednesday')
             wednesday.grid(column=5, row=1)
+            wednesday.configure(font=underline)
             thursday = tk.Label(sched, text='Thursday')
             thursday.grid(column=6, row=1)
+            thursday.configure(font=underline)
             friday = tk.Label(sched, text='Friday')
             friday.grid(column=7, row=1)
+            friday.configure(font=underline)
             saturdayDay = tk.Label(sched, text='Saturday Day')
             saturdayDay.grid(column=8, row=1)
+            saturdayDay.configure(font=underline)
             saturdayNight = tk.Label(sched, text='Saturday Day')
             saturdayNight.grid(column=9, row=1)
+            saturdayNight.configure(font=underline)
             
             # Display current schedule in the system
+            weekNumFont = tk.font.Font(undoButton, undoButton.cget("font"))
+            weekNumFont.configure(size=14)
             for week in sa.shiftAssignments:
                 # Primary RA row
-                weekNum = tk.Label(sched, text=('Week %d Primary' % (week)))
-                weekNum.grid(column=0, row=(week*2))
+                weekNumPrimary = tk.Label(sched, text=('Week %d Primary' % (week)))
+                weekNumPrimary.grid(column=0, row=(week*2))
+                weekNumPrimary.configure(font=weekNumFont)
                 slot1 = tk.Button(sched, text=sa.shiftAssignments[week][0][0], command=partial(self.editSchedule, week, 0, 0))
                 slot1.grid(column=1, row=(week*2))
                 slot2 = tk.Button(sched, text=sa.shiftAssignments[week][0][1], command=partial(self.editSchedule, week, 0, 1))
@@ -418,8 +504,9 @@ class OnCallViewer:
                 slot9 = tk.Button(sched, text=sa.shiftAssignments[week][0][8], command=partial(self.editSchedule, week, 0, 8))
                 slot9.grid(column=9, row=(week*2))
                 # Secondary RA row
-                weekNum = tk.Label(sched, text=('Week %d Secondary' % (week)))
-                weekNum.grid(column=0, row=(week*2)+1)
+                weekNumSecondary = tk.Label(sched, text=('Week %d Secondary' % (week)))
+                weekNumSecondary.grid(column=0, row=(week*2)+1)
+                weekNumSecondary.configure(font=weekNumFont)
                 slot11 = tk.Button(sched, text=sa.shiftAssignments[week][1][0], command=partial(self.editSchedule, week, 1, 0))
                 slot11.grid(column=1, row=(week*2)+1)
                 slot12 = tk.Button(sched, text=sa.shiftAssignments[week][1][1], command=partial(self.editSchedule, week, 1, 1))
@@ -441,20 +528,24 @@ class OnCallViewer:
         else:
             # Show message that there is not a schedule in the system
             noSchedLabel = tk.Label(sched, text='No Existing Schedule\nPlease Generate New Schedule')
-            noSchedLabel.grid(column=0, row=0)
-        
-        # TODO add clear/delete schedule button?
-        # TODO add scrollbar
+            noSchedLabel.grid(column=0, row=0, pady=20)
+            sched.grid_columnconfigure(0, weight=1)
         
         # Create Generate button:
         generateSched = tk.Button(sched, text='Generate New Schedule', command=self.generateNewSchedule)
-        generateSched.grid(column=0, row=22, pady=50)
+        generateSched.grid(column=0, row=22, columnspan=2)
         
-        # Create export button:
-        exportSched = tk.Button(sched, text='Export Schedule', command=self.exportSchedule)
-        exportSched.grid(column=0, row=23)
+        if(numShifts != 0):
+            # Create export button:
+            exportSched = tk.Button(sched, text='Export Schedule', command=self.exportSchedule)
+            exportSched.grid(column=2, row=22, pady=50, columnspan=2)
+            
+            # Create clear button:
+            clearSched = tk.Button(sched, text='Clear Schedule', command=self.clearSchedule)
+            clearSched.grid(column=4, row=22, columnspan=2)
         
         # Start screen:
+        sched.protocol('WM_DELETE_WINDOW', self.closeSchedule)
         sched.update() # use update, not mainloop so other functions can still run
         return None
     
@@ -473,17 +564,28 @@ class OnCallViewer:
             This opens the preference's settings screen
             This calls output.py's generateSchedule function
         '''
-        # TODO check if there are RAs in the system
-        # TODO check if schedule already exists
-        # TODO if schedule already exists, warn user of overwriting
-        # TODO if schedule doesn't exist, tell user what will happen
-        self.settingsSaved = False
-        self.settingsClosed.set(False)
-        self.settingsView()
-        self.root.wait_variable(self.settingsClosed)
-        if(self.settingsSaved):
-            error = output.generateSchedule()
-        # TODO handle error
+        if(self.settings != None):
+            self.settings.lift()
+            return None # Only allow one generate screen at a time
+        
+        inputGood = input.Preferences.weekendsOffCheck()
+        if(inputGood == 0):
+            continueYes = True
+            if(len(sa.shiftAssignments) != 0):
+                continueYes = tk.messagebox.askokcancel(message='This will overwrite the current schedule.\nContinue?')
+            if(continueYes):
+                self.settingsSaved = False
+                self.settingsClosed.set(False)
+                self.settingsView()
+                self.root.wait_variable(self.settingsClosed)
+                if(self.settingsSaved):
+                    error = output.generateSchedule()
+                    if(error == 1):
+                        tk.messagebox.showerror(message='An error occured.\nA schedule cannot be generated.')
+        elif(inputGood == 1):
+            tk.messagebox.showerror(message='A schedule cannot be generated:\nA minimum of 10 RAs are needed.')
+        elif(inputGood == 2):
+            tk.messagebox.showerror(message='A schedule cannot be generated:\nMore than half the RA team has requested the same weekend off.')
         return None
     
     def exportSchedule(self):
@@ -498,9 +600,21 @@ class OnCallViewer:
             fileName = tk.filedialog.asksaveasfilename(filetypes = files)
             if(fileName != ''):
                 error = output.exportFile(fileName)
-                # TODO if error indicator returned, send message to user ---- exportFile currently never returns 1 under any circumstances
+                if(error == 1):
+                    tk.messagebox.showerror(message='An error occured.\nThe schedule could not be exported.')
         else:
             tk.messagebox.showerror(message='No schedule to export. Please generate a schedule first.')
+        return None
+    
+    def clearSchedule(self):
+        '''
+            None -> None
+            This calls output.py's function to delete the schedule in the system
+        '''
+        if(tk.messagebox.askokcancel(message='This will permanently delete the schedule in the system.\nContinue?')):
+            empty = {}
+            output.rewriteSchedule(empty)
+            self.closeSchedule()
         return None
     
     def closeSchedule(self):
@@ -517,12 +631,15 @@ class OnCallViewer:
     
     
     ''' The following functions are for the Edit Schedule window '''
-    # TODO prevent this window from opening if one is already open
     def editSchedule(self, weekNum, secondary, index):
         '''
             int, int, int -> None
             This creates the screen to update a shift in the schedule
         '''
+        if(self.schedEdit != None):
+            self.schedEdit.lift()
+            return None # Only allow one shift to be edited at a time
+        
         # Setup schedule edit window:
         self.schedEdit = tk.Toplevel()
         schedEdit = self.schedEdit
@@ -564,9 +681,14 @@ class OnCallViewer:
             This updates the chosen field in the schedule
             This calls output's function
         '''
-        output.updateSchedule(weekNum, secondary, index, self.changeRaChoice)
-        self.closeEditSchedule()
-        self.closeSchedule()
+        if(self.changeRaChoice == None):
+            tk.messagebox.showerror(message='No RA selected.\nPlease select an RA.')
+        else:
+            if(sa.shiftAssignments[weekNum][secondary][index] != self.changeRaChoice):
+                # only call update if it is a new choice
+                output.updateSchedule(weekNum, secondary, index, self.changeRaChoice)
+            self.closeEditSchedule()
+            self.closeSchedule()
         return None
     
     def closeEditSchedule(self):
@@ -674,20 +796,13 @@ class OnCallViewer:
             This calls input.py's function to save the settings
             This also closes the settings window
         '''
-        # TODO include error checking for the pairing choices
-            # an RA cannot be paired with theirself
-            # an RA cannot be paired with 'no one'
-        # TODO remove print statements
-        
         # Handle gold star choice
         nameIndex = self.settingsNames.index(self.goldStarChoice)
         input.Preferences.setGoldStar(self.settingsIDs[nameIndex])
-        print(self.goldStarChoice, self.settingsIDs[nameIndex])
         
         # Handle tiebreaker choice
         tiebreakerIndex = self.tiebreakerOptions.index(self.tiebreakerChoice)
         input.Preferences.setTiebreaker(tiebreakerIndex)
-        print(self.tiebreakerChoice, self.tiebreakerOptions.index(self.tiebreakerChoice))
         
         # Handle bad pairing choices
         p1 = 0
@@ -695,20 +810,22 @@ class OnCallViewer:
         p3 = 0
         p4 = 0
         if(self.pairingChoice1 != None and self.pairingChoice2 != None):
+            if(self.pairingChoice1 == self.pairingChoice2):
+                tk.messagebox.showerror(message='An RA was selected to not share a shift with themselves.\nThis is impossible.\nPlease update pairings.')
+                return None
             pairingIndex1 = self.settingsNames.index(self.pairingChoice1)
             pairingIndex2 = self.settingsNames.index(self.pairingChoice2)
             p1 = self.settingsIDs[pairingIndex1]
             p2 = self.settingsIDs[pairingIndex2]
         if(self.pairingChoice3 != None and self.pairingChoice4 != None):
+            if(self.pairingChoice3 == self.pairingChoice4):
+                tk.messagebox.showerror(message='An RA was selected to not share a shift with themselves.\nThis is impossible.\nPlease update pairings.')
+                return None
             pairingIndex3 = self.settingsNames.index(self.pairingChoice3)
             pairingIndex4 = self.settingsNames.index(self.pairingChoice4)
             p3 = self.settingsIDs[pairingIndex3]
             p4 = self.settingsIDs[pairingIndex4]
         input.Preferences.setBadPairings(p1, p2, p3, p4)
-        print(self.pairingChoice1, p1)
-        print(self.pairingChoice2, p2)
-        print(self.pairingChoice3, p3)
-        print(self.pairingChoice4, p4)
         
         # Close window
         self.settingsSaved = True
@@ -870,8 +987,8 @@ def preferencesView(self):
         # Set up main frame
         prefMain = tk.Frame(pref)
         prefMain.grid(sticky='news') # Frame extends to north, east, west, and south of the window
-        prefMain.grid_rowconfigure(0, weight=1) # TODO find out if this line is necessary
-        prefMain.grid_columnconfigure(0, weight=1) # TODO find out if this line is necessary
+        prefMain.grid_rowconfigure(0, weight=1)
+        prefMain.grid_columnconfigure(0, weight=1)
         prefMain.grid_propagate(False)
         prefMain.config(width=700, height=400)
         # Create Canvas with scrollbar
@@ -893,14 +1010,11 @@ def preferencesView(self):
             if(len(input.inputUpdates) == 0):
                 undoButton.configure(state='disabled')
             
-            # TODO add 'header' labels to prefMain
-            # labels in row 1
-            
             # Create RA list frame
             #prefList = tk.Frame(prefMain)
             #prefList.grid(row=2, column=1, sticky='nw')
-            #prefList.grid_rowconfigure(0, weight=1) # TODO find out if this line is necessary
-            #prefList.grid_columnconfigure(0, weight=1) # TODO find out if this line is necessary
+            #prefList.grid_rowconfigure(0, weight=1)
+            #prefList.grid_columnconfigure(0, weight=1)
             #prefList.grid_propagate(False)
             #prefList.config(width=800, height=300)
             
@@ -925,7 +1039,6 @@ def preferencesView(self):
                 if(ra != '1' and ra != '2' and ra != '3'):
                     self.raIDs.append(ra)
                     self.raNames.append(raPrefs.raPreferences.get(ra)[0])
-                    # TODO set column/row sizes
 
                     # Show RA name
                     nameLabel = tk.Label(prefWidgets, text=raPrefs.raPreferences.get(ra)[0])
@@ -956,8 +1069,6 @@ def preferencesView(self):
             # Set the canvas scrolling region
             #canvas.config(scrollregion=canvas.bbox("all"))
         
-        # TODO add scrollbar
-        
         # Create import button:
         importPrefs = tk.Button(prefWidgets, text='Import Preferences', command=self.importPreferences)
         importPrefs.grid(column=1, row=numRAs+2, padx=50, pady=50)
@@ -973,8 +1084,6 @@ def preferencesView(self):
         # Create deletion save button:
         saveDeletion = tk.Button(prefWidgets, text='Save', command=self.deleteRA)
         saveDeletion.grid(column=2, row=numRAs+3, padx=10, pady=10)
-        
-        # TODO add delete all RAs button?
         
         # Start screen:
         prefWidgets.update_idletasks()

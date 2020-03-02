@@ -226,7 +226,7 @@ class Preferences:
 		key_list = list(current_dictionary.keys()) # list of each RA's student's IDs
 
 		if len(key_list) < 10: # checks that thee team is the minimum size necessary to generate the schedule
-			print("A schedule cannot be generated: The RA team is too small. A minimum of 10 RAs are needed. Likely, not all the RAs have been uploaded.")
+			#print("A schedule cannot be generated: The RA team is too small. A minimum of 10 RAs are needed. Likely, not all the RAs have been uploaded.")
 			return 1
 
 		for i in key_list:
@@ -242,16 +242,16 @@ class Preferences:
 		if (len(key_list) % 2) == 1: # odd number of RAs
 			for k in range(len(weekends_off)):
 				if weekends_off[k] > ((len(key_list) // 2) + 1): # if the number of weekends at index k is greater than half the RA team
-					print("error")
-					print("More than half the RA team has request weekend {} off. Please discuss with your RAs alternatives.".format(k+1))
-					return 1
+					#print("error")
+					#print("More than half the RA team has request weekend {} off. Please discuss with your RAs alternatives.".format(k+1))
+					return 2
 
 		else: # even number of RAs
 			for l in range(len(weekends_off)):
-				if weekends_off[k] > (len(key_list) // 2): # if the number of weekends at index k is greater than half the RA team
-					print("error")
-					print("More than half the RA team has request weekend {} off. Please discuss with your RAs alternatives.".format(k+1))
-					return 1
+				if weekends_off[l] > (len(key_list) // 2): # if the number of weekends at index k is greater than half the RA team
+					#print("error")
+					#print("More than half the RA team has request weekend {} off. Please discuss with your RAs alternatives.".format(l+1))
+					return 2
 		return 0
 
 	def updatePreferences(idNum, index, newPref):
