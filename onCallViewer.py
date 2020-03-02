@@ -613,7 +613,8 @@ class OnCallViewer:
             This calls output.py's function to delete the schedule in the system
         '''
         if(tk.messagebox.askokcancel(message='This will permanently delete the schedule in the system.\nContinue?')):
-            print('Clear Schedule function not implemented yet') # TODO call function once implemented
+            empty = {}
+            output.rewriteSchedule(empty)
             self.closeSchedule()
         return None
     
