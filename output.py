@@ -1,6 +1,6 @@
 '''
 	Author: Kiana Hosaka
-	Date of Last Modification: February 28, 2020
+	Date of Last Modification: March 1, 2020
 	Description: File produces the functionality of the Shift Assignments Module.
 	References:
 	- Prepending to a list: https://kite.com/python/answers/how-to-prepend-to-a-list-in-python
@@ -195,6 +195,7 @@ def undo():
 
 	return 0
 
+
 def resetAssignments():
 	'''
 		() -> int
@@ -211,6 +212,7 @@ def resetAssignments():
 	importlib.reload(sa) # Reloading dictionary
 
 	return 0
+
 
 '''
 	Calling methods to test program functionality.
