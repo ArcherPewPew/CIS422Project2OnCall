@@ -34,10 +34,7 @@ import raPreferences as raPrefs
 import shiftAssignments as sa
 
 # TODO dropdown lists of RAs should have 'none' as an option in settings
-# TODO "header" labels to RA preferences
-# TODO set column/row sizes
-# TODO add delete all RAs button
-# TODO add clear/delete schedule button
+# TODO integrate with output.py's reset function
 
 class OnCallViewer:
     def __init__(self):
@@ -226,7 +223,7 @@ class OnCallViewer:
             saveDeletion.grid(column=3, row=numRAs+3, padx=10)
             
             # Create delete all button
-            delAll = tk.Button(pref, text='Delete All', command=self.testButton)
+            delAll = tk.Button(pref, text='Delete All', command=self.deleteAllRAs)
             delAll.grid(column=4, row=numRAs+3, columnspan=3)
             
         else:
@@ -297,6 +294,16 @@ class OnCallViewer:
                 self.closePreferences() # terminates preferences window forcing the user to reopen it, refreshing the information
         else:
             tk.messagebox.showerror(message='No RA selected.\nPlease select an RA to delete.')
+        return None
+    
+    def deleteAllRAs(self):
+        '''
+            None -> None
+            This calls input.py's function to clear all the RAs in the system
+        '''
+        if(tk.messagebox.askokcancel(message='This will permanently delete all of the RAs in the system.\nContinue?')):
+            input.Preferences.resetPreferences()
+            self.closePreferences()
         return None
     
     def closePreferences(self):
@@ -535,7 +542,7 @@ class OnCallViewer:
             exportSched.grid(column=2, row=22, pady=50, columnspan=2)
             
             # Create clear button:
-            clearSched = tk.Button(sched, text='Clear Schedule', command=self.testButton)
+            clearSched = tk.Button(sched, text='Clear Schedule', command=self.clearSchedule)
             clearSched.grid(column=4, row=22, columnspan=2)
         
         # Start screen:
@@ -598,6 +605,16 @@ class OnCallViewer:
                     tk.messagebox.showerror(message='An error occured.\nThe schedule could not be exported.')
         else:
             tk.messagebox.showerror(message='No schedule to export. Please generate a schedule first.')
+        return None
+    
+    def clearSchedule(self):
+        '''
+            None -> None
+            This calls output.py's function to delete the schedule in the system
+        '''
+        if(tk.messagebox.askokcancel(message='This will permanently delete the schedule in the system.\nContinue?')):
+            print('Clear Schedule function not implemented yet') # TODO call function once implemented
+            self.closeSchedule()
         return None
     
     def closeSchedule(self):
