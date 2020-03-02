@@ -222,6 +222,13 @@ class Preferences:
 		weekends_off = [0,0,0,0,0,0,0,0,0,0] # a list to tally the number of times each weekend has been requested off
 		# weekends_off = [1,2,3,4,5,6,7,8,9,10] relevant indices as they are in terms of weeks
 
+		try: # deletes keys that contain setting information so it is not written into file
+			del current_dictionary["1"] # deletes gold star
+			del current_dictionary["2"] # deletes tiebreaker
+			del current_dictionary["3"] # deletes bad pairings
+		except KeyError: # if those keys do not exist, continue
+			pass
+
 		requests = [] # a list to keep track of each RA's weekend off requests
 		key_list = list(current_dictionary.keys()) # list of each RA's student's IDs
 
@@ -255,13 +262,30 @@ class Preferences:
 		return 0
 
 	def updatePreferences(idNum, index, newPref):
-		'''str, int, str -> int (0)
+		'''str, int, str -> int (0 or 1)
 		This function allows for updates of individual fields of the dictionary to allow for updating preferences.
 		'''
 		current_dictionary = Input.readingDictPy("raPreferences.py") # obtains current raPreferences dictionary
 		# print(current_dictionary[idNum][index])
+
+		# print(current_dictionary[idNum][index])
+
 		Input.save(current_dictionary, idNum, index) # adds action to global dictionary
 		current_dictionary[idNum][index] = newPref # makes modifications
+		
+		if index == 1: # error checking that the updated preference isn't the same as the other two
+			if current_dictionary[idNum][1] == current_dictionary[idNum][2] or current_dictionary[idNum][1] == current_dictionary[idNum][3]:
+				# print("error1")
+				return 1
+		elif index == 2: # error checking that the updated preference isn't the same as the other two
+			if current_dictionary[idNum][2] == current_dictionary[idNum][1] or current_dictionary[idNum][2] == current_dictionary[idNum][3]:
+				# print("error2")
+				return 1
+		elif index == 3: # error checking that the updated preference isn't the same as the other two
+			if current_dictionary[idNum][3] == current_dictionary[idNum][1] or current_dictionary[idNum][3] == current_dictionary[idNum][2]:
+				# print("error3")
+				return 1
+
 		file = open("raPreferences.py", "w+") # opens the file containing raPreferences dictionary
 		file.write("raPreferences = %s\n" % (str(current_dictionary))) # writes the new dictionary to raPreferences.py
 		file.close()
