@@ -1,6 +1,6 @@
 '''
 Author: Alyssa Huque
-Date of last modification: 2-27-2020
+Date of last modification: 3-02-2020
 Description: This produces the functionality of the RA Preferences module
 References:
 	On Deck Development Team's Project 1 fileInput.py file
@@ -211,7 +211,7 @@ class Preferences:
 		return 0
 
 	def generateCheck():
-		''' None -> int (0 or 1)
+		''' None -> int (0, 1, 2, or 3)
 		The function checks that no more than half the RA team has requested the same weekend off.
 		If more than half the RA team has requested the same weekend off, this is a violation of
 			the RA contract and this function prints an error message and returns a 1.
@@ -239,7 +239,7 @@ class Preferences:
 		for i in key_list:
 			requests += current_dictionary[i][4:] # adds RA's weekend off requests to list
 			if current_dictionary[i][1] == current_dictionary[i][2] or current_dictionary[i][1] == current_dictionary[i][3] or current_dictionary[i][2] == current_dictionary[i][3]:
-				print("An RA has been given multiple of the same weekday preference. Please resolve this issue before a schedule can be generated")
+				# print("An RA has been given multiple of the same weekday preference. Please resolve this issue before a schedule can be generated")
 				return 3
 		
 		for j in requests:
@@ -269,8 +269,6 @@ class Preferences:
 		This function allows for updates of individual fields of the dictionary to allow for updating preferences.
 		'''
 		current_dictionary = Input.readingDictPy("raPreferences.py") # obtains current raPreferences dictionary
-		# print(current_dictionary[idNum][index])
-
 		# print(current_dictionary[idNum][index])
 
 		Input.save(current_dictionary, idNum, index) # adds action to global dictionary
