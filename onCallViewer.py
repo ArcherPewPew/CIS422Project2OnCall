@@ -469,17 +469,23 @@ class OnCallViewer:
             This opens the preference's settings screen
             This calls output.py's generateSchedule function
         '''
-        # TODO check if there are RAs in the system
         # TODO check if schedule already exists
         # TODO if schedule already exists, warn user of overwriting
         # TODO if schedule doesn't exist, tell user what will happen
-        self.settingsSaved = False
-        self.settingsClosed.set(False)
-        self.settingsView()
-        self.root.wait_variable(self.settingsClosed)
-        if(self.settingsSaved):
-            error = output.generateSchedule()
-        # TODO handle error
+        inputGood = input.Preferences.weekendsOffCheck()
+        if(inputGood == 0):
+            self.settingsSaved = False
+            self.settingsClosed.set(False)
+            self.settingsView()
+            self.root.wait_variable(self.settingsClosed)
+            if(self.settingsSaved):
+                error = output.generateSchedule()
+                # TODO handle error
+        elif(inputGood == 1):
+            tk.messagebox.showerror(message='A schedule cannot be generated:\nA minimum of 10 RAs are needed.')
+        elif(inputGood == 2):
+            tk.messagebox.showerror(message='A schedule cannot be generated:\nMore than half the RA team has requested the same weekend off.')
+            
         return None
     
     def exportSchedule(self):
