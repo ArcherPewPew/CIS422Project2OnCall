@@ -568,7 +568,7 @@ class OnCallViewer:
             self.settings.lift()
             return None # Only allow one generate screen at a time
         
-        inputGood = input.Preferences.weekendsOffCheck()
+        inputGood = input.Preferences.generateCheck()
         if(inputGood == 0):
             continueYes = True
             if(len(sa.shiftAssignments) != 0):
