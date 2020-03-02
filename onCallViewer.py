@@ -94,7 +94,7 @@ class OnCallViewer:
     
     
     
-    ''' The following function is for the home window and runs the whole application '''
+    ''' The following function is for the Main window and runs the whole application '''
     def home(self):
         '''
             None -> None
@@ -216,7 +216,7 @@ class OnCallViewer:
             # Create dropdown menu
             self.delRaDropdown = tk.ttk.Combobox(pref, values=self.raNames, state='readonly')
             self.delRaDropdown.grid(column=1, row=numRAs+3, columnspan=2)
-            self.delRaDropdown.bind('<<ComboboxSelected>>', self.selectedForDeletion)
+            self.delRaDropdown.bind('<<ComboboxSelected>>', self.updateDeletionChoice)
             # Create deletion save button:
             saveDeletion = tk.Button(pref, text='Save', command=self.deleteRA)
             saveDeletion.grid(column=3, row=numRAs+3, padx=10)
@@ -271,13 +271,6 @@ class OnCallViewer:
                     tk.messagebox.showerror(message='Invalid file.\nPlease check the following:\nID numbers are correct.\nAll preferences are filled out with valid choices.\nThe same weekday preference is not chosen multiple times per RA.')
                 else:
                     self.closePreferences()
-        return None
-    
-    def selectedForDeletion(self, event):
-        '''
-            This updates the selected RA to delete when the choice changes in the dropdown menu
-        '''
-        self.raSelectedToDelete = self.delRaDropdown.get()
         return None
     
     def deleteRA(self):
@@ -717,7 +710,7 @@ class OnCallViewer:
         # Setup settings window:
         self.settings = tk.Toplevel()
         settings = self.settings
-        settings.title('On Call - Settings')
+        settings.title('On Call - Generate Schedule Settings')
         settings.geometry('900x300+300+200') # width x height + x_offset + y_offset
         settings.minsize(900, 300)
         
@@ -894,6 +887,14 @@ class OnCallViewer:
     
     
     ''' The following functions are for tracking dropdown menus '''
+    def updateDeletionChoice(self, event):
+        '''
+            This updates the selected RA to delete in the dropdown menu
+            Dropdown menu is in Preferences window
+        '''
+        self.raSelectedToDelete = self.delRaDropdown.get()
+        return None
+    
     def updateWeekdayChoice(self, event):
         '''
             This updates the selected weekday choice in the dropdown menu
@@ -1080,7 +1081,7 @@ def preferencesView(self):
         # Create dropdown menu
         self.delRaDropdown = tk.ttk.Combobox(prefWidgets, values=self.raNames, state='readonly')
         self.delRaDropdown.grid(column=1, row=numRAs+3, padx=10, pady=10)
-        self.delRaDropdown.bind('<<ComboboxSelected>>', self.selectedForDeletion)
+        self.delRaDropdown.bind('<<ComboboxSelected>>', self.updateDeletionChoice)
         # Create deletion save button:
         saveDeletion = tk.Button(prefWidgets, text='Save', command=self.deleteRA)
         saveDeletion.grid(column=2, row=numRAs+3, padx=10, pady=10)
