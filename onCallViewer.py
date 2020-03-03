@@ -218,7 +218,7 @@ class OnCallViewer:
             self.delRaDropdown.grid(column=1, row=numRAs+3, columnspan=2)
             self.delRaDropdown.bind('<<ComboboxSelected>>', self.updateDeletionChoice)
             # Create deletion save button:
-            saveDeletion = tk.Button(pref, text='Save', command=self.deleteRA)
+            saveDeletion = tk.Button(pref, text='Delete', command=self.deleteRA)
             saveDeletion.grid(column=3, row=numRAs+3, padx=10)
             
             # Create delete all button
@@ -304,13 +304,8 @@ class OnCallViewer:
             This closes the preferences window
             It resets the RA Preferences Tracker variables
         '''
-        if self.prefEdit != None:
-            self.prefEdit.destroy()
-            self.prefEdit = None
-            self.weekdayDropdown = None
-            self.weekdayChoice = None
-            self.weekendDropdown = None
-            self.weekendChoice = None
+        if(self.prefEdit != None):
+            self.closeEditRA()
         self.preferences.destroy()
         self.preferences = None
         self.raIDs = None
@@ -337,8 +332,8 @@ class OnCallViewer:
         self.prefEdit = tk.Toplevel()
         prefEdit = self.prefEdit
         prefEdit.title('On Call - Edit RA Preference')
-        prefEdit.geometry('500x100+400+300') # width x height + x_offset + y_offset
-        prefEdit.minsize(500, 100)
+        prefEdit.geometry('400x200+400+300') # width x height + x_offset + y_offset
+        prefEdit.minsize(400, 200)
         
         # Create label with RA's name:
         nameLabel = tk.Label(prefEdit, text=self.raNames[ra])
@@ -347,20 +342,22 @@ class OnCallViewer:
         # Create label and dropdown menu for new preference:
         if(field <= 3):
             prefLabel = tk.Label(prefEdit, text=('Weekday Preference #%d:' % (field)))
-            prefLabel.grid(column=1, row=0, padx=10, pady=10)
+            prefLabel.grid(column=0, row=1, padx=10, pady=10)
             self.weekdayDropdown = tk.ttk.Combobox(prefEdit, values=self.weekdayOptions, state='readonly')
-            self.weekdayDropdown.grid(column=2, row=0, padx=10, pady=10)
+            self.weekdayDropdown.grid(column=0, row=2, padx=10, pady=10)
             self.weekdayDropdown.bind('<<ComboboxSelected>>', self.updateWeekdayChoice)
         else:
             prefLabel = tk.Label(prefEdit, text=('Weekend Off Preference #%d:' % (field - 3)))
-            prefLabel.grid(column=1, row=0, padx=10, pady=10)
+            prefLabel.grid(column=0, row=1, padx=10, pady=10)
             self.weekendDropdown = tk.ttk.Combobox(prefEdit, values=self.weekendOptions, state='readonly')
-            self.weekendDropdown.grid(column=2, row=0, padx=10, pady=10)
+            self.weekendDropdown.grid(column=0, row=2, padx=10, pady=10)
             self.weekendDropdown.bind('<<ComboboxSelected>>', self.updateWeekendChoice)
         
         # Create save button:
         savePref = tk.Button(prefEdit, text='Save', command=partial(self.updateRA, ra, field))
-        savePref.grid(column=1, row=1, padx=10, pady=10)
+        savePref.grid(column=0, row=3, padx=10, pady=10, columnspan=2)
+        
+        prefEdit.grid_columnconfigure(0, weight=1)
         
         prefEdit.protocol('WM_DELETE_WINDOW', self.closeEditRA)
         prefEdit.update()
@@ -561,7 +558,7 @@ class OnCallViewer:
             self.settings.lift()
             return None # Only allow one generate screen at a time
         
-        inputGood = input.Preferences.weekendsOffCheck()
+        inputGood = input.Preferences.generateCheck()
         if(inputGood == 0):
             continueYes = True
             if(len(sa.shiftAssignments) != 0):
@@ -579,6 +576,8 @@ class OnCallViewer:
             tk.messagebox.showerror(message='A schedule cannot be generated:\nA minimum of 10 RAs are needed.')
         elif(inputGood == 2):
             tk.messagebox.showerror(message='A schedule cannot be generated:\nMore than half the RA team has requested the same weekend off.')
+        elif(inputGood ==3):
+            tk.messagebox.showerror(message='A schedule cannot be generated:\nAn RA has the same preference for multiple weekdays.')
         return None
     
     def exportSchedule(self):
@@ -615,6 +614,8 @@ class OnCallViewer:
             None -> None
             This closes the schedule window
         '''
+        if(self.schedEdit != None):
+            self.closeEditSchedule()
         self.schedule.destroy()
         self.schedule = None
         return None
@@ -637,8 +638,8 @@ class OnCallViewer:
         self.schedEdit = tk.Toplevel()
         schedEdit = self.schedEdit
         schedEdit.title('On Call - Edit Schedule')
-        schedEdit.geometry('400x200+400+300') # width x height + x_offset + y_offset
-        schedEdit.minsize(400, 200)
+        schedEdit.geometry('400x150+400+300') # width x height + x_offset + y_offset
+        schedEdit.minsize(400, 150)
         
         # Get RA info for dropdown menu:
         importlib.reload(raPrefs)
@@ -663,6 +664,8 @@ class OnCallViewer:
         # Create save button:
         saveChange = tk.Button(schedEdit, text='Save', command=partial(self.updateShift, weekNum, secondary, index))
         saveChange.grid(column=0, row=2, padx=10, pady=10)
+        
+        schedEdit.grid_columnconfigure(0, weight=1)
         
         schedEdit.protocol('WM_DELETE_WINDOW', self.closeEditSchedule)
         schedEdit.update()
