@@ -34,6 +34,7 @@ import raPreferences as raPrefs
 import shiftAssignments as sa
 
 # TODO dropdown lists of RAs should have 'none' as an option in settings
+# TODO ID numbers are saved as strings, update doc strings
 
 class OnCallViewer:
     def __init__(self):
@@ -321,7 +322,7 @@ class OnCallViewer:
     ''' The following functions are for the Edit RA Preference window '''
     def editRA(self, ra, field):
         '''
-            int, int, int -> None
+            int, int -> None
             This opens a new window and allows the user to input a new preference for an RA
         '''
         if(self.prefEdit != None):
