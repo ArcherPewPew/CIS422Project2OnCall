@@ -131,6 +131,10 @@ def rewriteSchedule(assignments):
 	f.close()
 	importlib.reload(sa) # Reloading dictionary
 
+	if(len(assignments) == 0):
+                global outputUpdates
+                outputUpdates = [] # if the schedule is cleared from the system, undos cannot be made
+
 	return 0
 
 def updateSchedule(weekNum, secondary, index, newName):
