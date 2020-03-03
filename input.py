@@ -1,6 +1,6 @@
 '''
 Author: Alyssa Huque
-Date of last modification: 3-02-2020
+Date of last modification: 3-03-2020
 Description: This produces the functionality of the RA Preferences module
 References:
 	On Deck Development Team's Project 1 fileInput.py file
@@ -101,6 +101,7 @@ class Preferences:
 		Returns a 0 if no errors occured or a 1 if an error occured
 		'''
 		updated_dict = Input.inputPreferences(filename) #now i have a dictionary with the new information, I need to compare
+		lastnames = []
 		if(updated_dict == 1):
 			# print("error7")
 			return 1 # returns 1 for GUI warning
@@ -132,6 +133,11 @@ class Preferences:
 		'''
 		current_dictionary = Input.readingDictPy("raPreferences.py")
 		del current_dictionary[student_id]
+
+		global inputUpdates # list with things that have been undone
+		for i in range(len(inputUpdates)):
+			if student_id == inputUpdates[i][0]: # if the student that has been deleted is in inputUpdates
+				inputUpdates.pop(i) # remove deleted RA from inputUpdates if anything has been changed
 
 		file = open("raPreferences.py", "w+")
 		file.write("raPreferences = %s\n" % (str(current_dictionary)))
@@ -298,7 +304,7 @@ class Preferences:
 		return 0
 
 # if __name__ == '__main__':
-	# Preferences.importFile("Example Input/example.csv")
+# 	Preferences.importFile("Example Input/All RAs.csv")
 	# Preferences.updatePreferences("951545641", 2, "Thursday")
 	# Preferences.undo()
 	# Preferences.save("951545641", 1)
