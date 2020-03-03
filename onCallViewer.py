@@ -462,7 +462,7 @@ class OnCallViewer:
             saturdayDay = tk.Label(sched, text='Saturday Day')
             saturdayDay.grid(column=8, row=1)
             saturdayDay.configure(font=underline)
-            saturdayNight = tk.Label(sched, text='Saturday Day')
+            saturdayNight = tk.Label(sched, text='Saturday Night')
             saturdayNight.grid(column=9, row=1)
             saturdayNight.configure(font=underline)
             
