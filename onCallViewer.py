@@ -33,8 +33,6 @@ import output
 import raPreferences as raPrefs
 import shiftAssignments as sa
 
-# TODO dropdown lists of RAs should have 'none' as an option in settings
-# TODO ID numbers are saved as strings, update doc strings
 
 class OnCallViewer:
     def __init__(self):
@@ -617,6 +615,8 @@ class OnCallViewer:
         '''
         if(self.schedEdit != None):
             self.closeEditSchedule()
+        if(self.settings != None):
+            self.closeSettings()
         self.schedule.destroy()
         self.schedule = None
         return None
@@ -720,8 +720,8 @@ class OnCallViewer:
         
         # Get RA info for dropdown menus:
         importlib.reload(raPrefs)
-        self.settingsIDs = []
-        self.settingsNames = []
+        self.settingsIDs = [0]
+        self.settingsNames = ['None']
         for ra in raPrefs.raPreferences:
             if(ra != '1' and ra != '2' and ra != '3'):
                 self.settingsIDs.append(ra)
@@ -755,6 +755,8 @@ class OnCallViewer:
         self.pairingDropdown1 = tk.ttk.Combobox(settings, values=names, state='readonly')
         self.pairingDropdown1.grid(column=1, row=2, padx=10, pady=10)
         self.pairingDropdown1.bind('<<ComboboxSelected>>', self.updatePairingOne)
+        self.pairingDropdown1.current(0)
+        self.paringChoice1 = self.pairingDropdown1.get()
         # Create first dis-allowed pairing label:
         pairingLabel2 = tk.Label(settings, text='and')
         pairingLabel2.grid(column=2, row=2, padx=10, pady=10)
@@ -762,6 +764,8 @@ class OnCallViewer:
         self.pairingDropdown2 = tk.ttk.Combobox(settings, values=names, state='readonly')
         self.pairingDropdown2.grid(column=3, row=2, padx=10, pady=10)
         self.pairingDropdown2.bind('<<ComboboxSelected>>', self.updatePairingTwo)
+        self.pairingDropdown2.current(0)
+        self.paringChoice2 = self.pairingDropdown2.get()
         
         # Create second dis-allowed pairing label:
         pairingLabel1 = tk.Label(settings, text='Second pair of RAs who cannot share a shift:')
@@ -770,6 +774,8 @@ class OnCallViewer:
         self.pairingDropdown3 = tk.ttk.Combobox(settings, values=names, state='readonly')
         self.pairingDropdown3.grid(column=1, row=3, padx=10, pady=10)
         self.pairingDropdown3.bind('<<ComboboxSelected>>', self.updatePairingThree)
+        self.pairingDropdown3.current(0)
+        self.paringChoice3 = self.pairingDropdown3.get()
         # Create second dis-allowed pairing label:
         pairingLabel2 = tk.Label(settings, text='and')
         pairingLabel2.grid(column=2, row=3, padx=10, pady=10)
@@ -777,6 +783,8 @@ class OnCallViewer:
         self.pairingDropdown4 = tk.ttk.Combobox(settings, values=names, state='readonly')
         self.pairingDropdown4.grid(column=3, row=3, padx=10, pady=10)
         self.pairingDropdown4.bind('<<ComboboxSelected>>', self.updatePairingFour)
+        self.pairingDropdown4.current(0)
+        self.paringChoice4 = self.pairingDropdown4.get()
         
         # Create save button:
         saveSettings = tk.Button(settings, text='Save', command=self.saveSettingsChoices)
