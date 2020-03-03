@@ -146,6 +146,7 @@ class Preferences:
 		file = open("raPreferences.py", "w+") # opens the file containing raPrefernces dictionary
 		file.write("raPreferences = {}") # writes an empty dictionary to raPreferences.py
 		file.close()
+		global inputUpdates
 		inputUpdates = [] # cannot undo changes that do not exist anymore
 		return 0
 
