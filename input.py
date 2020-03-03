@@ -240,8 +240,11 @@ class Preferences:
 		requests = [] # a list to keep track of each RA's weekend off requests
 		key_list = list(current_dictionary.keys()) # list of each RA's student's IDs
 
-		if len(key_list) < 10: # checks that thee team is the minimum size necessary to generate the schedule
+		if len(key_list) < 10: # checks that the team is the minimum size necessary to generate the schedule
 			#print("A schedule cannot be generated: The RA team is too small. A minimum of 10 RAs are needed. Likely, not all the RAs have been uploaded.")
+			return 1
+		elif len(key_list) > 25: # checks that the team is less than the maximize size necessary to genereate the schedule
+			#print("A schedule cannot be generated: The RA team is too large. A maximum of 25 RAs are are allowed. Likely, you have accidentally given RAs from other buildings.")
 			return 1
 
 		for i in key_list:
