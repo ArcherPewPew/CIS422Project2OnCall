@@ -605,7 +605,7 @@ class OnCallViewer:
         '''
         if(tk.messagebox.askokcancel(message='This will permanently delete the schedule in the system.\nContinue?')):
             empty = {}
-            output.rewriteSchedule(empty)
+            output.resetAssignments()
             self.closeSchedule()
         return None
     
