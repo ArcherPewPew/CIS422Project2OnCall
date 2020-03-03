@@ -1,6 +1,6 @@
 '''
 	Author: Kiana Hosaka
-	Date of Last Modification: February 28, 2020
+	Date of Last Modification: March 1, 2020
 	Description: File produces the functionality of the Shift Assignments Module.
 	References:
 	- Prepending to a list: https://kite.com/python/answers/how-to-prepend-to-a-list-in-python
@@ -194,6 +194,28 @@ def undo():
 	rewriteSchedule(last_state)
 
 	return 0
+
+
+def resetAssignments():
+	'''
+		() -> int
+
+		Resets the shiftAssignments dictionary in shiftAssignments.py to be empty.	
+	'''
+	try:
+		f = open("shiftAssignments.py", "w")
+	except:
+		return 1
+
+	f.write("shiftAssignments = {}")
+	f.close()
+	importlib.reload(sa) # Reloading dictionary
+
+	global outputUpdates
+	outputUpdates = [] # if the schedule is cleared from the system, undos cannot be made
+
+	return 0
+
 
 '''
 	Calling methods to test program functionality.
