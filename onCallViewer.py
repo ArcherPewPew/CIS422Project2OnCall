@@ -253,6 +253,7 @@ class OnCallViewer:
             Asks user for csv file name
             Calls input.py's importFile function
         '''
+        importlib.reload(raPrefs)
         if(len(raPrefs.raPreferences) == 25):
             tk.messagebox.showerror(message='The maximum limit of RAs has been reached. Please remove an RA before importing a new file.')
             return None
@@ -268,6 +269,8 @@ class OnCallViewer:
                 error = input.Preferences.importFile(fileName)
                 if(error == 1):
                     tk.messagebox.showerror(message='Invalid file.\nPlease check the following:\nID numbers are correct.\nAll preferences are filled out with valid choices.\nThe same weekday preference is not chosen multiple times per RA.')
+                elif(error == 2):
+                    tk.messagebox.showerror(message='The RA team is too large.\nA maximum of 25 RAs are allowed.')
                 else:
                     self.closePreferences()
         return None
