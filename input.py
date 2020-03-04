@@ -93,7 +93,7 @@ class Preferences:
 		pass
 
 	def importFile(filename):
-		'''string -> int (0 or 1)
+		'''string -> int (0, 1, or 2)
 		Receives the name of the file to import
 		This function imports RA preference information.
 		The file may contain one or several RAs. This function also accounts for an empty file.
@@ -117,6 +117,12 @@ class Preferences:
 		# updating RA information
 		for key in original_dict.keys() & updated_dict.keys():
 			dictionary[key][1:7] = updated_dict[key][1:7]
+
+		if len(dictionary.keys()) > 25:
+			#print("A schedule cannot be generated: The RA team is too large. A maximum of 25 RAs are allowed. Likely, RAs from other buildings have been accidentally inputted.")
+			return 2
+
+		print(len(dictionary.keys()))
 
 		file = open("raPreferences.py", "w+") # writes file for Queue
 		file.write("raPreferences = %s\n" % (str(dictionary)))
@@ -243,9 +249,6 @@ class Preferences:
 		if len(key_list) < 10: # checks that the team is the minimum size necessary to generate the schedule
 			#print("A schedule cannot be generated: The RA team is too small. A minimum of 10 RAs are needed. Likely, not all the RAs have been uploaded.")
 			return 1
-		elif len(key_list) > 25: # checks that the team is less than the maximize size necessary to genereate the schedule
-			#print("A schedule cannot be generated: The RA team is too large. A maximum of 25 RAs are are allowed. Likely, you have accidentally given RAs from other buildings.")
-			return 1
 
 		for i in key_list:
 			requests += current_dictionary[i][4:] # adds RA's weekend off requests to list
@@ -306,8 +309,8 @@ class Preferences:
 			return 1
 		return 0
 
-# if __name__ == '__main__':
-# 	Preferences.importFile("Example Input/All RAs.csv")
+if __name__ == '__main__':
+	Preferences.importFile("Example Input/All RAs.csv")
 	# Preferences.updatePreferences("951545641", 2, "Thursday")
 	# Preferences.undo()
 	# Preferences.save("951545641", 1)
