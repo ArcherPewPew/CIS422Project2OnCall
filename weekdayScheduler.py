@@ -68,7 +68,7 @@ class WeekdayShifts:
         weekdays = {"Sunday": [], "Monday": [], "Tuesday": [], "Wednesday": [], "Thursday": []}
         raList = list(self.raPreferences.keys())
         badPairs = self.settings['3']               #Where bad pairs are saved
-        print(badPairs)
+        #print(badPairs)
         
         #Gold star RA gets their first preference
         if(self.settings['1'] != 0):                    #Not necessarily a gold star RA

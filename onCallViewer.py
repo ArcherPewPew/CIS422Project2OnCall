@@ -528,9 +528,11 @@ class OnCallViewer:
         
         # Create Generate button:
         generateSched = tk.Button(sched, text='Generate New Schedule', command=self.generateNewSchedule)
-        generateSched.grid(column=2, row=22, columnspan=2)
         
         if(numShifts != 0):
+            # Add generate button to screen
+            generateSched.grid(column=2, row=22, columnspan=2)
+            
             # Create export button:
             exportSched = tk.Button(sched, text='Export Schedule', command=self.exportSchedule)
             exportSched.grid(column=4, row=22, pady=50, columnspan=2)
@@ -538,6 +540,9 @@ class OnCallViewer:
             # Create clear button:
             clearSched = tk.Button(sched, text='Clear Schedule', command=self.clearSchedule)
             clearSched.grid(column=6, row=22, columnspan=2)
+        else:
+            # Add generate button to screen
+            generateSched.grid(column=0, row=22, columnspan=2)
         
         # Start screen:
         sched.protocol('WM_DELETE_WINDOW', self.closeSchedule)
