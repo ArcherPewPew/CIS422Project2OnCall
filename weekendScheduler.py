@@ -10,7 +10,7 @@ import random
 import importlib
 import raPreferences as raPrefs
 
-def weekendShifts():
+def weekendShifts(**kwargs):
     '''
     None ->  [[], []] -- list of two-lists
     Reads the dictionary in raPreferences.py.
@@ -37,7 +37,9 @@ def weekendShifts():
         if key not in ['1','2','3']:
             raDict[key] = val
             raDict[key].append(0) #add var to counts number of shifts
-
+            raDict[key].append(0) #num primary
+            raDict[key].append(0) #num secondary
+            
     dictLen = len(list(raDict))
     avg = (78 / dictLen) #there are 78 slots to fill / #RAs. Used for number of shifts enforcement.
   
@@ -70,13 +72,15 @@ def weekendShifts():
               weekcount == raDict.get(firstRa)[6]:
             firstRa = random.choice(list(raDict)) 
         raDict[firstRa][7] += 1 #increase shift counter
+        raDict[firstRa][8] += 1 #increase primary
         secondRa = random.choice(list(raDict)) #pick secondary worker
-        #make sure they don't have the week off, aren't a disallowed pair, the same person or have > avg shifts.
+        #make sure they don't have the week off, aren't a disallowed pair, the same person or have a shift already.
         while [firstRa,secondRa] == badPair1 or [secondRa,firstRa] == badPair1 or [firstRa,secondRa] == badPair2 or \
               [secondRa,firstRa] == badPair2 or firstRa == secondRa or weekcount == raDict.get(secondRa)[4] or \
-              weekcount == raDict.get(secondRa)[5] or weekcount == raDict.get(secondRa)[6]: 
+              weekcount == raDict.get(secondRa)[5] or weekcount == raDict.get(secondRa)[6] or raDict.get(secondRa)[7] > 1 : 
             secondRa = random.choice(list(raDict)) 
         raDict[secondRa][7] += 1 #increase shift counter
+        raDict[secondRa][9] += 1 #increase secondary counter
         #add each RA to the primary/secondary list for week one.
         primary_1[day] = raDict[firstRa][0]
         secondary_1[day] = raDict[secondRa][0]  
@@ -88,34 +92,43 @@ def weekendShifts():
             firstRa = random.choice(list(raDict)) #pick primary worker
             #make sure they dont have the week off or have more shifts than average.
             while weekcount == raDict.get(firstRa)[4] or weekcount == raDict.get(firstRa)[5] or \
-                  weekcount == raDict.get(firstRa)[6] or raDict.get(firstRa)[7] > avg:
-                firstRa = random.choice(list(raDict)) 
+                  weekcount == raDict.get(firstRa)[6] or raDict.get(firstRa)[8] > raDict.get(firstRa)[9]+1 or raDict.get(firstRa)[7] > avg:
+                firstRa = random.choice(list(raDict))
+                    
             raDict[firstRa][7] += 1 #increase shift counter
+            raDict[firstRa][8] += 1 
             secondRa = random.choice(list(raDict)) #pick secondary worker
             #make sure they don't have the week off, aren't a disallowed pair, or the same person, and have no more shifts than average
             while [firstRa,secondRa] == badPair1 or [secondRa,firstRa] == badPair1 or [firstRa,secondRa] == badPair2 or \
                   [secondRa,firstRa] == badPair2 or firstRa == secondRa or weekcount == raDict.get(secondRa)[4] or \
-                  weekcount == raDict.get(secondRa)[5] or weekcount == raDict.get(secondRa)[6] or raDict.get(secondRa)[7] > avg+1: 
+                  weekcount == raDict.get(secondRa)[5] or weekcount == raDict.get(secondRa)[6] or raDict.get(secondRa)[9] > raDict.get(secondRa)[8]+1 or raDict.get(secondRa)[7] > avg: 
                 secondRa = random.choice(list(raDict))
             raDict[secondRa][7] += 1 #increase shift counter
+            raDict[secondRa][9] += 1 
             #add each RA to the primary/secondary list for the particular week
             schedule[week][0][day] = raDict[firstRa][0]
             schedule[week][1][day] = raDict[secondRa][0]    
         weekcount += 1
 
+    def clearshifts(): #clears shift counts, useful for resetting.
+        for key in raDict.keys():
+            raDict[key][7] = 0
+            raDict[key][8] = 0
+            raDict[key][9] = 0
+         
+    def shiftcount(): #counts shifts, useful for testing
+        numshifts = 0
+        for key in raDict.keys():
+            numshifts += raDict[key][7]
+            print(raDict[key][0], ' has ', raDict[key][7], " shifts. ", raDict[key][8], " primary shifts. ", raDict[key][9], " secondary shifts.") 
+        print("numshifts: ", numshifts)
+    if kwargs:
+        shiftcount()
+        clearshifts()
     return(schedule)    
 
 ''' These functions are for testing '''
-def clearshifts(): #clears shift count, useful for resetting.
-    for key in raDict.keys():
-        raDict[key][7] = 0
 
-def shiftcount(): #counts shifts, useful for testing
-    numshifts = 0
-    for key in raDict.keys():
-        numshifts += raDict[key][7]
-        print(raDict[key][0], ' has ', raDict[key][7], " shifts.") 
-    print("numshifts: ", numshifts)
     
 ''' alternate code
 
