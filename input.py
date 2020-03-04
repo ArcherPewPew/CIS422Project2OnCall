@@ -122,12 +122,6 @@ class Preferences:
 			#print("A schedule cannot be generated: The RA team is too large. A maximum of 25 RAs are allowed. Likely, RAs from other buildings have been accidentally inputted.")
 			return 2
 
-<<<<<<< HEAD
-		print(len(dictionary.keys()))
-=======
-		#print(len(dictionary.keys()))
->>>>>>> l-jim
-
 		file = open("raPreferences.py", "w+") # writes file for Queue
 		file.write("raPreferences = %s\n" % (str(dictionary)))
 		file.close()
