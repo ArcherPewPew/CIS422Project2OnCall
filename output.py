@@ -63,6 +63,7 @@ def generateSchedule():
 	f.write("shiftAssignments = %s\n" % (str(assignments)))
 
 	f.close()
+
 	return 0
 
 

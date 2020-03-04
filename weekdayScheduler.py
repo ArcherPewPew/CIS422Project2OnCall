@@ -8,7 +8,6 @@ References:
 TODO:
 - implement test function to make sure names show up right amount of times
 - implement primary/secondary RA balancing
-- implement bad pairs
 '''
 
 import ast
@@ -67,8 +66,6 @@ class WeekdayShifts:
         leftOver = len(self.raPreferences) - (raPerDay * 5)
         weekdays = {"Sunday": [], "Monday": [], "Tuesday": [], "Wednesday": [], "Thursday": []}
         raList = list(self.raPreferences.keys())
-        badPairs = self.settings['3']               #Where bad pairs are saved
-        print(badPairs)
         
         #Gold star RA gets their first preference
         if(self.settings['1'] != 0):                    #Not necessarily a gold star RA
@@ -83,7 +80,7 @@ class WeekdayShifts:
         #first choice loop
         for ra in raList:
             firstPreference = self.raPreferences[ra][1]
-            if(len(weekdays[firstPreference]) < raPerDay):
+            if(len(weekdays[firstPreference]) < raPerDay and self.badPairInDay(weekdays[firstPreference], ra) == False):
                 weekdays[firstPreference].append(ra)
                 rasToRemove.append(ra)
         raList = [ra for ra in raList if ra not in rasToRemove]     #removes the scheduled RAs so they are not considered later
@@ -93,7 +90,7 @@ class WeekdayShifts:
         random.shuffle(raList)
         for ra in raList:
             secondPreference = self.raPreferences[ra][2]
-            if(len(weekdays[secondPreference]) < raPerDay):
+            if(len(weekdays[secondPreference]) < raPerDay and self.badPairInDay(weekdays[secondPreference], ra) == False):
                 weekdays[secondPreference].append(ra)
                 rasToRemove.append(ra)
         raList = [ra for ra in raList if ra not in rasToRemove]
@@ -103,7 +100,7 @@ class WeekdayShifts:
         random.shuffle(raList)
         for ra in raList:
             thirdPreference = self.raPreferences[ra][3]
-            if(len(weekdays[thirdPreference]) < raPerDay):
+            if(len(weekdays[thirdPreference]) < raPerDay and self.badPairInDay(weekdays[thirdPreference], ra) == False):
                 weekdays[thirdPreference].append(ra)
                 rasToRemove.append(ra)
         raList = [ra for ra in raList if ra not in rasToRemove]
@@ -114,8 +111,9 @@ class WeekdayShifts:
         for day in weekdays:
             while(len(weekdays[day]) != raPerDay):
                 raSelected = self.tiebreaker(tieSetting, raList)
-                weekdays[day].append(raSelected)       #adds the student selected by the tie breaker
-                raList.remove(raSelected)
+                if(self.badPairInDay(weekdays[firstPreference], ra) == False):
+                    weekdays[day].append(raSelected)       #adds the student selected by the tie breaker
+                    raList.remove(raSelected)
 
         if(len(raList) != 0):
             #for leftover people
@@ -125,12 +123,12 @@ class WeekdayShifts:
                 tempRaPreferences = self.raPreferences[ra][1:4]
                 for i in range(3):                                  #preferences
                     day = tempRaPreferences[i]
-                    if(len(weekdays[day]) < raPerDay + 1 and ra not in rasToRemove):
+                    if(len(weekdays[day]) < raPerDay + 1 and ra not in rasToRemove and self.badPairInDay(weekdays[day], ra) == False):
                         weekdays[day].append(ra)
                         rasToRemove.append(ra)
                 if ra not in rasToRemove:                               #this would happen if an extra spot needs to be filled but it is not one of the ras preferences
                     for day in weekdays:
-                        if(len(weekdays[day]) < raPerDay + 1 and ra not in rasToRemove):
+                        if(len(weekdays[day]) < raPerDay + 1 and ra not in rasToRemove and self.badPairInDay(weekdays[day], ra) == False):
                             weekdays[day].append(ra)
                             rasToRemove.append(ra)
 
@@ -157,6 +155,24 @@ class WeekdayShifts:
                 idList.append(int(ra))
             raToReturn = str(min(idList))
             return raToReturn
+
+    def badPairInDay(self, weekday, ra):
+        '''
+        string -> boolean
+        '''
+        isBadPair = False
+        badPairs = self.settings['3']
+        for pair in badPairs:               #checks to see if the RA even has a bad pair in the first place
+            if ra in pair:
+                isBadPair = True
+
+        if(isBadPair == False):                     #if the RA is in neither bad pair list, then the ra can be scheduled with anyone
+            return False
+
+        for studentNo in weekday:
+            if((studentNo in badPairs[0] and ra in badPairs[0]) or (studentNo in badPairs[1] and ra in badPairs[1])): #if the
+                return True
+        return False                         #means an ra is in a bad pair, but that bad pair is not present on this day
 
     def scheduleShifts(self, initialWeekdays):
         '''
