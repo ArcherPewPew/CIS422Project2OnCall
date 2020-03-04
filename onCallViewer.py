@@ -1,6 +1,6 @@
 '''
     Author: Lily Jim
-    Date of last modification: 3-1-2020
+    Date of last modification: 3-3-2020
     Description: This creates the graphical user interface
     References:
         On Deck Development Team's Project 1 interface.py file
@@ -33,7 +33,6 @@ import output
 import raPreferences as raPrefs
 import shiftAssignments as sa
 
-# TODO dropdown lists of RAs should have 'none' as an option in settings
 
 class OnCallViewer:
     def __init__(self):
@@ -94,7 +93,7 @@ class OnCallViewer:
     
     
     
-    ''' The following function is for the home window and runs the whole application '''
+    ''' The following function is for the Main window and runs the whole application '''
     def home(self):
         '''
             None -> None
@@ -216,9 +215,9 @@ class OnCallViewer:
             # Create dropdown menu
             self.delRaDropdown = tk.ttk.Combobox(pref, values=self.raNames, state='readonly')
             self.delRaDropdown.grid(column=1, row=numRAs+3, columnspan=2)
-            self.delRaDropdown.bind('<<ComboboxSelected>>', self.selectedForDeletion)
+            self.delRaDropdown.bind('<<ComboboxSelected>>', self.updateDeletionChoice)
             # Create deletion save button:
-            saveDeletion = tk.Button(pref, text='Save', command=self.deleteRA)
+            saveDeletion = tk.Button(pref, text='Delete', command=self.deleteRA)
             saveDeletion.grid(column=3, row=numRAs+3, padx=10)
             
             # Create delete all button
@@ -273,13 +272,6 @@ class OnCallViewer:
                     self.closePreferences()
         return None
     
-    def selectedForDeletion(self, event):
-        '''
-            This updates the selected RA to delete when the choice changes in the dropdown menu
-        '''
-        self.raSelectedToDelete = self.delRaDropdown.get()
-        return None
-    
     def deleteRA(self):
         '''
             None -> None
@@ -311,13 +303,8 @@ class OnCallViewer:
             This closes the preferences window
             It resets the RA Preferences Tracker variables
         '''
-        if self.prefEdit != None:
-            self.prefEdit.destroy()
-            self.prefEdit = None
-            self.weekdayDropdown = None
-            self.weekdayChoice = None
-            self.weekendDropdown = None
-            self.weekendChoice = None
+        if(self.prefEdit != None):
+            self.closeEditRA()
         self.preferences.destroy()
         self.preferences = None
         self.raIDs = None
@@ -333,7 +320,7 @@ class OnCallViewer:
     ''' The following functions are for the Edit RA Preference window '''
     def editRA(self, ra, field):
         '''
-            int, int, int -> None
+            int, int -> None
             This opens a new window and allows the user to input a new preference for an RA
         '''
         if(self.prefEdit != None):
@@ -344,8 +331,8 @@ class OnCallViewer:
         self.prefEdit = tk.Toplevel()
         prefEdit = self.prefEdit
         prefEdit.title('On Call - Edit RA Preference')
-        prefEdit.geometry('500x100+400+300') # width x height + x_offset + y_offset
-        prefEdit.minsize(500, 100)
+        prefEdit.geometry('400x200+400+300') # width x height + x_offset + y_offset
+        prefEdit.minsize(400, 200)
         
         # Create label with RA's name:
         nameLabel = tk.Label(prefEdit, text=self.raNames[ra])
@@ -354,20 +341,22 @@ class OnCallViewer:
         # Create label and dropdown menu for new preference:
         if(field <= 3):
             prefLabel = tk.Label(prefEdit, text=('Weekday Preference #%d:' % (field)))
-            prefLabel.grid(column=1, row=0, padx=10, pady=10)
+            prefLabel.grid(column=0, row=1, padx=10, pady=10)
             self.weekdayDropdown = tk.ttk.Combobox(prefEdit, values=self.weekdayOptions, state='readonly')
-            self.weekdayDropdown.grid(column=2, row=0, padx=10, pady=10)
+            self.weekdayDropdown.grid(column=0, row=2, padx=10, pady=10)
             self.weekdayDropdown.bind('<<ComboboxSelected>>', self.updateWeekdayChoice)
         else:
             prefLabel = tk.Label(prefEdit, text=('Weekend Off Preference #%d:' % (field - 3)))
-            prefLabel.grid(column=1, row=0, padx=10, pady=10)
+            prefLabel.grid(column=0, row=1, padx=10, pady=10)
             self.weekendDropdown = tk.ttk.Combobox(prefEdit, values=self.weekendOptions, state='readonly')
-            self.weekendDropdown.grid(column=2, row=0, padx=10, pady=10)
+            self.weekendDropdown.grid(column=0, row=2, padx=10, pady=10)
             self.weekendDropdown.bind('<<ComboboxSelected>>', self.updateWeekendChoice)
         
         # Create save button:
         savePref = tk.Button(prefEdit, text='Save', command=partial(self.updateRA, ra, field))
-        savePref.grid(column=1, row=1, padx=10, pady=10)
+        savePref.grid(column=0, row=3, padx=10, pady=10, columnspan=2)
+        
+        prefEdit.grid_columnconfigure(0, weight=1)
         
         prefEdit.protocol('WM_DELETE_WINDOW', self.closeEditRA)
         prefEdit.update()
@@ -442,7 +431,7 @@ class OnCallViewer:
         if(numShifts != 0):
             # Create undo button
             undoButton = tk.Button(sched, text='Undo', command=self.undoShiftChange)
-            undoButton.grid(column=0, row=0)
+            undoButton.grid(column=0, row=0, columnspan=2)
             if(len(output.outputUpdates) == 0):
                 undoButton.configure(state='disabled')
             
@@ -450,31 +439,31 @@ class OnCallViewer:
             underline = tk.font.Font(undoButton, undoButton.cget("font"))
             underline.configure(size=14, underline=True)
             sundayDay = tk.Label(sched, text='Sunday Day')
-            sundayDay.grid(column=1, row=1)
+            sundayDay.grid(column=2, row=1)
             sundayDay.configure(font=underline)
             sundayNight = tk.Label(sched, text='Sunday Night')
-            sundayNight.grid(column=2, row=1)
+            sundayNight.grid(column=3, row=1)
             sundayNight.configure(font=underline)
             monday = tk.Label(sched, text='Monday')
-            monday.grid(column=3, row=1)
+            monday.grid(column=4, row=1)
             monday.configure(font=underline)
             tuesday = tk.Label(sched, text='Tuesday')
-            tuesday.grid(column=4, row=1)
+            tuesday.grid(column=5, row=1)
             tuesday.configure(font=underline)
             wednesday = tk.Label(sched, text='Wednesday')
-            wednesday.grid(column=5, row=1)
+            wednesday.grid(column=6, row=1)
             wednesday.configure(font=underline)
             thursday = tk.Label(sched, text='Thursday')
-            thursday.grid(column=6, row=1)
+            thursday.grid(column=7, row=1)
             thursday.configure(font=underline)
             friday = tk.Label(sched, text='Friday')
-            friday.grid(column=7, row=1)
+            friday.grid(column=8, row=1)
             friday.configure(font=underline)
             saturdayDay = tk.Label(sched, text='Saturday Day')
-            saturdayDay.grid(column=8, row=1)
+            saturdayDay.grid(column=9, row=1)
             saturdayDay.configure(font=underline)
-            saturdayNight = tk.Label(sched, text='Saturday Day')
-            saturdayNight.grid(column=9, row=1)
+            saturdayNight = tk.Label(sched, text='Saturday Night')
+            saturdayNight.grid(column=10, row=1)
             saturdayNight.configure(font=underline)
             
             # Display current schedule in the system
@@ -482,49 +471,52 @@ class OnCallViewer:
             weekNumFont.configure(size=14)
             for week in sa.shiftAssignments:
                 # Primary RA row
-                weekNumPrimary = tk.Label(sched, text=('Week %d Primary' % (week)))
-                weekNumPrimary.grid(column=0, row=(week*2))
-                weekNumPrimary.configure(font=weekNumFont)
+                weekNumLabel = tk.Label(sched, text='Week %d' % (week))
+                weekNumLabel.grid(column=0, row=(week*2))
+                weekNumLabel.configure(font=weekNumFont)
+                primaryLabel = tk.Label(sched, text=('Primary'))
+                primaryLabel.grid(column=1, row=(week*2))
+                primaryLabel.configure(font=weekNumFont)
                 slot1 = tk.Button(sched, text=sa.shiftAssignments[week][0][0], command=partial(self.editSchedule, week, 0, 0))
-                slot1.grid(column=1, row=(week*2))
+                slot1.grid(column=2, row=(week*2))
                 slot2 = tk.Button(sched, text=sa.shiftAssignments[week][0][1], command=partial(self.editSchedule, week, 0, 1))
-                slot2.grid(column=2, row=(week*2))
+                slot2.grid(column=3, row=(week*2))
                 slot3 = tk.Button(sched, text=sa.shiftAssignments[week][0][2], command=partial(self.editSchedule, week, 0, 2))
-                slot3.grid(column=3, row=(week*2))
+                slot3.grid(column=4, row=(week*2))
                 slot4 = tk.Button(sched, text=sa.shiftAssignments[week][0][3], command=partial(self.editSchedule, week, 0, 3))
-                slot4.grid(column=4, row=(week*2))
+                slot4.grid(column=5, row=(week*2))
                 slot5 = tk.Button(sched, text=sa.shiftAssignments[week][0][4], command=partial(self.editSchedule, week, 0, 4))
-                slot5.grid(column=5, row=(week*2))
+                slot5.grid(column=6, row=(week*2))
                 slot6 = tk.Button(sched, text=sa.shiftAssignments[week][0][5], command=partial(self.editSchedule, week, 0, 5))
-                slot6.grid(column=6, row=(week*2))
+                slot6.grid(column=7, row=(week*2))
                 slot7 = tk.Button(sched, text=sa.shiftAssignments[week][0][6], command=partial(self.editSchedule, week, 0, 6))
-                slot7.grid(column=7, row=(week*2))
+                slot7.grid(column=8, row=(week*2))
                 slot8 = tk.Button(sched, text=sa.shiftAssignments[week][0][7], command=partial(self.editSchedule, week, 0, 7))
-                slot8.grid(column=8, row=(week*2))
+                slot8.grid(column=9, row=(week*2))
                 slot9 = tk.Button(sched, text=sa.shiftAssignments[week][0][8], command=partial(self.editSchedule, week, 0, 8))
-                slot9.grid(column=9, row=(week*2))
+                slot9.grid(column=10, row=(week*2))
                 # Secondary RA row
-                weekNumSecondary = tk.Label(sched, text=('Week %d Secondary' % (week)))
-                weekNumSecondary.grid(column=0, row=(week*2)+1)
-                weekNumSecondary.configure(font=weekNumFont)
+                secondaryLabel = tk.Label(sched, text=('Secondary'))
+                secondaryLabel.grid(column=1, row=(week*2)+1)
+                secondaryLabel.configure(font=weekNumFont)
                 slot11 = tk.Button(sched, text=sa.shiftAssignments[week][1][0], command=partial(self.editSchedule, week, 1, 0))
-                slot11.grid(column=1, row=(week*2)+1)
+                slot11.grid(column=2, row=(week*2)+1)
                 slot12 = tk.Button(sched, text=sa.shiftAssignments[week][1][1], command=partial(self.editSchedule, week, 1, 1))
-                slot12.grid(column=2, row=(week*2)+1)
+                slot12.grid(column=3, row=(week*2)+1)
                 slot13 = tk.Button(sched, text=sa.shiftAssignments[week][1][2], command=partial(self.editSchedule, week, 1, 2))
-                slot13.grid(column=3, row=(week*2)+1)
+                slot13.grid(column=4, row=(week*2)+1)
                 slot14 = tk.Button(sched, text=sa.shiftAssignments[week][1][3], command=partial(self.editSchedule, week, 1, 3))
-                slot14.grid(column=4, row=(week*2)+1)
+                slot14.grid(column=5, row=(week*2)+1)
                 slot15 = tk.Button(sched, text=sa.shiftAssignments[week][1][4], command=partial(self.editSchedule, week, 1, 4))
-                slot15.grid(column=5, row=(week*2)+1)
+                slot15.grid(column=6, row=(week*2)+1)
                 slot16 = tk.Button(sched, text=sa.shiftAssignments[week][1][5], command=partial(self.editSchedule, week, 1, 5))
-                slot16.grid(column=6, row=(week*2)+1)
+                slot16.grid(column=7, row=(week*2)+1)
                 slot17 = tk.Button(sched, text=sa.shiftAssignments[week][1][6], command=partial(self.editSchedule, week, 1, 6))
-                slot17.grid(column=7, row=(week*2)+1)
+                slot17.grid(column=8, row=(week*2)+1)
                 slot18 = tk.Button(sched, text=sa.shiftAssignments[week][1][7], command=partial(self.editSchedule, week, 1, 7))
-                slot18.grid(column=8, row=(week*2)+1)
+                slot18.grid(column=9, row=(week*2)+1)
                 slot19 = tk.Button(sched, text=sa.shiftAssignments[week][1][8], command=partial(self.editSchedule, week, 1, 8))
-                slot19.grid(column=9, row=(week*2)+1)
+                slot19.grid(column=10, row=(week*2)+1)
         else:
             # Show message that there is not a schedule in the system
             noSchedLabel = tk.Label(sched, text='No Existing Schedule\nPlease Generate New Schedule')
@@ -533,16 +525,16 @@ class OnCallViewer:
         
         # Create Generate button:
         generateSched = tk.Button(sched, text='Generate New Schedule', command=self.generateNewSchedule)
-        generateSched.grid(column=0, row=22, columnspan=2)
+        generateSched.grid(column=2, row=22, columnspan=2)
         
         if(numShifts != 0):
             # Create export button:
             exportSched = tk.Button(sched, text='Export Schedule', command=self.exportSchedule)
-            exportSched.grid(column=2, row=22, pady=50, columnspan=2)
+            exportSched.grid(column=4, row=22, pady=50, columnspan=2)
             
             # Create clear button:
             clearSched = tk.Button(sched, text='Clear Schedule', command=self.clearSchedule)
-            clearSched.grid(column=4, row=22, columnspan=2)
+            clearSched.grid(column=6, row=22, columnspan=2)
         
         # Start screen:
         sched.protocol('WM_DELETE_WINDOW', self.closeSchedule)
@@ -568,7 +560,7 @@ class OnCallViewer:
             self.settings.lift()
             return None # Only allow one generate screen at a time
         
-        inputGood = input.Preferences.weekendsOffCheck()
+        inputGood = input.Preferences.generateCheck()
         if(inputGood == 0):
             continueYes = True
             if(len(sa.shiftAssignments) != 0):
@@ -586,6 +578,8 @@ class OnCallViewer:
             tk.messagebox.showerror(message='A schedule cannot be generated:\nA minimum of 10 RAs are needed.')
         elif(inputGood == 2):
             tk.messagebox.showerror(message='A schedule cannot be generated:\nMore than half the RA team has requested the same weekend off.')
+        elif(inputGood ==3):
+            tk.messagebox.showerror(message='A schedule cannot be generated:\nAn RA has the same preference for multiple weekdays.')
         return None
     
     def exportSchedule(self):
@@ -613,7 +607,7 @@ class OnCallViewer:
         '''
         if(tk.messagebox.askokcancel(message='This will permanently delete the schedule in the system.\nContinue?')):
             empty = {}
-            output.rewriteSchedule(empty)
+            output.resetAssignments()
             self.closeSchedule()
         return None
     
@@ -622,6 +616,10 @@ class OnCallViewer:
             None -> None
             This closes the schedule window
         '''
+        if(self.schedEdit != None):
+            self.closeEditSchedule()
+        if(self.settings != None):
+            self.closeSettings()
         self.schedule.destroy()
         self.schedule = None
         return None
@@ -644,8 +642,8 @@ class OnCallViewer:
         self.schedEdit = tk.Toplevel()
         schedEdit = self.schedEdit
         schedEdit.title('On Call - Edit Schedule')
-        schedEdit.geometry('400x200+400+300') # width x height + x_offset + y_offset
-        schedEdit.minsize(400, 200)
+        schedEdit.geometry('400x150+400+300') # width x height + x_offset + y_offset
+        schedEdit.minsize(400, 150)
         
         # Get RA info for dropdown menu:
         importlib.reload(raPrefs)
@@ -670,6 +668,8 @@ class OnCallViewer:
         # Create save button:
         saveChange = tk.Button(schedEdit, text='Save', command=partial(self.updateShift, weekNum, secondary, index))
         saveChange.grid(column=0, row=2, padx=10, pady=10)
+        
+        schedEdit.grid_columnconfigure(0, weight=1)
         
         schedEdit.protocol('WM_DELETE_WINDOW', self.closeEditSchedule)
         schedEdit.update()
@@ -717,14 +717,14 @@ class OnCallViewer:
         # Setup settings window:
         self.settings = tk.Toplevel()
         settings = self.settings
-        settings.title('On Call - Settings')
+        settings.title('On Call - Generate Schedule Settings')
         settings.geometry('900x300+300+200') # width x height + x_offset + y_offset
         settings.minsize(900, 300)
         
         # Get RA info for dropdown menus:
         importlib.reload(raPrefs)
-        self.settingsIDs = []
-        self.settingsNames = []
+        self.settingsIDs = [0]
+        self.settingsNames = ['None']
         for ra in raPrefs.raPreferences:
             if(ra != '1' and ra != '2' and ra != '3'):
                 self.settingsIDs.append(ra)
@@ -758,6 +758,8 @@ class OnCallViewer:
         self.pairingDropdown1 = tk.ttk.Combobox(settings, values=names, state='readonly')
         self.pairingDropdown1.grid(column=1, row=2, padx=10, pady=10)
         self.pairingDropdown1.bind('<<ComboboxSelected>>', self.updatePairingOne)
+        self.pairingDropdown1.current(0)
+        self.paringChoice1 = self.pairingDropdown1.get()
         # Create first dis-allowed pairing label:
         pairingLabel2 = tk.Label(settings, text='and')
         pairingLabel2.grid(column=2, row=2, padx=10, pady=10)
@@ -765,6 +767,8 @@ class OnCallViewer:
         self.pairingDropdown2 = tk.ttk.Combobox(settings, values=names, state='readonly')
         self.pairingDropdown2.grid(column=3, row=2, padx=10, pady=10)
         self.pairingDropdown2.bind('<<ComboboxSelected>>', self.updatePairingTwo)
+        self.pairingDropdown2.current(0)
+        self.paringChoice2 = self.pairingDropdown2.get()
         
         # Create second dis-allowed pairing label:
         pairingLabel1 = tk.Label(settings, text='Second pair of RAs who cannot share a shift:')
@@ -773,6 +777,8 @@ class OnCallViewer:
         self.pairingDropdown3 = tk.ttk.Combobox(settings, values=names, state='readonly')
         self.pairingDropdown3.grid(column=1, row=3, padx=10, pady=10)
         self.pairingDropdown3.bind('<<ComboboxSelected>>', self.updatePairingThree)
+        self.pairingDropdown3.current(0)
+        self.paringChoice3 = self.pairingDropdown3.get()
         # Create second dis-allowed pairing label:
         pairingLabel2 = tk.Label(settings, text='and')
         pairingLabel2.grid(column=2, row=3, padx=10, pady=10)
@@ -780,6 +786,8 @@ class OnCallViewer:
         self.pairingDropdown4 = tk.ttk.Combobox(settings, values=names, state='readonly')
         self.pairingDropdown4.grid(column=3, row=3, padx=10, pady=10)
         self.pairingDropdown4.bind('<<ComboboxSelected>>', self.updatePairingFour)
+        self.pairingDropdown4.current(0)
+        self.paringChoice4 = self.pairingDropdown4.get()
         
         # Create save button:
         saveSettings = tk.Button(settings, text='Save', command=self.saveSettingsChoices)
@@ -895,6 +903,14 @@ class OnCallViewer:
     
     
     ''' The following functions are for tracking dropdown menus '''
+    def updateDeletionChoice(self, event):
+        '''
+            This updates the selected RA to delete in the dropdown menu
+            Dropdown menu is in Preferences window
+        '''
+        self.raSelectedToDelete = self.delRaDropdown.get()
+        return None
+    
     def updateWeekdayChoice(self, event):
         '''
             This updates the selected weekday choice in the dropdown menu
@@ -1081,7 +1097,7 @@ def preferencesView(self):
         # Create dropdown menu
         self.delRaDropdown = tk.ttk.Combobox(prefWidgets, values=self.raNames, state='readonly')
         self.delRaDropdown.grid(column=1, row=numRAs+3, padx=10, pady=10)
-        self.delRaDropdown.bind('<<ComboboxSelected>>', self.selectedForDeletion)
+        self.delRaDropdown.bind('<<ComboboxSelected>>', self.updateDeletionChoice)
         # Create deletion save button:
         saveDeletion = tk.Button(prefWidgets, text='Save', command=self.deleteRA)
         saveDeletion.grid(column=2, row=numRAs+3, padx=10, pady=10)
