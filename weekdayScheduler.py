@@ -1,9 +1,14 @@
 '''
 Author: Max Terry
-Date of last modification: 2-25-2020
+Date of last modification: 3-3-2020
 Description: This determines the on call schedule for weekday shifts
 References:
     TODO
+
+TODO:
+- implement test function to make sure names show up right amount of times
+- implement primary/secondary RA balancing
+- implement bad pairs
 '''
 
 import ast
@@ -48,10 +53,6 @@ class WeekdayShifts:
         This function acts like a main function specific to scheduling weekdays and is called by output.py
         Returns a dictionary of the weekday shifts
         '''
-       #for testing
-        #weekdays = {'Sunday':['951111111', '951111112', '951111113', '951111114'], 'Monday':['951111115', '951111116', '951111117'],
-        #            'Tuesday': ['951111118', '951111119', '951111121'], 'Wednesday':['951111122', '951111123', '951111124'],
-        #            'Thursday': ['951111125', '951111126', '951111127']}
 
         if(len(self.raPreferences) != 0):
             weekdays = self.assignDays()
@@ -66,13 +67,16 @@ class WeekdayShifts:
         leftOver = len(self.raPreferences) - (raPerDay * 5)
         weekdays = {"Sunday": [], "Monday": [], "Tuesday": [], "Wednesday": [], "Thursday": []}
         raList = list(self.raPreferences.keys())
+        badPairs = self.settings['3']               #Where bad pairs are saved
+        print(badPairs)
         
         #Gold star RA gets their first preference
-        goldStarRa = self.settings['1']
-        goldStarInfo = self.raPreferences[goldStarRa]
-        goldStarDay = goldStarInfo[1]
-        weekdays[goldStarDay].append(goldStarRa)
-        raList.remove(goldStarRa)
+        if(self.settings['1'] != 0):                    #Not necessarily a gold star RA
+            goldStarRa = self.settings['1']
+            goldStarInfo = self.raPreferences[goldStarRa]
+            goldStarDay = goldStarInfo[1]
+            weekdays[goldStarDay].append(goldStarRa)
+            raList.remove(goldStarRa)
 
         rasToRemove = []
         random.shuffle(raList)          #so every ra has an equal chance of being scheduled first/last
@@ -105,7 +109,7 @@ class WeekdayShifts:
         raList = [ra for ra in raList if ra not in rasToRemove]
 
         #make sure everyday has three people on it before assigning extra days
-        tieSetting = self.settings['2']
+        tieSetting = self.settings['2']     #Decides how to break ties
         random.shuffle(raList)
         for day in weekdays:
             while(len(weekdays[day]) != raPerDay):
@@ -118,9 +122,9 @@ class WeekdayShifts:
             rasToRemove = []
             random.shuffle(raList)
             for ra in raList:
-                raPreferences = self.raPreferences[ra][1:4]
-                for i in range(3):
-                    day = raPreferences[i]
+                tempRaPreferences = self.raPreferences[ra][1:4]
+                for i in range(3):                                  #preferences
+                    day = tempRaPreferences[i]
                     if(len(weekdays[day]) < raPerDay + 1 and ra not in rasToRemove):
                         weekdays[day].append(ra)
                         rasToRemove.append(ra)
@@ -131,14 +135,28 @@ class WeekdayShifts:
                             rasToRemove.append(ra)
 
             raList = [ra for ra in raList if ra not in rasToRemove]
-
         return weekdays
 
     def tiebreaker(self, tieSetting, raList):
         #todo: implement tiebreaker settings for alphabetical/numerical
-        if(tieSetting == 0):
+        if(tieSetting == 0):                    #for random tiebreakers
             randomRa = random.choice(raList)
             return randomRa
+        elif(tieSetting == 1):                  #alphabetical by last name tiebreaker
+            lastNames = []
+            for ra in raList:
+                lastNames.append([ra, self.raPreferences[ra][0].split()[1]])      #just want to keep track of last names
+            minName = lastNames[0]
+            for name in lastNames:
+                if name[1] < minName[1]:
+                    minName = name
+            return minName[0]                 #alphabetically first by last name
+        elif(tieSetting == 2):             #for numeric by student ID number
+            idList = []
+            for ra in raList:
+                idList.append(int(ra))
+            raToReturn = str(min(idList))
+            return raToReturn
 
     def scheduleShifts(self, initialWeekdays):
         '''
@@ -182,5 +200,4 @@ class WeekdayShifts:
             weekList.append(primaryList)
             weekList.append(secondaryList)
             finalShiftList.append(weekList)
-
         return finalShiftList
