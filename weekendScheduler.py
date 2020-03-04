@@ -1,6 +1,6 @@
 '''
 Author: Alex Archer
-Date of last modification: 3-2-2020
+Date of last modification: 3-4-2020
 Description: This determines the on call schedule for weekend shifts
 References:
     https://stackoverflow.com/questions/13520876/how-can-i-make-multiple-empty-lists-in-python
@@ -90,7 +90,7 @@ def weekendShifts():
     for week in range(1,10): #weeks 2-10 
         for day in range(4): #friday, saturday day, saturday night, sunday day
             firstRa = random.choice(list(raDict)) #pick primary worker
-            #make sure they dont have the week off or have more shifts than average.
+            #make sure they dont have the week off or have more shifts than average or have more primary than secondary shifts.
             while weekcount == raDict.get(firstRa)[4] or weekcount == raDict.get(firstRa)[5] or \
                   weekcount == raDict.get(firstRa)[6] or raDict.get(firstRa)[8] > raDict.get(firstRa)[9]+1 or raDict.get(firstRa)[7] > avg:
                 firstRa = random.choice(list(raDict))
@@ -98,7 +98,7 @@ def weekendShifts():
             raDict[firstRa][7] += 1 #increase shift counter
             raDict[firstRa][8] += 1 
             secondRa = random.choice(list(raDict)) #pick secondary worker
-            #make sure they don't have the week off, aren't a disallowed pair, or the same person, and have no more shifts than average
+            #make sure they don't have the week off, aren't a disallowed pair, or the same person, and have no more shifts than average and dont have more secondary than primary shifts.
             while [firstRa,secondRa] == badPair1 or [secondRa,firstRa] == badPair1 or [firstRa,secondRa] == badPair2 or \
                   [secondRa,firstRa] == badPair2 or firstRa == secondRa or weekcount == raDict.get(secondRa)[4] or \
                   weekcount == raDict.get(secondRa)[5] or weekcount == raDict.get(secondRa)[6] or raDict.get(secondRa)[9] > raDict.get(secondRa)[8]+1 or raDict.get(secondRa)[7] > avg: 
@@ -110,7 +110,10 @@ def weekendShifts():
             schedule[week][1][day] = raDict[secondRa][0]    
         weekcount += 1
 
-    ''' # include **kwargs as function argument
+    return(schedule)    
+
+''' These functions are for testing 
+  # include **kwargs as function argument
     def clearshifts(): #clears shift counts, useful for resetting.
         for key in raDict.keys():
             raDict[key][7] = 0
@@ -125,13 +128,10 @@ def weekendShifts():
         print("numshifts: ", numshifts)
     if kwargs:
         shiftcount()
-        clearshifts()'''
-    return(schedule)    
-
-''' These functions are for testing '''
-
-    
-''' alternate code
+        clearshifts()
+'''
+'''   
+alternate code
 
 import raPreferences  #directly instead of importlib + update works too
 import random
@@ -232,5 +232,4 @@ def weekendShifts():
         weekcount += 1
 
     return(schedule)  
-
-'''
+```
