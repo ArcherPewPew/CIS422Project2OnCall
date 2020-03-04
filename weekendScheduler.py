@@ -64,7 +64,7 @@ def weekendShifts():
 
     weekcount = 1
 
-    ''' This loop assigns RAs to the first week's primary and secondary shifts. There is no sunday shift''' 
+    ''' This loop assigns RAs to the first week's primary and secondary shifts. There is no sunday shift ''' 
     for day in range(3): #friday, saturday day, saturday night
         firstRa = random.choice(list(raDict)) #pick primary worker
         #make sure they don't have the week off
@@ -86,7 +86,7 @@ def weekendShifts():
         secondary_1[day] = raDict[secondRa][0]  
     weekcount += 1
 
-    ''' This loop assigns RAs to Primary and Secondary shifts for weeks 2 through 10'''
+    ''' This loop assigns RAs to Primary and Secondary shifts for weeks 2 through 10 '''
     for week in range(1,10): #weeks 2-10 
         for day in range(4): #friday, saturday day, saturday night, sunday day
             firstRa = random.choice(list(raDict)) #pick primary worker
@@ -109,7 +109,7 @@ def weekendShifts():
             schedule[week][0][day] = raDict[firstRa][0]
             schedule[week][1][day] = raDict[secondRa][0]    
         weekcount += 1
-
+    
     return(schedule)    
 
 ''' These functions are for testing 
@@ -129,13 +129,8 @@ def weekendShifts():
     if kwargs:
         shiftcount()
         clearshifts()
-'''
-'''   
+  
 alternate code
-
-import raPreferences  #directly instead of importlib + update works too
-import random
-import input
 
 def weekendShifts():
     raPreferences = input.Input.readingDictPy("raPreferences.py") #Alyssa's import function. makes a copy of read dictonary
@@ -232,4 +227,4 @@ def weekendShifts():
         weekcount += 1
 
     return(schedule)  
-```
+'''
