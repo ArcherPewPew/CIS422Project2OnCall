@@ -253,6 +253,7 @@ class OnCallViewer:
             Asks user for csv file name
             Calls input.py's importFile function
         '''
+        importlib.reload(raPrefs)
         if(len(raPrefs.raPreferences) == 25):
             tk.messagebox.showerror(message='The maximum limit of RAs has been reached. Please remove an RA before importing a new file.')
             return None
@@ -268,6 +269,8 @@ class OnCallViewer:
                 error = input.Preferences.importFile(fileName)
                 if(error == 1):
                     tk.messagebox.showerror(message='Invalid file.\nPlease check the following:\nID numbers are correct.\nAll preferences are filled out with valid choices.\nThe same weekday preference is not chosen multiple times per RA.')
+                elif(error == 2):
+                    tk.messagebox.showerror(message='The RA team is too large.\nA maximum of 25 RAs are allowed.')
                 else:
                     self.closePreferences()
         return None
@@ -525,9 +528,11 @@ class OnCallViewer:
         
         # Create Generate button:
         generateSched = tk.Button(sched, text='Generate New Schedule', command=self.generateNewSchedule)
-        generateSched.grid(column=2, row=22, columnspan=2)
         
         if(numShifts != 0):
+            # Add generate button to screen
+            generateSched.grid(column=2, row=22, columnspan=2)
+            
             # Create export button:
             exportSched = tk.Button(sched, text='Export Schedule', command=self.exportSchedule)
             exportSched.grid(column=4, row=22, pady=50, columnspan=2)
@@ -535,6 +540,9 @@ class OnCallViewer:
             # Create clear button:
             clearSched = tk.Button(sched, text='Clear Schedule', command=self.clearSchedule)
             clearSched.grid(column=6, row=22, columnspan=2)
+        else:
+            # Add generate button to screen
+            generateSched.grid(column=0, row=22, columnspan=2)
         
         # Start screen:
         sched.protocol('WM_DELETE_WINDOW', self.closeSchedule)

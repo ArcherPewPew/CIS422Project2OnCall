@@ -84,16 +84,16 @@ def exportFile(fileName):
 		return 1
 
 	# Writing header
-	output_file.write(",,SUNDAY DAY,SUNDAY NIGHT,MONDAY,TUESDAY,WEDNESDAY,THURSDAY,"
+	output_file.write(",,,SUNDAY DAY,SUNDAY NIGHT,MONDAY,TUESDAY,WEDNESDAY,THURSDAY,"
 				"FRIDAY,SATURDAY DAY,SATURDAY NIGHT\n")	
 
 	# Go through the weeks of shiftAssignments dictionary and save into output file
 	for week in sa.shiftAssignments:
 		# Write week i's number
-		output_file.write("Week %d," % (week))
+		output_file.write("Week %d,Primary" % (week))
 
 		# Write week i's primary schedule
-		output_file.write(", %s, %s, %s, %s, %s, %s, %s, %s, %s \n" % \
+		output_file.write(",, %s, %s, %s, %s, %s, %s, %s, %s, %s \n" % \
 				(sa.shiftAssignments[week][0][0], \
 				sa.shiftAssignments[week][0][1], sa.shiftAssignments[week][0][2], \
 				sa.shiftAssignments[week][0][3], sa.shiftAssignments[week][0][4], \
@@ -101,7 +101,7 @@ def exportFile(fileName):
 				sa.shiftAssignments[week][0][7], sa.shiftAssignments[week][0][8]))
 
 		# Write week i's secondary schedule		
-		output_file.write(",, %s, %s, %s, %s, %s, %s, %s, %s, %s \n" % \
+		output_file.write(",Secondary,, %s, %s, %s, %s, %s, %s, %s, %s, %s \n" % \
 				(sa.shiftAssignments[week][1][0], \
 				sa.shiftAssignments[week][1][1], sa.shiftAssignments[week][1][2], \
 				sa.shiftAssignments[week][1][3], sa.shiftAssignments[week][1][4], \
