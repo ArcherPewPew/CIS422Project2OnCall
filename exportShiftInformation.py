@@ -1,8 +1,21 @@
+'''
+Author: Max Terry
+Date of last modification: 3-5-2020
+Description: Outputs a report of RA scheduling information in a separate file
+References:
+    TODO
+'''
+
 import shiftAssignments as sa
 import importlib
 import weekdayScheduler as week
 
 def exportShiftInfo(fileName):
+	'''
+	string -> None
+	Function will output information about each RA in the list.
+	This includes the days the work, their total number of shifts, and total number of primary shifts.
+	'''
 	importlib.reload(sa)
 	raInfo = week.WeekdayShifts().getRaInformation()[0]
 	raDict = {}
@@ -46,7 +59,7 @@ def exportShiftInfo(fileName):
 	except:
 		return 1
 
-	for ra in raDict:
+	for ra in raDict:											#loop through each RA and write the necessary information to a txt file
 		output_file.write(ra + '\n')
 		output_file.write("Weekday Assigned: " + raDict[ra][2][0] + "\n")		#should only be one weekday here
 		output_file.write("Total number of weekday shifts: " + str(sum(raDict[ra][0])) + "\n")
@@ -103,4 +116,3 @@ def exportShiftInfo(fileName):
 	#print(primaryInfo)
 	#print(secondaryInfo)
 '''
-exportShiftInfo("test.txt")
