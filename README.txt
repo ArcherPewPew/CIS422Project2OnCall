@@ -15,4 +15,49 @@ DEPENDENCIES:
 - python 3
 - tkinter 8.6
 - python standard libraries: ast, importlib, and random
-- existence of these files: //\\
+- existence of these files: raPreferences.py and shiftAssignments.py
+
+DIRECTORY DESCRIPTION:
+-On-Call (main): all files that are actively used/modified when the 'On Call' application is being used.
+	-On-Call.py
+	-input.py
+	-onCallViewer.py
+	-output.pu
+	-raPreferences.py
+	-shiftAssignments.py
+	-weekendScheduler.py
+	-weekdayScheduler.py
+-On-Call > testFiles:
+	-Makefile
+	-originalExampleRaPreferences.py
+	-test_end.py
+	-test_week.py
+-On-Call > testInputs:
+	-20  RAs.csv
+	-Max RAs.csv
+	-RA 1.csv
+	-RA 2.csv
+	-RA 3.csv
+	-RA 4.csv
+	-RA 5.csv
+	-RA 6.csv
+	-RA 7.csv
+	-RA 8.csv
+	-RA 9.csv
+	-RA 10.csv
+	-RA 11.csv
+	-RA 12.csv
+	-RA 13.csv
+	-RA 14.csv
+	-RA 15.csv
+	-RA 16.csv
+	-Same Weekend Off.csv
+	-Same weekday chosen.csv
+	-example.csv
+	-example1.csv
+	-example2.csv
+	-example3.csv
+	-example4.csv
+	-example5.csv
+	-updatedexample.csv
+	
