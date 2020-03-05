@@ -1,0 +1,128 @@
+Kiana Hosaka
+Weekday Assigned: Sunday Night
+Total number of weekday shifts: 7
+Total number of primary weekday shifts: 3
+Weekends Assigned: Saturday Day, Friday, Saturday Night
+Total number of weekend shifts: 6
+Total number of primary weekend shifts: 2
+
+Alex Archer
+Weekday Assigned: Tuesday
+Total number of weekday shifts: 6
+Total number of primary weekday shifts: 5
+Weekends Assigned: Friday, Saturday Day
+Total number of weekend shifts: 4
+Total number of primary weekend shifts: 2
+
+Lucas Hyatt
+Weekday Assigned: Wednesday
+Total number of weekday shifts: 6
+Total number of primary weekday shifts: 3
+Weekends Assigned: Saturday Day
+Total number of weekend shifts: 3
+Total number of primary weekend shifts: 2
+
+Lily Jim
+Weekday Assigned: Thursday
+Total number of weekday shifts: 5
+Total number of primary weekday shifts: 3
+Weekends Assigned: Friday, Saturday Day, Sunday Day, Saturday Night
+Total number of weekend shifts: 6
+Total number of primary weekend shifts: 4
+
+Cory Ingram
+Weekday Assigned: Monday
+Total number of weekday shifts: 7
+Total number of primary weekday shifts: 3
+Weekends Assigned: Sunday Day, Saturday Night
+Total number of weekend shifts: 3
+Total number of primary weekend shifts: 2
+
+Max Terry
+Weekday Assigned: Monday
+Total number of weekday shifts: 6
+Total number of primary weekday shifts: 4
+Weekends Assigned: Saturday Night, Sunday Day, Friday, Saturday Day
+Total number of weekend shifts: 5
+Total number of primary weekend shifts: 1
+
+Justin Becker
+Weekday Assigned: Thursday
+Total number of weekday shifts: 5
+Total number of primary weekday shifts: 2
+Weekends Assigned: Friday, Saturday Night, Sunday Day
+Total number of weekend shifts: 6
+Total number of primary weekend shifts: 4
+
+Bethany Van Meter
+Weekday Assigned: Sunday Night
+Total number of weekday shifts: 7
+Total number of primary weekday shifts: 3
+Weekends Assigned: Saturday Night, Saturday Day, Friday, Sunday Day
+Total number of weekend shifts: 6
+Total number of primary weekend shifts: 4
+
+James Kang
+Weekday Assigned: Tuesday
+Total number of weekday shifts: 7
+Total number of primary weekday shifts: 2
+Weekends Assigned: Saturday Night, Saturday Day, Friday, Sunday Day
+Total number of weekend shifts: 6
+Total number of primary weekend shifts: 0
+
+Samuel Lundquist
+Weekday Assigned: Thursday
+Total number of weekday shifts: 5
+Total number of primary weekday shifts: 2
+Weekends Assigned: Friday, Saturday Day, Saturday Night
+Total number of weekend shifts: 5
+Total number of primary weekend shifts: 5
+
+Claire Kolln
+Weekday Assigned: Tuesday
+Total number of weekday shifts: 7
+Total number of primary weekday shifts: 3
+Weekends Assigned: Sunday Day, Saturday Day, Saturday Night
+Total number of weekend shifts: 5
+Total number of primary weekend shifts: 1
+
+Stefan Fields
+Weekday Assigned: Wednesday
+Total number of weekday shifts: 7
+Total number of primary weekday shifts: 3
+Weekends Assigned: Friday, Saturday Night, Sunday Day
+Total number of weekend shifts: 4
+Total number of primary weekend shifts: 1
+
+Leonie Way
+Weekday Assigned: Sunday Night
+Total number of weekday shifts: 6
+Total number of primary weekday shifts: 4
+Weekends Assigned: Sunday Day, Saturday Night, Friday
+Total number of weekend shifts: 5
+Total number of primary weekend shifts: 3
+
+Alyssa Huque
+Weekday Assigned: Wednesday
+Total number of weekday shifts: 7
+Total number of primary weekday shifts: 4
+Weekends Assigned: Saturday Day, Sunday Day, Friday, Saturday Night
+Total number of weekend shifts: 5
+Total number of primary weekend shifts: 3
+
+Olivia Pannell
+Weekday Assigned: Monday
+Total number of weekday shifts: 7
+Total number of primary weekday shifts: 3
+Weekends Assigned: Sunday Day, Saturday Night, Friday
+Total number of weekend shifts: 4
+Total number of primary weekend shifts: 3
+
+Ryan Gurnick
+Weekday Assigned: Thursday
+Total number of weekday shifts: 5
+Total number of primary weekday shifts: 3
+Weekends Assigned: Saturday Night, Saturday Day, Sunday Day
+Total number of weekend shifts: 5
+Total number of primary weekend shifts: 2
+
