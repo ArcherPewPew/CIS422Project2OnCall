@@ -13,7 +13,7 @@ import shiftAssignments as sa
 #import test_week as week # For testing
 #import test_end as end # For testing
 import weekdayScheduler as week
-import weekendScheduler as end # Not using Alex's file right now because it's giving me errors
+import weekendScheduler as end
 
 # List of previous shiftAssignments dictionary states
 outputUpdates = []
