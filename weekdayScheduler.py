@@ -24,7 +24,7 @@ class WeekdayShifts:
 
     def getRaInformation(self):
         '''
-        None -> (dictionary)
+        None -> (dictionary,dictionary)
         Reads the dictionary in raPreferences.py.
         Returns a dictionary containing the preference information.
         '''

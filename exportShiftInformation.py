@@ -68,7 +68,6 @@ def exportShiftInfo(fileName):
 		output_file.write("Total number of weekend shifts: " + str(sum(raDict[ra][1])) + "\n")
 		output_file.write("Total number of primary weekend shifts: " + str(raDict[ra][1][0]) + "\n")
 		output_file.write("\n")
-		print(ra, " ", raDict[ra])
 
 	output_file.close()
 
