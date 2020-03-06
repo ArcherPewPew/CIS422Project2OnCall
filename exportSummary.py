@@ -2,8 +2,6 @@
 Author: Max Terry
 Date of last modification: 3-5-2020
 Description: Outputs a report of RA scheduling information in a separate file
-References:
-    TODO
 '''
 
 import shiftAssignments as sa
