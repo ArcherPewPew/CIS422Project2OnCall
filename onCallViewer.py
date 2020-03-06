@@ -30,6 +30,7 @@ from functools import partial
 
 import input
 import output
+import exportSummary
 import raPreferences as raPrefs
 import shiftAssignments as sa
 
@@ -534,13 +535,17 @@ class OnCallViewer:
             # Add generate button to screen
             generateSched.grid(column=2, row=22, columnspan=2)
             
-            # Create export button:
+            # Create export schedule button:
             exportSched = tk.Button(sched, text='Export Schedule', command=self.exportSchedule)
             exportSched.grid(column=4, row=22, pady=50, columnspan=2)
             
+            # Create export summary button:
+            exportSum = tk.Button(sched, text='Export Summary', command=self.exportSummary)
+            exportSum.grid(column=6, row=22, columnspan=2)
+            
             # Create clear button:
             clearSched = tk.Button(sched, text='Clear Schedule', command=self.clearSchedule)
-            clearSched.grid(column=6, row=22, columnspan=2)
+            clearSched.grid(column=8, row=22, columnspan=2)
         else:
             # Add generate button to screen
             generateSched.grid(column=0, row=22, columnspan=2)
@@ -607,6 +612,22 @@ class OnCallViewer:
                     tk.messagebox.showerror(message='An error occured.\nThe schedule could not be exported.')
         else: # If there is no schedule
             tk.messagebox.showerror(message='No schedule to export. Please generate a schedule first.')
+        return None
+    
+    def exportSummary(self):
+        '''
+            None -> None
+            Asks user for text file name
+            Calls exportSummary.py's exportShiftInfo function
+        '''
+        importlib.reload(sa)
+        if(len(sa.shiftAssignments) != 0): # If there is a schedule in the system
+            files = [('Text Files', '*.txt')]
+            fileName = tk.filedialog.asksaveasfilename(filetypes = files) # Ask user to choose file name and location
+            if(fileName != ''): # fileName will be empty if user clicks cancel on file dialog
+                exportSummary.exportShiftInfo(fileName)
+        else: # If there is no schedule
+            tk.messagebox.showerror(message='No schedule to export summary of. Please generate a schedule first.')
         return None
     
     def clearSchedule(self):
