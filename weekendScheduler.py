@@ -1,6 +1,6 @@
 '''
 Author: Alex Archer
-Date of last modification: 3-4-2020
+Date of last modification: 3-6-2020
 Description: This determines the on call schedule for weekend shifts
 References:
     https://stackoverflow.com/questions/13520876/how-can-i-make-multiple-empty-lists-in-python
