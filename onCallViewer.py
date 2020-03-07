@@ -1,6 +1,6 @@
 '''
     Author: Lily Jim
-    Date of last modification: 3-4-2020
+    Date of last modification: 3-7-2020
     Description: This creates the graphical user interface
     References:
         On Deck Development Team's Project 1 interface.py file
