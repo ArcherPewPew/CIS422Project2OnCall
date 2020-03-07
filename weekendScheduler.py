@@ -10,7 +10,7 @@ import random
 import importlib
 import raPreferences as raPrefs
 
-def weekendShifts(**kwargs):
+def weekendShifts():
     '''
     None ->  [[], []] -- list of two-lists
     Reads the dictionary in raPreferences.py.
@@ -107,24 +107,8 @@ def weekendShifts(**kwargs):
             raDict[secondRa][9] += 1 
             #add each RA to the primary/secondary list for the particular week
             schedule[week][0][day] = raDict[firstRa][0]
-            schedule[week][1][day] = raDict[secondRa][0]    
+            schedule[week][1][day] = raDict[secondRa][0]
         weekcount += 1
-
-    def clearshifts(): #clears shift counts, useful for resetting.
-        for key in raDict.keys():
-            raDict[key][7] = 0
-            raDict[key][8] = 0
-            raDict[key][9] = 0
-         
-    def shiftcount(): #counts shifts, useful for testing
-        numshifts = 0
-        for key in raDict.keys():
-            numshifts += raDict[key][7]
-            print(raDict[key][0], ' has ', raDict[key][7], " shifts. ", raDict[key][8], " primary shifts. ", raDict[key][9], " secondary shifts.") 
-        print("numshifts: ", numshifts)
-    if kwargs:
-        shiftcount()
-        clearshifts()
 
     return(schedule)    
 
