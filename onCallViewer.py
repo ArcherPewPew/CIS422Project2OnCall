@@ -74,7 +74,7 @@ class OnCallViewer:
         self.settingsClosed = tk.BooleanVar(self.root, True)
         self.settingsIDs = None
         self.settingsNames = None
-        self.tiebreakerOptions = ['Random', 'Alphabetical Order by Last Name', 'Numerical Order by ID Number']
+        self.tiebreakerOptions = ['Random', 'Alphabetical Order (Last Name)', 'Numerical Order (ID Number)']
         # Dropdown menus
         self.goldStarDropdown = None
         self.tiebreakerDropdown = None
@@ -143,7 +143,7 @@ class OnCallViewer:
         if(numRAs == 0): # No RAs is a special window with just a message and single button
             pref.geometry('225x125+250+150') # width x height + x_offset + y_offset
             pref.minsize(225, 125)
-        elif(numRAs > 20): # Once you have more than 20 RAs, the window needs to be bigger
+        elif(numRAs > 18): # Once you have more than 18 RAs, the window needs to be bigger
             pref.geometry('800x750+0+0') # width x height + x_offset + y_offset
             pref.minsize(600, 750)
         else: # This is the "standard" window
