@@ -1,6 +1,6 @@
 '''
 Author: Alex Archer
-Date of last modification: 3-4-2020
+Date of last modification: 3-6-2020
 Description: This determines the on call schedule for weekend shifts
 References:
     https://stackoverflow.com/questions/13520876/how-can-i-make-multiple-empty-lists-in-python
@@ -92,7 +92,7 @@ def weekendShifts():
             firstRa = random.choice(list(raDict)) #pick primary worker
             #make sure they dont have the week off or have more shifts than average or have more primary than secondary shifts.
             while weekcount == raDict.get(firstRa)[4] or weekcount == raDict.get(firstRa)[5] or \
-                  weekcount == raDict.get(firstRa)[6] or raDict.get(firstRa)[8] > raDict.get(firstRa)[9]+1 or raDict.get(firstRa)[7] > avg:
+                  weekcount == raDict.get(firstRa)[6] or raDict.get(firstRa)[8] > raDict.get(firstRa)[9] or raDict.get(firstRa)[7] > avg+1:
                 firstRa = random.choice(list(raDict))
                     
             raDict[firstRa][7] += 1 #increase shift counter
@@ -101,15 +101,15 @@ def weekendShifts():
             #make sure they don't have the week off, aren't a disallowed pair, or the same person, and have no more shifts than average and dont have more secondary than primary shifts.
             while [firstRa,secondRa] == badPair1 or [secondRa,firstRa] == badPair1 or [firstRa,secondRa] == badPair2 or \
                   [secondRa,firstRa] == badPair2 or firstRa == secondRa or weekcount == raDict.get(secondRa)[4] or \
-                  weekcount == raDict.get(secondRa)[5] or weekcount == raDict.get(secondRa)[6] or raDict.get(secondRa)[9] > raDict.get(secondRa)[8]+1 or raDict.get(secondRa)[7] > avg: 
+                  weekcount == raDict.get(secondRa)[5] or weekcount == raDict.get(secondRa)[6] or raDict.get(secondRa)[9] > raDict.get(secondRa)[8] or raDict.get(secondRa)[7] > avg+1: 
                 secondRa = random.choice(list(raDict))
             raDict[secondRa][7] += 1 #increase shift counter
             raDict[secondRa][9] += 1 
             #add each RA to the primary/secondary list for the particular week
             schedule[week][0][day] = raDict[firstRa][0]
-            schedule[week][1][day] = raDict[secondRa][0]    
+            schedule[week][1][day] = raDict[secondRa][0]
         weekcount += 1
-    
+
     return(schedule)    
 
 ''' These functions are for testing 
@@ -131,10 +131,8 @@ def weekendShifts():
         clearshifts()
   
 alternate code
-
 def weekendShifts():
     raPreferences = input.Input.readingDictPy("raPreferences.py") #Alyssa's import function. makes a copy of read dictonary
-
     #if not raPreferences:
         #raPreferences = {951111111:	["Alex Archer",	"Tuesday",	"Thursday",	"Sunday", 3, 5, 8], 951111112: ["Kiana Hosaka", "Sunday", "Thursday", "Monday", 2, 6, 4], 951111113: ["Alyssa Huque", "Wednesday", "Monday", "Sunday", 0, 0, 0], 951111114: ["Lily Jim", "Thursday", "Sunday", "Tuesday", 5, 3, 9], 951111115: ["Max Terry", "Monday", "Sunday", "Thursday", 10, 5, 1], 951111116: ["Lucas Hyatt", "Wednesday", "Tuesday", "Monday", 5, 7, 2], 951111117: ["James Kang", "Tuesday", "Monday", "Sunday", 4, 8, 3], 951111118: ["Claire Kolln", "Thursday", "Wednesday", "Tuesday", 6, 9, 0], 951111119: ["Leonie Way", "Sunday", "Tuesday", "Thursday", 3, 2, 8], 951111121: ["Stefan Fields", "Wednesday", "Monday", "Sunday", 10, 1, 5], 951111122: ["Justin Becker", "Thursday", "Wednesday", "Monday", 5, 0, 9], 951111123: ["Cory Ingram", "Monday", "Sunday", "Tuesday", 10, 4, 3], 951111124: ["Samuel Lundquist", "Thursday", "Monday", "Wednesday", 3, 7, 10], 951111125: ["Olivia Pannell", "Monday", "Wednesday", "Thursday", 2, 4, 9], 951111126: ["Bethany Van Meter", "Sunday", "Thursday", "Tuesday", 9, 3, 8], 951111127: ["Ryan Gurnick", "Thursday", "Monday", "Wednesday", 0, 7, 10], 1: 951111116, 2: 2, 3: [[951111114, 951111127], [0, 0]]}
         #print("WeekdnScheduler: danger, Preference input has failed, switching to default values to avoid crash!")
@@ -150,18 +148,14 @@ def weekendShifts():
     p2ra1 = raPreferences.get('3')[1][1]  
     p2ra2 = raPreferences.get('3')[1][1]
     bad2 = [p2ra1,p2ra2]
-
     badpairs = [bad1,bad2]
     #else:
         #print("WeekdnScheduler: danger, setting 3 input has failed, bad pairings settings were not passed or defined.")
-
     radict = {}
-
     for key,val in raPreferences.items(): ##copy dictonary w/o preferences
         if key not in ['1','2','3']:
             radict[key] = val
             radict[key].append(0) #add var to counts number of shifts
-
     dictlen = len(list(radict))
     if dictlen != 0:
         avg = 78/dictlen#there are 78 slots to fill and the length of the list of keys is number of RAs. makes an average. used for number of shifts enforcement.
@@ -195,7 +189,6 @@ def weekendShifts():
 		[primary_4, secondary_4], [primary_5, secondary_5], [primary_6, secondary_6], \
 		[primary_7, secondary_7], [primary_8, secondary_8], [primary_9, secondary_9], \
 		[primary_10, secondary_10]]
-
     weekcount = 1
     
     for i in range(3): #friday, saturday day, saturday night of week 1. Number of shifts are not considered.
@@ -209,7 +202,6 @@ def weekendShifts():
         radict[tmp2][7] += 1 #increase shift counter
         primary_1[i] = radict[tmp][0]
         secondary_1[i] = radict[tmp2][0]    #update the week lists...
-
     weekcount += 1
     
     for x in range(1,10): #weeks 2-10 to be considered
@@ -225,6 +217,5 @@ def weekendShifts():
             schedule[x][0][i] = radict[tmp][0]
             schedule[x][1][i] = radict[tmp2][0]    #update the week lists..
         weekcount += 1
-
     return(schedule)  
 '''
