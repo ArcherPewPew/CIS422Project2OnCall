@@ -62,7 +62,10 @@ class Input:
 					return 1
 				raPreferences = {j[0]: j[1:8] for j in contents} # write raPreferences dictionary
 		file.close() # closes input file
-		return raPreferences # returns dictionary
+		try:
+			return raPreferences # returns dictionary
+		except:
+			return 1
 
 	def readingDictPy(filename):
 		'''file -> dictionary
