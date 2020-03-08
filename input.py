@@ -30,9 +30,11 @@ class Input:
 		6) checks that the weekdays provided are not repeats
 		'''
 		weekdays = ["Monday", "Tuesday", "Wednesday", "Thursday", "Sunday"] # list of weekdays
-
 		with open(filename, "r") as file:
-			contents = file.readlines()
+			try:
+				contents = file.readlines()
+			except:
+				return 1
 			for i in range(len(contents)):
 				contents[i] = contents[i].strip('\n')
 				contents[i] = contents[i].split(',')
@@ -62,7 +64,10 @@ class Input:
 					return 1
 				raPreferences = {j[0]: j[1:8] for j in contents} # write raPreferences dictionary
 		file.close() # closes input file
-		return raPreferences # returns dictionary
+		try:
+			return raPreferences # returns dictionary
+		except:
+			return 1
 
 	def readingDictPy(filename):
 		'''file -> dictionary
