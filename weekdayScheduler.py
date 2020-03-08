@@ -1,7 +1,9 @@
 '''
 Author: Max Terry
-Date of last modification: 2-25-2020
+Date of last modification: 3-5-2020
 Description: This determines the on call schedule for weekday shifts
+References:
+    TODO
 '''
 
 import ast
@@ -11,6 +13,10 @@ import importlib
 
 class WeekdayShifts:
     def __init__(self):
+        '''
+        None -> (None)
+        Sets the initial values of class variables
+        '''
         raInfo = self.getRaInformation()
         self.raPreferences = raInfo[0]
         self.settings = raInfo[1]
@@ -18,7 +24,7 @@ class WeekdayShifts:
 
     def getRaInformation(self):
         '''
-        None -> (dictionary)
+        None -> (dictionary,dictionary)
         Reads the dictionary in raPreferences.py.
         Returns a dictionary containing the preference information.
         '''
@@ -35,6 +41,7 @@ class WeekdayShifts:
             if raId not in ['1','2','3']:       #to save just the RA information
                 finalReference[raId] = tempRaPreferences[raId][0:4]       #gets rid of weekend information
                 finalReference[raId].append(0)           #to keep track of shift counter
+                finalReference[raId].append(0)           #to keep track of number of primary shifts
             else:
                 settings[raId] = tempRaPreferences[raId]
 
@@ -55,6 +62,10 @@ class WeekdayShifts:
             print("Error in loading RA preferences")
 
     def assignDays(self):
+        '''
+        None -> dict
+        assigns each RA to the weekday that they will be scheduled on for the term
+        '''
         #schedule  this many per day at first, then fill in the last few later
         raPerDay = len(self.raPreferences) // 5
         leftOver = len(self.raPreferences) - (raPerDay * 5)
@@ -130,7 +141,11 @@ class WeekdayShifts:
         return weekdays
 
     def tiebreaker(self, tieSetting, raList):
-        #todo: implement tiebreaker settings for alphabetical/numerical
+        '''
+        int,list -> string
+        Returns an ra from a list of ras based on the user's tiebreaker setting.
+        Tiebreaks will either be done randomly, alphabetically by last name, or numerically by student ID number
+        '''
         if(tieSetting == 0):                    #for random tiebreakers
             randomRa = random.choice(raList)
             return randomRa
@@ -152,7 +167,8 @@ class WeekdayShifts:
 
     def badPairInDay(self, weekday, ra):
         '''
-        string -> boolean
+        list,string -> boolean
+        Checks to see if an RA can be scheduled based on the presence of a bad pair, defined by the user
         '''
         isBadPair = False
         badPairs = self.settings['3']
@@ -171,6 +187,7 @@ class WeekdayShifts:
     def scheduleShifts(self, initialWeekdays):
         '''
         dictionary -> list
+        Once the ras are all assigned to a day, this function actually schedules them week by week
         '''
         weekdays = initialWeekdays.copy()       #to avoid aliasing
         finalShiftList = []
@@ -196,10 +213,17 @@ class WeekdayShifts:
                     haveShiftRas.remove(needShiftRas[0])    #have to get rid of this to avoid duplicates
                     needShiftRas.append(random.choice(haveShiftRas))
 
-                
-                primaryRa = random.choice(needShiftRas)
+                minPrimaryShifts = 1000
+                minRa = ''
+                for ra in needShiftRas:
+                    if(self.raPreferences[ra][5] < minPrimaryShifts):
+                        minPrimaryShifts = self.raPreferences[ra][5]
+                        minRa = ra
+
+                primaryRa = minRa#random.choice(needShiftRas)
                 needShiftRas.remove(primaryRa)              #so there isnt a repeat here
                 self.raPreferences[primaryRa][4] += 1       #increment the shift counter
+                self.raPreferences[primaryRa][5] += 1       #increment the primary RA counter
 
                 secondaryRa = random.choice(needShiftRas)   #don't need to remove this one as the availableRa list resets anyways
                 self.raPreferences[secondaryRa][4] += 1
