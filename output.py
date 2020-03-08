@@ -1,6 +1,6 @@
 '''
 	Author: Kiana Hosaka
-	Date of Last Modification: February 28, 2020
+	Date of Last Modification: March 1, 2020
 	Description: File produces the functionality of the Shift Assignments Module.
 	References:
 	- Prepending to a list: https://kite.com/python/answers/how-to-prepend-to-a-list-in-python
@@ -13,7 +13,7 @@ import shiftAssignments as sa
 #import test_week as week # For testing
 #import test_end as end # For testing
 import weekdayScheduler as week
-import weekendScheduler as end # Not using Alex's file right now because it's giving me errors
+import weekendScheduler as end
 
 # List of previous shiftAssignments dictionary states
 outputUpdates = []
@@ -63,7 +63,6 @@ def generateSchedule():
 	f.write("shiftAssignments = %s\n" % (str(assignments)))
 
 	f.close()
-
 	return 0
 
 
@@ -85,16 +84,16 @@ def exportFile(fileName):
 		return 1
 
 	# Writing header
-	output_file.write(",,SUNDAY DAY,SUNDAY NIGHT,MONDAY,TUESDAY,WEDNESDAY,THURSDAY,"
+	output_file.write(",,,SUNDAY DAY,SUNDAY NIGHT,MONDAY,TUESDAY,WEDNESDAY,THURSDAY,"
 				"FRIDAY,SATURDAY DAY,SATURDAY NIGHT\n")	
 
 	# Go through the weeks of shiftAssignments dictionary and save into output file
 	for week in sa.shiftAssignments:
 		# Write week i's number
-		output_file.write("Week %d," % (week))
+		output_file.write("Week %d,Primary" % (week))
 
 		# Write week i's primary schedule
-		output_file.write(", %s, %s, %s, %s, %s, %s, %s, %s, %s \n" % \
+		output_file.write(",, %s, %s, %s, %s, %s, %s, %s, %s, %s \n" % \
 				(sa.shiftAssignments[week][0][0], \
 				sa.shiftAssignments[week][0][1], sa.shiftAssignments[week][0][2], \
 				sa.shiftAssignments[week][0][3], sa.shiftAssignments[week][0][4], \
@@ -102,7 +101,7 @@ def exportFile(fileName):
 				sa.shiftAssignments[week][0][7], sa.shiftAssignments[week][0][8]))
 
 		# Write week i's secondary schedule		
-		output_file.write(",, %s, %s, %s, %s, %s, %s, %s, %s, %s \n" % \
+		output_file.write(",Secondary,, %s, %s, %s, %s, %s, %s, %s, %s, %s \n" % \
 				(sa.shiftAssignments[week][1][0], \
 				sa.shiftAssignments[week][1][1], sa.shiftAssignments[week][1][2], \
 				sa.shiftAssignments[week][1][3], sa.shiftAssignments[week][1][4], \
@@ -195,6 +194,28 @@ def undo():
 	rewriteSchedule(last_state)
 
 	return 0
+
+
+def resetAssignments():
+	'''
+		() -> int
+
+		Resets the shiftAssignments dictionary in shiftAssignments.py to be empty.	
+	'''
+	try:
+		f = open("shiftAssignments.py", "w")
+	except:
+		return 1
+
+	f.write("shiftAssignments = {}")
+	f.close()
+	importlib.reload(sa) # Reloading dictionary
+
+	global outputUpdates
+	outputUpdates = [] # if the schedule is cleared from the system, undos cannot be made
+
+	return 0
+
 
 '''
 	Calling methods to test program functionality.

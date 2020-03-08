@@ -1,6 +1,6 @@
 '''
 Author: Alyssa Huque
-Date of last modification: 2-27-2020
+Date of last modification: 3-03-2020
 Description: This produces the functionality of the RA Preferences module
 References:
 	On Deck Development Team's Project 1 fileInput.py file
@@ -93,7 +93,7 @@ class Preferences:
 		pass
 
 	def importFile(filename):
-		'''string -> int (0 or 1)
+		'''string -> int (0, 1, or 2)
 		Receives the name of the file to import
 		This function imports RA preference information.
 		The file may contain one or several RAs. This function also accounts for an empty file.
@@ -101,6 +101,7 @@ class Preferences:
 		Returns a 0 if no errors occured or a 1 if an error occured
 		'''
 		updated_dict = Input.inputPreferences(filename) #now i have a dictionary with the new information, I need to compare
+		lastnames = []
 		if(updated_dict == 1):
 			# print("error7")
 			return 1 # returns 1 for GUI warning
@@ -116,6 +117,12 @@ class Preferences:
 		# updating RA information
 		for key in original_dict.keys() & updated_dict.keys():
 			dictionary[key][1:7] = updated_dict[key][1:7]
+
+		if len(dictionary.keys()) > 25:
+			#print("A schedule cannot be generated: The RA team is too large. A maximum of 25 RAs are allowed. Likely, RAs from other buildings have been accidentally inputted.")
+			return 2
+
+		#print(len(dictionary.keys()))
 
 		file = open("raPreferences.py", "w+") # writes file for Queue
 		file.write("raPreferences = %s\n" % (str(dictionary)))
@@ -133,6 +140,11 @@ class Preferences:
 		current_dictionary = Input.readingDictPy("raPreferences.py")
 		del current_dictionary[student_id]
 
+		global inputUpdates # list with things that have been undone
+		for i in range(len(inputUpdates)):
+			if student_id == inputUpdates[i][0]: # if the student that has been deleted is in inputUpdates
+				inputUpdates.pop(i) # remove deleted RA from inputUpdates if anything has been changed
+
 		file = open("raPreferences.py", "w+")
 		file.write("raPreferences = %s\n" % (str(current_dictionary)))
 		file.close()
@@ -146,6 +158,8 @@ class Preferences:
 		file = open("raPreferences.py", "w+") # opens the file containing raPrefernces dictionary
 		file.write("raPreferences = {}") # writes an empty dictionary to raPreferences.py
 		file.close()
+		global inputUpdates
+		inputUpdates = [] # cannot undo changes that do not exist anymore
 		return 0
 
 	def setGoldStar(student_id):
@@ -210,8 +224,8 @@ class Preferences:
 		file.close()
 		return 0
 
-	def weekendsOffCheck():
-		''' None -> int (0 or 1)
+	def generateCheck():
+		''' None -> int (0, 1, 2, or 3)
 		The function checks that no more than half the RA team has requested the same weekend off.
 		If more than half the RA team has requested the same weekend off, this is a violation of
 			the RA contract and this function prints an error message and returns a 1.
@@ -222,15 +236,25 @@ class Preferences:
 		weekends_off = [0,0,0,0,0,0,0,0,0,0] # a list to tally the number of times each weekend has been requested off
 		# weekends_off = [1,2,3,4,5,6,7,8,9,10] relevant indices as they are in terms of weeks
 
+		try: # deletes keys that contain setting information so it is not written into file
+			del current_dictionary["1"] # deletes gold star
+			del current_dictionary["2"] # deletes tiebreaker
+			del current_dictionary["3"] # deletes bad pairings
+		except KeyError: # if those keys do not exist, continue
+			pass
+
 		requests = [] # a list to keep track of each RA's weekend off requests
 		key_list = list(current_dictionary.keys()) # list of each RA's student's IDs
 
-		if len(key_list) < 10: # checks that thee team is the minimum size necessary to generate the schedule
-			print("A schedule cannot be generated: The RA team is too small. A minimum of 10 RAs are needed. Likely, not all the RAs have been uploaded.")
+		if len(key_list) < 10: # checks that the team is the minimum size necessary to generate the schedule
+			#print("A schedule cannot be generated: The RA team is too small. A minimum of 10 RAs are needed. Likely, not all the RAs have been uploaded.")
 			return 1
 
 		for i in key_list:
 			requests += current_dictionary[i][4:] # adds RA's weekend off requests to list
+			if current_dictionary[i][1] == current_dictionary[i][2] or current_dictionary[i][1] == current_dictionary[i][3] or current_dictionary[i][2] == current_dictionary[i][3]:
+				# print("An RA has been given multiple of the same weekday preference. Please resolve this issue before a schedule can be generated")
+				return 3
 		
 		for j in requests:
 			j = int(j) # converts string to integer
@@ -242,26 +266,28 @@ class Preferences:
 		if (len(key_list) % 2) == 1: # odd number of RAs
 			for k in range(len(weekends_off)):
 				if weekends_off[k] > ((len(key_list) // 2) + 1): # if the number of weekends at index k is greater than half the RA team
-					print("error")
-					print("More than half the RA team has request weekend {} off. Please discuss with your RAs alternatives.".format(k+1))
-					return 1
+					#print("error")
+					#print("More than half the RA team has request weekend {} off. Please discuss with your RAs alternatives.".format(k+1))
+					return 2
 
 		else: # even number of RAs
 			for l in range(len(weekends_off)):
-				if weekends_off[k] > (len(key_list) // 2): # if the number of weekends at index k is greater than half the RA team
-					print("error")
-					print("More than half the RA team has request weekend {} off. Please discuss with your RAs alternatives.".format(k+1))
-					return 1
+				if weekends_off[l] > (len(key_list) // 2): # if the number of weekends at index k is greater than half the RA team
+					#print("error")
+					#print("More than half the RA team has request weekend {} off. Please discuss with your RAs alternatives.".format(l+1))
+					return 2
 		return 0
 
 	def updatePreferences(idNum, index, newPref):
-		'''str, int, str -> int (0)
+		'''str, int, str -> int (0 or 1)
 		This function allows for updates of individual fields of the dictionary to allow for updating preferences.
 		'''
 		current_dictionary = Input.readingDictPy("raPreferences.py") # obtains current raPreferences dictionary
 		# print(current_dictionary[idNum][index])
+
 		Input.save(current_dictionary, idNum, index) # adds action to global dictionary
 		current_dictionary[idNum][index] = newPref # makes modifications
+
 		file = open("raPreferences.py", "w+") # opens the file containing raPreferences dictionary
 		file.write("raPreferences = %s\n" % (str(current_dictionary))) # writes the new dictionary to raPreferences.py
 		file.close()
@@ -283,8 +309,8 @@ class Preferences:
 			return 1
 		return 0
 
-# if __name__ == '__main__':
-	# Preferences.importFile("Example Input/example.csv")
+if __name__ == '__main__':
+	Preferences.importFile("Example Input/All RAs.csv")
 	# Preferences.updatePreferences("951545641", 2, "Thursday")
 	# Preferences.undo()
 	# Preferences.save("951545641", 1)
