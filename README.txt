@@ -6,35 +6,43 @@ DATE CREATED: 2-12-2020
 
 CREATION PURPOSE: CIS 422 with Professor Anthony Hornof, Winter 2020, Project 2 assignment
 
-HOW TO COMPILE SOURCE CODE: in terminal, type "python3 On-Call.py"
+HOW TO COMPILE SOURCE CODE: in terminal, type "python3.7 On-Call.py"
 
 ADDITIONAL SET UP: none
 
 DEPENDENCIES:
 - Macintosh OSX 10.13 (High Sierra) or 10.15 (Catalina)
-- python 3
+- python 3.7
 - tkinter 8.6
-- python standard libraries: ast, importlib, and random
+- python standard libraries: ast, functools, importlib, and random
 - existence of these files: raPreferences.py and shiftAssignments.py
 
 DIRECTORY DESCRIPTION:
 -On-Call (main): all files that are actively used/modified when the 'On Call' application is being used.
-	-On-Call.py
-	-input.py
+	-exportSummary.py
+    -input.py
+    -On-Call.py
 	-onCallViewer.py
-	-output.pu
+	-output.py
 	-raPreferences.py
 	-shiftAssignments.py
+    -weekdayScheduler.py
 	-weekendScheduler.py
-	-weekdayScheduler.py
--On-Call > testFiles:
+-On-Call > developerTestFiles:
 	-Makefile
 	-originalExampleRaPreferences.py
 	-test_end.py
 	-test_week.py
 -On-Call > testInputs:
-	-20  RAs.csv
-	-Max RAs.csv
+	-16 RAs.csv
+	-20 RAs.csv
+	-25 RAs.csv
+    -example.csv
+	-example1.csv
+	-example2.csv
+	-example3.csv
+	-example4.csv
+	-example5.csv
 	-RA 1.csv
 	-RA 2.csv
 	-RA 3.csv
@@ -51,13 +59,7 @@ DIRECTORY DESCRIPTION:
 	-RA 14.csv
 	-RA 15.csv
 	-RA 16.csv
+    -Same weekday chosen.csv
 	-Same Weekend Off.csv
-	-Same weekday chosen.csv
-	-example.csv
-	-example1.csv
-	-example2.csv
-	-example3.csv
-	-example4.csv
-	-example5.csv
 	-updatedexample.csv
 	
