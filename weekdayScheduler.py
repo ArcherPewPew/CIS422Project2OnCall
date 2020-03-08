@@ -2,12 +2,6 @@
 Author: Max Terry
 Date of last modification: 2-25-2020
 Description: This determines the on call schedule for weekday shifts
-References:
-    TODO
-
-TODO:
-- implement test function to make sure names show up right amount of times
-- implement primary/secondary RA balancing
 '''
 
 import ast
